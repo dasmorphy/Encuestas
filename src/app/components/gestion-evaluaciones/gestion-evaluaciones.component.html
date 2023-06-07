@@ -1,0 +1,47 @@
+<div class="container">
+    <h1>Lista de Evaluaciones</h1>
+    <p>Se presentan todas las evaluaciones en estado calificado</p>
+
+    <div class="card">
+
+        <div class="card-head"></div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Usuario</th>
+                        <th scope="col">Colaborador</th>
+                        <th scope="col">Calificacion Final</th>
+                        <th scope="col">Acciones</th>
+
+    
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let evaluacion of evaluaciones">
+                        <input type="hidden" value="{{evaluacion.id_Evaluacion}}">
+                        <td >{{evaluacion.id_Evaluacion}}</td>
+                        <td>{{evaluacion.usuario_id}}</td>
+                        <td>{{evaluacion.colaborador_id}}</td>
+                        <td>{{evaluacion.calificacionFinal}}</td>
+
+                        <!-- <button class="btn btn-dark" (click) = "editarUsuario(usuario.id_Usuario)">Editar</button> -->
+                        <td><button class="btn btn-primary">Visualizar</button></td>
+                        <td><button class="btn btn-dark">Reversar</button></td>
+                        <td><button class="btn btn-dark">Imprimir</button></td>
+                        <td><button class="btn btn-danger">Eliminar</button></td>
+
+
+
+    
+    
+                    </tr>
+                
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</div>

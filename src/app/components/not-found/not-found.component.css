@@ -1,0 +1,46 @@
+img {
+    position: relative;
+    top: -50px;
+    height: 40rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+} 
+button{
+    position: relative;
+    top: -50px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 50px;
+    font-size: 20px;
+}
+  
+
+
+
+/*
+MEME SIMPSON
+
+img {
+    position: relative;
+    margin-top: 2rem;
+    height: 30rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+p{
+    font-size: 20px;
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.uno{
+    font-size: 40px;
+    margin: 0;
+}
+*/

@@ -1,0 +1,20 @@
+<div class="container">
+    <h1>Actualizar Usuario</h1>
+
+    <form [formGroup]="editForm" class="form-register" (ngSubmit)="updateUser(editForm.value)">
+        <div class="form-group">
+            <label for="">Usuario</label>
+            <input type="text" class="form-control controls" formControlName="usuario">
+        </div>
+
+        <div class="form-group">
+            <label for="">Identificacion</label>
+            <input type="text" class="form-control controls" formControlName="identificacion">
+        </div>
+
+        <button type="submit" class="btn btn-success button">Actualizar</button>
+        <button (click)="backListUser()" class="btn btn-danger button">Cancelar</button>
+ 
+
+    </form>
+</div>

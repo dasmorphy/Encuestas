@@ -1,0 +1,46 @@
+<div class="sidenav" [ngClass]="collapsed ? 'sidenav-collapsed' : ''">
+    <div class="logo-container">
+        <button class="logo" (click)="toggleCollapse()">
+            <img src="../../../assets/img/logo.png" alt="Logo Principal">
+        </button>
+        <div class="logo-text" @fadeInOut *ngIf="collapsed">Evaluaciones</div>
+        <button class="close" (click)="closeSideNav()" *ngIf="collapsed">
+            <i class="fa-times fa-sharp fa-solid fa-circle-xmark"></i>
+            <!-- fa-sharp fa-solid fa-circle-xmark -->
+        </button>
+    </div>
+
+    <ul class="sidenav-nav">
+        <li class="sidenav-nav-item" *ngFor="let data of navData">
+            <a class="sidenav-nav-link" (click)="handClick(data)" *ngIf="data.items && data.items.length > 0"
+                [ngClass]="getActiveClass(data)">
+                <i class="sidenav-link-icon" [className] = "data.icon"></i>
+                <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">{{data.label}}</span>
+                <!-- icono de la barra de subOpciones -->
+                <i *ngIf="data.items && collapsed" class="menu-collapsed-icon" 
+                    [ngClass]="!data.expanded ? 'fa-solid fa-chevron-right' : 'fa-solid fa-chevron-down fa-2xs'" 
+                ></i>
+            </a>
+
+            <a class="sidenav-nav-link" 
+                *ngIf="!data.items || (data.items && data.items.length === 0)"
+                [routerLink]="[data.routeLink]" 
+                routerLinkActive="active" 
+                [routerLinkActiveOptions]="{exact: true}"
+            >
+                <i class="sidenav-link-icon" [className] = "data.icon"></i>
+                <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">{{data.label}}</span>
+            </a>
+            <div *ngIf="collapsed && data.items && data.items.length > 0">
+                <app-sublevel-menu
+                    [data]="data"
+                    [collapsed] = "collapsed"
+                    [multiple]="multiple"
+                    [expanded]="data.expanded"
+                ></app-sublevel-menu>
+            </div>
+
+        </li>
+    </ul>
+    
+</div>

@@ -1,0 +1,99 @@
+<h1>Nuevo Formato de Evaluacion</h1>
+<main>
+    <section class="row">
+        <!-- [formGroup]="registroForm" -->
+         <form  class="row" [formGroup]="registroForm"> 
+            <div class="col-12">
+                <div class="card" style="border-radius: 21px; margin-bottom: 2rem; margin-top:2rem;">
+                    <div class="card-header" style="border-radius: 21px;">
+                        <h3 class="card-title">Competencia</h3>
+                    </div>
+                    <div class="card-body">
+                        
+
+                        <div class="form-group col-md-3">
+                            <b><label for="">Elegir Competencia:</label></b>
+                            <select id="selectModulo" class="form-control" required formControlName="moduloSeleccionado" name="moduloSeleccionado">
+                                <option *ngFor="let modulo of modulos" value="{{modulo.id_Modulo_Evaluacion}}">{{modulo.nombre_Modulo}}</option>
+                            </select>
+                        </div>
+                        <button routerLink="/gestion-evaluaciones/nueva-competencia" style="margin-top: 22px; width: 200px;" id="btnModulo" class="btn btn-primary form-group col-md-1">Nueva Competencia</button>
+                        <div class="form-group col-md-1 contenedor-boton">
+                            <button (click)="AddQuestion()" style="margin-top: 22px;" id="btnañadir" class="btn btn-primary">Añadir</button>
+                        </div>
+
+                    
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="card" style="border-radius: 21px; margin-bottom: 2rem; margin-top:2rem;">
+                    <div class="card-header" style="border-radius: 21px;">
+                        <h3 class="card-title">Nivel</h3>
+                    </div>
+                    <div class="card-body">
+                        
+
+                        <div class="form-group col-md-3">
+                            <b><label for="">Elegir Nivel:</label></b>
+                            <select formControlName="tipoSeleccionado" name="tipoSeleccionado" class="form-control" required>
+                                <option *ngFor="let T_evaluacion of tipoEvaluacion" [value]="T_evaluacion.id_Tipo_Evaluacion" 
+                                value="{{T_evaluacion.id_Tipo_Evaluacion}}">{{T_evaluacion.nombre_Tipo}}</option>
+                            </select>
+                        </div>
+                       <button routerLink="/gestion-evaluaciones/nuevo-Nivel" style="margin-top: 22px; width: 200px;" id="btnModulo" class="btn btn-primary form-group col-md-1">Nueva Competencia</button>
+                            
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="card" style="border-radius: 21px;">
+                    <div class="card-header" style="border-radius: 21px;">
+                        <h3 class="card-title">Preguntas</h3>
+                    </div>
+                    <div class="card-body">
+                        
+                            <p>A continuacion podra escribir las preguntas a presentar dentro de la evaluacion</p>
+                            <div class="form-group col-md-11">
+                                <b><label for="">Pregunta 1:</label></b>
+                                <div id="preguntas">
+                                    <input type="text" formControlName="pregunta" class="form-control" maxlength="250" required>
+
+                                </div>
+
+                            </div>
+
+                            <div class="form-group col-md-1 contenedor-boton">
+                                <button (click)="AddQuestion()" style="margin-top: 22px;" id="btnañadir" class="btn btn-primary">Añadir</button>
+                            </div>
+
+
+                       
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+
+                <div class="col-md-12 text-center">
+        
+                    <button class="btn btn-success btn-lg" (click)="submitForm()" style="margin-top: 2rem; margin-bottom: 2rem;">Guardar Formato de Evaluacion</button>
+        
+        
+                </div>
+        
+            </div>
+        </form>
+    </section>
+
+    
+</main>
+
+
+<!-- 
+<pre>
+    {{registroForm | json}}
+</pre> -->

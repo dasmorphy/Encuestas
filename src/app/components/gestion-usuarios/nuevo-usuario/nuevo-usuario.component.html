@@ -1,0 +1,30 @@
+<div class="container">
+    <h1>Nuevo Usuario</h1>
+
+    <form [formGroup]="registroForm" class="form-register" (ngSubmit)="submitForm()">
+        <div class="form-group">
+            <label for="">Usuario</label>
+            <input type="text" class="form-control controls" maxlength="20" formControlName="usuario" required>
+        </div>
+
+        <div class="form-group">
+            <label for="">Identificacion</label>
+            <input type="text" onkeyup="this.value = this.value.replace(/[^0-9]/g, '').replace(/,/g);" maxlength="10" class="form-control controls" formControlName="identificacion" required>
+        </div>
+
+        <div class="form-group">
+            <label for="">Contraseña</label>
+            <input type="password" class="form-control controls" formControlName="password" maxlength="12" required>
+        </div>
+
+        <!-- <div class="form-group">
+            <label for="">Repetir Contraseña</label>
+            <input type="password" class="form-control controls" formControlName="repeatPass" required>
+        </div> -->
+
+        <button type="submit" class="btn btn-success button">Registrar Usuario</button>
+        <button (click)="backListUser()" class="btn btn-danger button">Cancelar</button>
+ 
+
+    </form>
+</div>

@@ -1,0 +1,1 @@
+Operacion IO es aquella que se da cuando nuestra app se comunica con otro sistema, ej la app net core se comunica con la bd'

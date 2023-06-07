@@ -1,0 +1,102 @@
+
+<h1>Proceso de Evaluación</h1>
+<h3>Datos del evaluado</h3>
+
+<form>
+
+  <div [formGroup]="usuarioForm" class="col-12">
+    <div class="card" style="border-radius: 21px;">
+        <div class="card-header" style="border-radius: 21px;">
+            <h4 class="card-title">Datos del Usuario</h4>
+        </div>
+        <div class="card-body">
+          <div class="form-group col-md-11" >
+            <div style="display: none;">
+              <label>Id Usuario:</label>
+              <input class="form-control" type="text" formControlName="id_Usuario">
+            </div>
+            <div>
+              <label>Usuario:</label>
+              <input class="form-control" type="text" formControlName="usuario">
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <div [formGroup]="evaluacionForm" class="col-12">
+    <div class="card" style="border-radius: 21px;">
+        <div class="card-header" style="border-radius: 21px;">
+            <h4 class="card-title">Datos del evaluado</h4>
+        </div>
+        <div class="card-body">
+          <div class="form-group col-md-11" >
+            <div style="display: none;">
+              <label>Id Colaborador:</label>
+              <input class="form-control" type="text" formControlName="id_Colaborador">
+            </div>
+            <div>
+              <label>Nombres:</label>
+              <input class="form-control" type="text" formControlName="nombres">
+            </div>
+            <div>
+              <label>Apellidos:</label>
+              <input class="form-control" type="text" formControlName="apellidos">
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <div [formGroup]="moduloEvaluacionForm" class="col-12">
+    <div class="card" style="border-radius: 21px;">
+        <div class="card-header" style="border-radius: 21px;">
+            <h4 class="card-title">Competencia</h4>
+        </div>
+        <div class="card-body">
+          <div class="form-group col-md-11" >
+            <div style="display: none;">
+              <label>Id id_Modulo_Evaluacion:</label>
+              <input class="form-control" type="text" formControlName="id_Modulo_Evaluacion">
+            </div>
+            <div>
+              <label>nombre_Modulo:</label>
+              <input class="form-control" type="text" formControlName="nombre_Modulo">
+            </div>
+            <div>
+              <label>definicion:</label>
+              <input class="form-control" type="text" formControlName="definicion">
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+
+  <div class="col-12">
+    <div class="card" style="border-radius: 21px;">
+        <div class="card-header" style="border-radius: 21px;">
+            <h4 class="card-title">Preguntas</h4>
+        </div>
+        <div class="card-body">
+      
+          <p>A continuacion podra escribir las preguntas a presentar dentro de la evaluacion</p>
+          <div class="form-group col-md-11" *ngFor="let preguntas of preguntasByEvaluacion">
+            <b><label id="{{preguntas.id_Preguntas_Tipo}}">{{preguntas.pregunta}}</label></b>
+            <input class="form-control" type="text" [(ngModel)]="calificacionPregunta['clfc_Pregunta' + preguntas.numero_Pregunta]" 
+            [id]="'clfc_Pregunta' + preguntas.numero_Pregunta" [name]="'clfc_Pregunta' + preguntas.numero_Pregunta"
+            onkeyup="this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');">
+            
+          </div>
+          <input type="text" name="calificacionFinal" [(ngModel)]="calificacionPregunta.calificacionFinal" onkeyup="this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');">
+
+        </div>
+    </div>
+  </div>
+  
+
+  <button (click)="guardarEvaluacion()" type="submit" class="btn btn-success button">Guardar Evaluación</button>
+  <button  class="btn btn-danger button">Cancelar</button>
+
+
+</form>

@@ -1,0 +1,33 @@
+<h1>Evaluacion</h1>
+<input class="form-control " type="text" placeholder="Buscar">
+
+<div class="card">
+
+    <div class="card-head"></div>
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nombres</th>
+                    <th scope="col">Apellidos</th>
+                    <th scope="col">Acciones</th>
+                    <th scope="col">Estado</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let colaborador of colaboradores">
+                    <input id ="id" type="hidden" value = {{colaborador.id_Colaborador}}>
+                    <th scope="row">{{colaborador.id_Colaborador}}</th>
+                    <td>{{colaborador.nombres}}</td>
+                    <td>{{colaborador.apellidos}}</td>
+                    <td><button (click)="evaluacionColaborador(colaborador.id_Colaborador)" class="btn btn-primary">Evaluar</button></td>
+                    <td>No evaluado</td> 
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
