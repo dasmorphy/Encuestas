@@ -3,6 +3,10 @@ body {
     background: #8b9bbe;
 }
 
+.login-component app-sidenav {
+    display: none;
+}
+
 button {
     /* margin-left: 1.9rem;   */
     width: 100%;

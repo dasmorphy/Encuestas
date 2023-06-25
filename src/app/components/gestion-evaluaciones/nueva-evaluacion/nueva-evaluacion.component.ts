@@ -5,6 +5,8 @@ import { ListaModuloEvaluacionInterface } from 'src/app/models/moduloEvaluacion'
 import { ListaPreguntasByEvaluacionInterface } from 'src/app/models/preguntasByEvaluacion';
 import { ListaTipoEvaluacionInterface } from 'src/app/models/tipoEvaluacion';
 import { ApiService } from 'src/app/services/ApiService';
+import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
+import { SessionService } from 'src/app/services/SessionService';
 
 @Component({
   selector: 'app-nueva-evaluacion',
@@ -17,7 +19,10 @@ export class NuevaEvaluacionComponent implements OnInit {
   tipoEvaluacion: ListaTipoEvaluacionInterface[];
   preguntaCount = 2;
   
-  constructor(private api:ApiService, private router: Router){}
+  constructor(private api:ApiService, private router: Router,
+    private sessionService: SessionService, 
+    private inactivityService: InactivitySessionService  
+  ){}
 
   
   registroForm= new FormGroup({
@@ -48,6 +53,12 @@ export class NuevaEvaluacionComponent implements OnInit {
       this.tipoEvaluacion = data; 
     })
 
+    const sessionData = this.sessionService.getSession();
+    this.inactivityService.initInactivityTimer();
+    if (sessionData == null){
+      this.router.navigate(['login']);
+    }
+
   }
 
  
@@ -57,7 +68,7 @@ export class NuevaEvaluacionComponent implements OnInit {
   }
 
   AddQuestion(){
-    if (this.preguntaCount <= 30) {
+    if (this.preguntaCount <= 52) {
       const nuevaPregunta: any = document.getElementById('preguntas');
       let input = document.createElement("input");
       input.setAttribute("class", "form-control");
@@ -75,4 +86,7 @@ export class NuevaEvaluacionComponent implements OnInit {
 
   }
 
+  onUserActivity(): void {
+    this.inactivityService.resetInactivityTimer();
+  }
 }

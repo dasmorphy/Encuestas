@@ -11,6 +11,14 @@ interface SideNavToggle {
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  mostrarSidenav = true; // Mostrar Sidenav de forma predeterminada
+
+  // Método para determinar si se debe mostrar el Sidenav en la página actual
+  shouldShowSidenav(): boolean {
+    // Verifica la URL actual para determinar si el Sidenav debe mostrarse o no
+    return !window.location.href.includes('login');
+  }
+
   title = 'Encuestas';
 
   isSideNavCollapsed = false;

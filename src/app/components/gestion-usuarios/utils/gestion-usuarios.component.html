@@ -1,7 +1,7 @@
 <h1>Gestion de Usuarios</h1>
 <input class="form-control " type="text" placeholder="Buscar">
 
-<div class="card">
+<div class="card" (mousemove)="onUserActivity()" (click)="onUserActivity()">
 
     <div class="card-head"></div>
     <div class="card-body">
@@ -23,7 +23,9 @@
                     <td>{{usuario.identificacion}}</td>
                     <td>
                         <button class="btn btn-dark" (click) = "editarUsuario(usuario.id_Usuario)">Editar</button>
-                        <button class="btn btn-dark">Cambiar Contraseña</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-dark" (click)="cambioPass(usuario.id_Usuario)">Cambiar Contraseña</button>                        
                     </td>
 
 

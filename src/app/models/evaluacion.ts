@@ -4,6 +4,7 @@ export interface ListaEvaluacionesInterface
     usuario_id: number;
     colaborador_id: number;
     calificacionFinal?: number;
+    estado?: string;
     clfc_Pregunta1?: number;
     clfc_Pregunta2?: number;
     clfc_Pregunta3?: number;
@@ -34,5 +35,28 @@ export interface ListaEvaluacionesInterface
     clfc_Pregunta28?: number;
     clfc_Pregunta29?: number;
     clfc_Pregunta30?: number;
+    clfc_Pregunta31?: number;
+    clfc_Pregunta32?: number;
+    clfc_Pregunta33?: number;
+    clfc_Pregunta34?: number;
+    clfc_Pregunta35?: number;
+    clfc_Pregunta36?: number;
+    clfc_Pregunta37?: number;
+    clfc_Pregunta38?: number;
+    clfc_Pregunta39?: number;
+    clfc_Pregunta40?: number;
+    clfc_Pregunta41?: number;
+    clfc_Pregunta42?: number;
+    clfc_Pregunta43?: number;
+    clfc_Pregunta44?: number;
+    clfc_Pregunta45?: number;
+    clfc_Pregunta46?: number;
+    clfc_Pregunta47?: number;
+    clfc_Pregunta48?: number;
+    clfc_Pregunta49?: number;
+    clfc_Pregunta50?: number;
+    clfc_Pregunta51?: number;
+    clfc_Pregunta52?: number;
+
 
 }

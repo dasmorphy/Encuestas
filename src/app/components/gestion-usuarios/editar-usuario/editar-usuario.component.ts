@@ -21,7 +21,8 @@ export class EditarUsuarioComponent implements OnInit {
     id_Usuario: new FormControl(''),
     usuario: new FormControl(''),
     password: new FormControl(''),
-    identificacion: new FormControl('')
+    identificacion: new FormControl(''),
+
   })
 
   ngOnInit(): void {
@@ -32,7 +33,7 @@ export class EditarUsuarioComponent implements OnInit {
         'id_Usuario': usuarioId,
         'usuario': this.datosUsuario.usuario,
         'password': this.datosUsuario.password,
-        'identificacion': this.datosUsuario.identificacion,
+        'identificacion': this.datosUsuario.identificacion
       })
     });
   }

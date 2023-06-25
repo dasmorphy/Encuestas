@@ -6,6 +6,8 @@ import { ColaboradoresComponent } from './components/colaboradores/colaboradores
 import { LoginComponent } from './components/login/login.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { EvaluacionColaboradorComponent } from './components/evaluacion/evaluacion-colaborador/evaluacion-colaborador.component';
+import { NuevoColaboradorComponent } from './components/colaboradores/nuevo-colaborador/nuevo-colaborador.component';
+import { VistaEvaluacionComponent } from './components/evaluacion/vista-evaluacion/vista-evaluacion.component';
 
 
 
@@ -15,6 +17,7 @@ const routes: Routes = [
   {path: 'inicio', component: InicioComponent},
   
   {path: 'colaboradores', component: ColaboradoresComponent},
+  {path: 'nuevosColaboradores', component: NuevoColaboradorComponent},
   {
     path: 'gestion-evaluaciones',
     loadChildren: () => import('./components/gestion-evaluaciones/gestion-evaluaciones.module').then(m => m.GestionEvaluacionesModule)
@@ -25,6 +28,9 @@ const routes: Routes = [
   },
   {path: 'evaluacion', component: EvaluacionComponent},
   {path: 'evaluacion-colaborador/:id_Colaborador', component: EvaluacionColaboradorComponent},
+  {
+    path: 'vistaEvaluacion/:id_Colaborador/:id_Usuario', component: VistaEvaluacionComponent
+  },
 
   {path: '**', component: NotFoundComponent},
 

@@ -4,4 +4,7 @@ export interface ListaUsuariosInterface
     usuario: string;
     password: string;
     identificacion: string;
+    tipo_Evaluacion_Id: number;
+    rol_Id: number;
+    cargo_Id: number;
 }

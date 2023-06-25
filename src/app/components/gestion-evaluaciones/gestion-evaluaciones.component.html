@@ -1,6 +1,6 @@
-<div class="container">
+<div class="container" (mousemove)="onUserActivity()" (click)="onUserActivity()">
     <h1>Lista de Evaluaciones</h1>
-    <p>Se presentan todas las evaluaciones en estado calificado</p>
+    <p>Se presentan todas las evaluaciones calificadas</p>
 
     <div class="card">
 
@@ -13,29 +13,35 @@
                         <th scope="col">Usuario</th>
                         <th scope="col">Colaborador</th>
                         <th scope="col">Calificacion Final</th>
+                        <th scope="col">Estado</th>
                         <th scope="col">Acciones</th>
 
     
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let evaluacion of evaluaciones">
+                    <tr *ngFor="let evaluacion of evaluacionesData">
                         <input type="hidden" value="{{evaluacion.id_Evaluacion}}">
                         <td >{{evaluacion.id_Evaluacion}}</td>
                         <td>{{evaluacion.usuario_id}}</td>
                         <td>{{evaluacion.colaborador_id}}</td>
                         <td>{{evaluacion.calificacionFinal}}</td>
+                        <td>{{evaluacion.estado}}</td>
 
                         <!-- <button class="btn btn-dark" (click) = "editarUsuario(usuario.id_Usuario)">Editar</button> -->
-                        <td><button class="btn btn-primary">Visualizar</button></td>
-                        <td><button class="btn btn-dark">Reversar</button></td>
-                        <td><button class="btn btn-dark">Imprimir</button></td>
-                        <td><button class="btn btn-danger">Eliminar</button></td>
+                        <td><button (click)="visualizarEvaluacion(evaluacion.colaborador_id, evaluacion.usuario_id, evaluacion.id_Evaluacion)" class="btn btn-primary">Visualizar</button></td>
 
+                        <td *ngIf="evaluacion.estado === 'Borrador'">
+                            <button [disabled]="BotonDesactivado(evaluacion)" 
+                            class="btn btn-success">Reversar</button>
+                        </td>
+                        <td *ngIf="evaluacion.estado !== 'Borrador'">
+                            <button (click)="reversarEvaluacion(evaluacion.colaborador_id, evaluacion.id_Evaluacion)" 
+                            class="btn btn-success">Reversar</button>
+                        </td>
 
-
-    
-    
+                        <td><button (click)="imprimirPdf(evaluacion.colaborador_id, evaluacion.usuario_id)" class="btn btn-dark">Imprimir</button></td>
+                        <td><button (click)="eliminarEvaluacion(evaluacion.id_Evaluacion)" class="btn btn-danger">Eliminar</button></td>    
                     </tr>
                 
                 </tbody>
