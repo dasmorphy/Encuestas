@@ -1,7 +1,7 @@
 <h1>Evaluacion</h1>
 <input class="form-control " type="text" placeholder="Buscar">
 
-<div class="card">
+<div class="card" (mousemove)="onUserActivity()" (click)="onUserActivity()">
 
     <div class="card-head"></div>
     <div class="card-body">
@@ -10,11 +10,16 @@
                 <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Nombres</th>
-                    <th scope="col">Apellidos</th>
-                    <th scope="col">Acciones</th>
+                    <th scope="col">Cedula</th>
+                    <th scope="col">Ingreso</th>
+                    <th scope="col">Cargo</th>
+                    <th scope="col">CC</th>
+                    <th scope="col">Localidad</th>
+                    <th scope="col">Zona</th>
+                    <th scope="col">Area</th>
+                    <th scope="col">Departamento</th>
                     <th scope="col">Estado</th>
-
-
+                    <th scope="col">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -22,9 +27,30 @@
                     <input id ="id" type="hidden" value = {{colaborador.id_Colaborador}}>
                     <th scope="row">{{colaborador.id_Colaborador}}</th>
                     <td>{{colaborador.nombres}}</td>
-                    <td>{{colaborador.apellidos}}</td>
-                    <td><button (click)="evaluacionColaborador(colaborador.id_Colaborador)" class="btn btn-primary">Evaluar</button></td>
-                    <td>No evaluado</td> 
+                    <td>{{colaborador.cedula}}</td>
+                    <td>{{colaborador.fe_Ingreso_Colaborador}}</td>
+                    <td>{{colaborador.cargo_Colaborador}}</td>
+                    <td>{{colaborador.cc}}</td>
+                    <td>{{colaborador.localidad}}</td>
+                    <td>{{colaborador.zona}}</td>
+                    <td>{{colaborador.area}}</td>
+                    <td>{{colaborador.departamento}}</td>
+                    <td>{{colaborador.estado}}</td> 
+                    <!-- <td><button [disabled]="BotonDesactivado(colaborador)" (click)="evaluacionColaborador(colaborador.id_Colaborador)" class="btn btn-primary">Evaluar</button></td>
+                    <td><button [disabled]="BotonDesactivado(colaborador)" (click)="evaluacionColaborador(colaborador.id_Colaborador)" class="btn btn-primary">Evaluar</button></td>
+                     -->
+                    <td *ngIf="colaborador.estado === 'Borrador'">
+                        <button (click)="continuarEvaluacion(colaborador.id_Colaborador)" class="btn btn-warning">Continuar</button>
+                    </td>
+            
+                    <!-- Mostrar botón "Ver Evaluación" solo si el estado es "Aprobado" -->
+                    <td *ngIf="colaborador.estado === 'No Evaluado'">
+                        <button (click)="evaluacionColaborador(colaborador.id_Colaborador)" class="btn btn-success">Evaluar</button>
+                    </td>
+
+                    <td *ngIf="colaborador.estado === 'Evaluado'">
+                        <button [disabled]="BotonDesactivado(colaborador)" class="btn btn-primary">Finalizada</button>
+                    </td>
 
                 </tr>
             </tbody>

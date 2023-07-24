@@ -25,6 +25,8 @@ export class SidenavComponent implements OnInit {
   screenWidth = 0;
   navData = navbarData;
   multiple: boolean = false;
+  opcionesRoles: any;
+  currentRole: any = null;
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any){
@@ -42,7 +44,14 @@ export class SidenavComponent implements OnInit {
   //vista se adapate al desplegar el sidebar 
   ngOnInit(): void {
     this.screenWidth = window.innerWidth;
+    // this.navData = this.getMenuOptionsForRole(3);
+    this.navData = this.getMenuOptionsForRole(this.currentRole);
   }
+
+  shouldShowOption(data: INavbarData): any {
+    return data.rol === this.currentRole || (data.items && data.items.some(subItem => subItem.rol === this.currentRole));
+  }
+  
 
   toggleCollapse(): void {
     this.collapsed = !this.collapsed;
@@ -65,6 +74,11 @@ export class SidenavComponent implements OnInit {
     }
     item.expanded = !item.expanded
   }
+
+  getMenuOptionsForRole(role: number): INavbarData[] {
+    return this.navData.filter((item) => item.rol === role || (item.items && item.items.some(subItem => subItem.rol === role)));
+  }
+  
 
   getActiveClass(data: INavbarData): string{
     return this.router.url.includes(data.routeLink) ? 'active' : '';

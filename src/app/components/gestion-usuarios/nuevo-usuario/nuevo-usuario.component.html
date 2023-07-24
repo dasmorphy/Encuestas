@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" (mousemove)="onUserActivity()" (click)="onUserActivity()">
     <h1>Nuevo Usuario</h1>
 
     <form [formGroup]="registroForm" class="form-register" (ngSubmit)="submitForm()">

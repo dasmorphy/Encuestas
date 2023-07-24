@@ -5,11 +5,13 @@ import { ReactiveFormsModule, FormsModule  } from '@angular/forms';
 import { EvaluacionRoutingModule } from './evaluacion-routing.module';
 import { EvaluacionColaboradorComponent } from './evaluacion-colaborador/evaluacion-colaborador.component';
 import { EvaluacionComponent } from './utils/evaluacion.component';
+import { VistaEvaluacionComponent } from './vista-evaluacion/vista-evaluacion.component';
 
 @NgModule({
   declarations: [
     EvaluacionColaboradorComponent,
-    EvaluacionComponent
+    EvaluacionComponent,
+    VistaEvaluacionComponent
   
   ],
   imports: [

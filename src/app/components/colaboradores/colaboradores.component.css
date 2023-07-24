@@ -1,0 +1,13 @@
+th, td{
+    font-size: 12px;
+}
+
+button{
+    display: flex;
+    text-align: center;
+    align-items: center;
+    width: 8rem;
+    font-size: 15px;
+    /* margin-left: 1rem; */
+    margin-top: 1rem;
+}

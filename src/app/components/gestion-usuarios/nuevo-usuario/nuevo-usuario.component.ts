@@ -1,17 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import {  Router } from '@angular/router';
 import { ListaUsuariosInterface } from 'src/app/models/usuarios';
 import { ApiService } from 'src/app/services/ApiService';
+import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
+import { SessionService } from 'src/app/services/SessionService';
 
 @Component({
   selector: 'app-nuevo-usuario',
   templateUrl: './nuevo-usuario.component.html',
   styleUrls: ['./nuevo-usuario.component.css']
 })
-export class NuevoUsuarioComponent {
+export class NuevoUsuarioComponent implements OnInit{
 
-  constructor (private router: Router, private api:ApiService){}
+  constructor (private router: Router, private api:ApiService,
+    private sessionService: SessionService, 
+    private inactivityService: InactivitySessionService
+  ){}
+  
   datosUsuario: ListaUsuariosInterface;
 
   registroForm = new FormGroup({
@@ -19,6 +25,14 @@ export class NuevoUsuarioComponent {
     password: new FormControl(''),
     identificacion: new FormControl('')
   })
+
+  ngOnInit(): void {
+    const sessionData = this.sessionService.getSession();
+    this.inactivityService.initInactivityTimer();
+    if (sessionData == null){
+      this.router.navigate(['login']);
+    }
+  }
 
   submitForm() {
     if (this.registroForm.valid) {
@@ -43,10 +57,12 @@ export class NuevoUsuarioComponent {
       console.log(newUser)
     }
   }
-
-
-
+  
   backListUser(){
     this.router.navigate(['gestion-usuarios/lista-usuarios']);
+  }
+
+  onUserActivity(): void {
+    this.inactivityService.resetInactivityTimer();
   }
 }

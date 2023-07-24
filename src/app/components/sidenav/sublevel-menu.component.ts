@@ -74,6 +74,7 @@ export class SublevelMenuComponent implements OnInit{
   routeLink: '',
   icon: '',
   label: '',
+  rol: '',
   items: []
 }
 

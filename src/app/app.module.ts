@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -18,6 +19,7 @@ import { CommonModule } from '@angular/common';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { EvaluacionModule } from './components/evaluacion/evaluacion.module';
 import { EvaluacionComponent } from './components/evaluacion/utils/evaluacion.component';
+import { NuevoColaboradorComponent } from './components/colaboradores/nuevo-colaborador/nuevo-colaborador.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,7 @@ import { EvaluacionComponent } from './components/evaluacion/utils/evaluacion.co
     SublevelMenuComponent,
     LoginComponent,
     NotFoundComponent,
+    NuevoColaboradorComponent,
     //EvaluacionComponent
   ],
   imports: [
@@ -40,7 +43,8 @@ import { EvaluacionComponent } from './components/evaluacion/utils/evaluacion.co
     CommonModule,
     GestionUsuariosModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule 
   ],
   providers: [],
   bootstrap: [AppComponent]

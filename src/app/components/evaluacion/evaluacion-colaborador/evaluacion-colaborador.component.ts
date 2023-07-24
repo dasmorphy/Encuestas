@@ -3,11 +3,14 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListaColaboresInterface } from 'src/app/models/colaboradores';
 import { ListaModuloEvaluacionInterface } from 'src/app/models/moduloEvaluacion';
+import { ListaModuloPreguntasInterface } from 'src/app/models/moduloPreguntas';
 import { ListaPreguntasByEvaluacionInterface } from 'src/app/models/preguntasByEvaluacion';
 import { ListaUsuariosInterface } from 'src/app/models/usuarios';
 import { ApiService } from 'src/app/services/ApiService';
-
-
+import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
+import { SessionService } from 'src/app/services/SessionService';
+import Swal from 'sweetalert2';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-evaluacion-colaborador',
@@ -15,30 +18,23 @@ import { ApiService } from 'src/app/services/ApiService';
   styleUrls: ['./evaluacion-colaborador.component.css']
 })
 export class EvaluacionColaboradorComponent implements OnInit {
-  constructor(private activedRoute: ActivatedRoute, private api:ApiService, private router: Router){}
+  constructor(private activedRoute: ActivatedRoute, private api:ApiService, private router: Router,
+    private sessionService: SessionService, 
+    private inactivityService: InactivitySessionService  
+  ){}
 
-  preguntaCount = 25; //maximo de calificacion segun el numero de preguntas
+  preguntaCount = 30; //maximo de calificacion segun el numero de preguntas
 
-  calificacionPregunta:any = {
-    calificacionFinal: 0,
-  };
+  calificacionPregunta:any = {};
 
   colaboradores: ListaColaboresInterface;
   preguntasByEvaluacion: ListaPreguntasByEvaluacionInterface[];
-  modulos: ListaModuloEvaluacionInterface;
   usuario: ListaUsuariosInterface;
-  
+  modulosPreguntas: ListaModuloPreguntasInterface[];
+
   evaluacionForm = new FormGroup({
     id_Colaborador: new FormControl(),
-    nombres: new FormControl(''),
-    apellidos: new FormControl('')
-
-  });
-
-  moduloEvaluacionForm = new FormGroup({
-    id_Modulo_Evaluacion: new FormControl(),
-    nombre_Modulo: new FormControl(''),
-    definicion: new FormControl('')
+    nombres: new FormControl('')
 
   });
 
@@ -49,20 +45,22 @@ export class EvaluacionColaboradorComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    const sessionData = this.sessionService.getSession();
+    console.log(sessionData);
+    this.inactivityService.initInactivityTimer();
+    if (sessionData == null){
+      this.router.navigate(['login']);
+    }
+
     this.generarCalificacionesPreguntas();
     let colaboradorId = this.activedRoute.snapshot.paramMap.get('id_Colaborador');
-    //let moduloId = this.activedRoute.snapshot.paramMap.get('id_Modulo_Evaluacion');
-    let moduloId = 3;
-    let usuarioId = 1008;
-
+    let usuarioId = sessionData.id_Usuario;
 
     this.api.getSingleColaborador(colaboradorId).subscribe(data => {
       this.colaboradores = data
       this.evaluacionForm.setValue({
         'id_Colaborador': colaboradorId,
-        'nombres': this.colaboradores.nombres,
-        'apellidos': this.colaboradores.apellidos
-
+        'nombres': this.colaboradores.nombres
       })
     });
 
@@ -70,18 +68,6 @@ export class EvaluacionColaboradorComponent implements OnInit {
     this.api.getAllPreguntaByEvaluacion().subscribe(data =>{
       console.log(data);
       this.preguntasByEvaluacion = data;
-    });
-
-
-    this.api.getSingleModulo(moduloId).subscribe(data => {
-      this.modulos = data
-      this.moduloEvaluacionForm.setValue({
-        'id_Modulo_Evaluacion': moduloId,
-        'nombre_Modulo': this.modulos.nombre_Modulo,
-        'definicion': this.modulos.definicion
-
-      })
-      console.warn(data);
     });
 
     this.api.getSingleUsuario(usuarioId).subscribe(data => {
@@ -93,6 +79,19 @@ export class EvaluacionColaboradorComponent implements OnInit {
       })
       console.warn(data);
     });
+
+    this.api.getAllModulosPreguntas(sessionData.tipo_Evaluacion_Id).subscribe(data =>{
+      console.log(data);
+      //this.modulosPreguntas = data;
+      //Se filtra los modulos segun el tipo de evaluacion del login
+      this.modulosPreguntas = data.filter
+      (
+        modulo => modulo.tipo_Evaluacion_Id === sessionData.tipo_Evaluacion_Id
+      );
+      console.log(this.modulosPreguntas);
+      
+    });
+
   }
 
   generarCalificacionesPreguntas() {
@@ -102,51 +101,90 @@ export class EvaluacionColaboradorComponent implements OnInit {
     }
   }
 
-  guardarEvaluacion()
+  
+
+  async guardarEvaluacion(estado: string)
   {
-    //const id_Modulo_Evaluacion = this.moduloEvaluacionForm.get('id_Modulo_Evaluacion')?.value;
     const id_Colaborador = this.evaluacionForm.get('id_Colaborador')?.value;
     const id_Usuario = this.usuarioForm.get('id_Usuario')?.value;
-
-
-    // const moduloData = this.moduloEvaluacionForm.value;
-    // const evaluacionData = this.evaluacionForm.value;
-
+    const estadoEvaluacion = estado;
+    
     const formData: any = {
       colaborador_id: id_Colaborador,
       usuario_id: id_Usuario,
-      calificacionFinal: this.calificacionPregunta.calificacionFinal
+      estado: estadoEvaluacion
     };
-
 
     for (let i = 1; i <= this.preguntaCount; i++) {
       const key = `clfc_Pregunta${i}`;
       formData[key] = this.calificacionPregunta[key];
     }
 
-    this.api.postEvaluacion(formData).subscribe(
-      next => {
-        console.log('Evaluacion registrada exitosamente');
-      },
-      error => {
+    if (estado == "Borrador") {
+
+      try {
+        const result = await Swal.fire({
+          title: '¿Está seguro de guardar la evaluación como borrador?, Podra continuar evaluandola más adelante',
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'Guardar como borrador',
+          denyButtonText: `No guardar`,
+        });
+  
+        if (result.isConfirmed) {
+          // Llamada al servicio y registro de datos solo si el usuario confirma
+          const next = await firstValueFrom(this.api.postEvaluacion(formData));
+          await Swal.fire('Ok', 'Evaluación guardada como borrador', 'success');
+          console.log('Evaluacion registrada exitosamente', next);
+          this.router.navigate(['evaluacion']);
+        } else if (result.isDenied) {
+          Swal.fire('Cancelado', '', 'info');
+        }
+        
+      } catch (error) {
         console.error('Error al registrar Evaluacion', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Ha ocurrido un error inesperado, por favor comuníquese con el adminitrador o sistemas',
+        });
       }
-      
-    );
+    }
+    else{
+      try {
+        const result = await Swal.fire({
+          title: '¿Está seguro de guardar la evaluación definitavemente?',
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'Guardar evaluación',
+          denyButtonText: `No guardar`,
+        });
+  
+        if (result.isConfirmed) {
+          // Llamada al servicio y registro de datos solo si el usuario confirma
+          const next = await firstValueFrom(this.api.postEvaluacion(formData));
+          console.log('Evaluacion registrada exitosamente', next);
+          await Swal.fire('Ok', 'Evaluacion guardada correctamente', 'success');   
+          this.router.navigate(['evaluacion']);
+          
+        } else if (result.isDenied) {
+          Swal.fire('Cancelado', '', 'info');
+        }
+        
+      } catch (error) {
+        console.error('Error al registrar Evaluacion', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Ha ocurrido un error inesperado, por favor comuníquese con el adminitrador o sistemas',
+        });
+      }
+    }
 
     console.log(formData);
   }
 
-  // formatNumber(input: HTMLInputElement | null) {
-  //   if (input) {
-  //     // Eliminar cualquier caracter que no sea un dígito
-  //     let number = input.value.replace(/[^0-9]/g, '');
-    
-  //     // Dividir los dos primeros dígitos por un punto y mantener los dos decimales
-  //     let formattedNumber = number.substr(0, 2) + '.' + number.substr(2, 2);
-    
-  //     // Asignar el número formateado de vuelta al campo de entrada
-  //     input.value = formattedNumber;
-  //   }
-  // }
+  onUserActivity(): void {
+    this.inactivityService.resetInactivityTimer();
+  }
 }

@@ -5,6 +5,7 @@ export interface INavbarData
     routeLink: string;
     icon?: string;
     label: string;
+    rol?: any
     expanded?: boolean;
     items?: INavbarData[];
 }

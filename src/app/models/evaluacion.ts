@@ -4,6 +4,7 @@ export interface ListaEvaluacionesInterface
     usuario_id: number;
     colaborador_id: number;
     calificacionFinal?: number;
+    estado?: string;
     clfc_Pregunta1?: number;
     clfc_Pregunta2?: number;
     clfc_Pregunta3?: number;
