@@ -10,6 +10,10 @@ import { ListaTipoEvaluacionInterface } from '../models/tipoEvaluacion';
 import { ListaPreguntasByEvaluacionInterface } from '../models/preguntasByEvaluacion';
 import { LoginAuthInterface } from '../models/loginAuth';
 import { ListaModuloPreguntasInterface } from '../models/moduloPreguntas';
+import { ListaObservacionesInterface } from '../models/observaciones';
+import { ListaRolesInterface } from '../models/roles';
+import { ListaPreguntaModuloCargo } from '../models/preguntaModuloCargo';
+import { ListaCargosInterface } from '../models/cargos';
 
 
 @Injectable({
@@ -51,6 +55,13 @@ export class ApiService {
         console.warn (urlPostColaborador);
         return this.http.post<ResponseInit>(urlPostColaborador, formData);
     }
+
+    deleteColaborador(id_Colaborador: number):Observable<any>
+    {
+        let urlDeleteColaborador: string = 'https://localhost:7091/api/colaborador/' + id_Colaborador;
+        return this.http.delete<any>(urlDeleteColaborador);
+
+    }
       
     getAllUsuarios():Observable<ListaUsuariosInterface[]>
     {
@@ -79,6 +90,13 @@ export class ApiService {
         return this.http.put<ResponseInit>(urlUpdateUsuario, form);
     }
 
+    deleteUser(id_Usuario: number):Observable<any>
+    {
+        let urlDeleteUsuario: string = 'https://localhost:7091/api/usuarios/' + id_Usuario;
+        return this.http.delete<any>(urlDeleteUsuario);
+
+    }
+
     getAllEvaluacion():Observable<ListaEvaluacionesInterface[]>
     {
         let urlEvaluacion: string = 'https://localhost:7091/api/evaluacion';
@@ -98,18 +116,25 @@ export class ApiService {
         return this.http.get<ListaEvaluacionesInterface[]>(urlSingleEvaluacion);
     }
 
-    postEvaluacion(form:ListaEvaluacionesInterface):Observable<ResponseInit>
+    postEvaluacion(form:any):Observable<ResponseInit>
     {
         let urlPostEvaluacion: string = 'https://localhost:7091/api/evaluacion'
         console.warn (urlPostEvaluacion);
         return this.http.post<ResponseInit>(urlPostEvaluacion, form);
     }
 
-    updateEvaluacion(formEvaluacion:any):Observable<any>
+    updateEvaluacion(dataFinal:any):Observable<any>
     {
-        let urlUpdateEvaluacion: string = 'https://localhost:7091/api/evaluacion/' + formEvaluacion.id_Evaluacion;
+        let urlUpdateEvaluacion: string = 'https://localhost:7091/api/evaluacion/' + dataFinal.evaluacionDtoPut.id_Evaluacion;
         console.warn (urlUpdateEvaluacion);
-        return this.http.put<any>(urlUpdateEvaluacion, formEvaluacion);
+        return this.http.put<any>(urlUpdateEvaluacion, dataFinal);
+    }
+
+    updateEvaluacionEstado(dataEvaluacion:any):Observable<any>
+    {
+        let urlUpdateEvaluacionEstado: string = 'https://localhost:7091/api/evaluacion/evaluacionEstado/' + dataEvaluacion.id_Evaluacion;
+        console.warn (urlUpdateEvaluacionEstado);
+        return this.http.put<any>(urlUpdateEvaluacionEstado, dataEvaluacion);
     }
 
     deleteEvaluacion(id_Evaluacion: number):Observable<any>
@@ -156,5 +181,36 @@ export class ApiService {
         let urlModulosPreguntas: string = 'https://localhost:7091/api/modulo/preguntasModulo/'+ id_tipo_evaluacion_session;
         return this.http.get<ListaModuloPreguntasInterface[]>(urlModulosPreguntas);
     }
+
+    getAllObservaciones():Observable<ListaObservacionesInterface[]>
+    {
+        let urlObservacion: string = 'https://localhost:7091/api/observacion';
+        return this.http.get<ListaObservacionesInterface[]>(urlObservacion); 
+    }
+
+    getObservacionByEvaluacion(id_Evaluacion: number):Observable<ListaObservacionesInterface[]>
+    {
+        let urlObservacionByEvaluacion: string = 'https://localhost:7091/api/observacion/' + id_Evaluacion;
+        return this.http.get<ListaObservacionesInterface[]>(urlObservacionByEvaluacion);
+    }
+
+    getAllRoles():Observable<ListaRolesInterface[]>
+    {
+        let urlRoles: string = 'https://localhost:7091/api/rol';
+        return this.http.get<ListaRolesInterface[]>(urlRoles); 
+    }
+
+    getPreguntaModuloCargo(id_Cargo:number):Observable<any[]>
+    {
+        let urlPreguntaModuloCargo: string = 'https://localhost:7091/api/preguntaModuloCargo/' +  id_Cargo
+        return this.http.get<any[]>(urlPreguntaModuloCargo);
+    }
+
+    getAllCargo():Observable<ListaCargosInterface[]>
+    {
+        let urlCargo: string = 'https://localhost:7091/api/cargos';
+        return this.http.get<ListaCargosInterface[]>(urlCargo); 
+    }
+    
     
 }

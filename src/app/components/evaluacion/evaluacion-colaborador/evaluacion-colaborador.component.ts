@@ -11,6 +11,7 @@ import { InactivitySessionService } from 'src/app/services/InactivitySessionServ
 import { SessionService } from 'src/app/services/SessionService';
 import Swal from 'sweetalert2';
 import { firstValueFrom } from 'rxjs';
+import { ListaPreguntaModuloCargo } from 'src/app/models/preguntaModuloCargo';
 
 @Component({
   selector: 'app-evaluacion-colaborador',
@@ -23,9 +24,10 @@ export class EvaluacionColaboradorComponent implements OnInit {
     private inactivityService: InactivitySessionService  
   ){}
 
-  preguntaCount = 30; //maximo de calificacion segun el numero de preguntas
+  preguntaCount = 52; //maximo de calificacion segun el numero de preguntas
 
   calificacionPregunta:any = {};
+  observacionPregunta:any={};
 
   colaboradores: ListaColaboresInterface;
   preguntasByEvaluacion: ListaPreguntasByEvaluacionInterface[];
@@ -80,17 +82,24 @@ export class EvaluacionColaboradorComponent implements OnInit {
       console.warn(data);
     });
 
-    this.api.getAllModulosPreguntas(sessionData.tipo_Evaluacion_Id).subscribe(data =>{
-      console.log(data);
-      //this.modulosPreguntas = data;
-      //Se filtra los modulos segun el tipo de evaluacion del login
-      this.modulosPreguntas = data.filter
-      (
-        modulo => modulo.tipo_Evaluacion_Id === sessionData.tipo_Evaluacion_Id
-      );
-      console.log(this.modulosPreguntas);
-      
+    this.api.getPreguntaModuloCargo(sessionData.cargo_Id).subscribe(data => {
+      this.modulosPreguntas = data;
     });
+
+    console.log(this.modulosPreguntas);
+
+    // this.api.getAllModulosPreguntas(sessionData.tipo_Evaluacion_Id).subscribe(data =>{
+    //   console.log(data);
+    //   //this.modulosPreguntas = data;
+    //   //Se filtra los modulos segun el tipo de evaluacion del login
+    //   this.modulosPreguntas = data
+    //   // this.modulosPreguntas = data.filter
+    //   // (
+    //   //   modulo => modulo.tipo_Evaluacion_Id === sessionData.tipo_Evaluacion_Id
+    //   // );
+    //   console.log(this.modulosPreguntas);
+      
+    // });
 
   }
 
@@ -98,6 +107,13 @@ export class EvaluacionColaboradorComponent implements OnInit {
     for (let i = 1; i <= this.preguntaCount; i++) {
       const key = `clfc_Pregunta${i}`;
       this.calificacionPregunta[key] = 0;
+    }
+  }
+
+  generarObservacionesPreguntas() {
+    for (let i = 1; i <= this.preguntaCount; i++) {
+      const key = `Observacion${i}`;
+      this.observacionPregunta[key] = 0;
     }
   }
 
@@ -109,16 +125,29 @@ export class EvaluacionColaboradorComponent implements OnInit {
     const id_Usuario = this.usuarioForm.get('id_Usuario')?.value;
     const estadoEvaluacion = estado;
     
-    const formData: any = {
+    const evaluacionDto: any = {
       colaborador_id: id_Colaborador,
       usuario_id: id_Usuario,
       estado: estadoEvaluacion
-    };
+    }
+    
+    const observacionDto: any = {};
 
     for (let i = 1; i <= this.preguntaCount; i++) {
       const key = `clfc_Pregunta${i}`;
-      formData[key] = this.calificacionPregunta[key];
+      evaluacionDto[key] = this.calificacionPregunta[key];
     }
+
+    for (let i = 1; i <= this.preguntaCount; i++) {
+      const key = `observacion${i}`;
+      observacionDto[key] = this.observacionPregunta[key];
+    }
+
+    const formData: any = {
+      evaluacionDto,
+      observacionDto
+      
+    };
 
     if (estado == "Borrador") {
 
@@ -182,6 +211,10 @@ export class EvaluacionColaboradorComponent implements OnInit {
     }
 
     console.log(formData);
+  }
+
+  cancelar(){
+    this.router.navigate(['evaluacion']);
   }
 
   onUserActivity(): void {

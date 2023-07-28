@@ -58,6 +58,10 @@
               <input class="form-control" type="text" [(ngModel)]="calificacionPregunta['clfc_Pregunta' + preguntas.numero_Pregunta]" 
               [id]="'clfc_Pregunta' + preguntas.numero_Pregunta" [name]="'clfc_Pregunta' + preguntas.numero_Pregunta"
               onkeyup="this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');">
+              <label for="">Observaciones:</label>
+              <textarea class="form-control" cols="28" rows="2"
+              [id]="'observacion' + preguntas.numero_Pregunta" [(ngModel)]="observacionPregunta['observacion' + preguntas.numero_Pregunta]" 
+              [name]="'observacion' + preguntas.numero_Pregunta"></textarea>
             </div>
           </div>
           <!-- <input type="text" name="calificacionFinal" [(ngModel)]="calificacionPregunta.calificacionFinal" onkeyup="this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');"> -->
@@ -69,6 +73,6 @@
 
   <button (click)="guardarEvaluacion('Realizada')" type="submit" class="btn btn-primary button">Finalizar evaluación</button>
   <button (click)="guardarEvaluacion('Borrador')" type="submit" class="btn btn-success button">Guardar evaluación en borrador</button>
-  <button  class="btn btn-danger button">Cancelar</button>
+  <button  (click)="cancelar()" class="btn btn-danger button">Cancelar</button>
 
 </form>

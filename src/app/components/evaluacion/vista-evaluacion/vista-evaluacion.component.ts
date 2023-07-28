@@ -25,9 +25,10 @@ export class VistaEvaluacionComponent implements OnInit{
   ){}
 
   datosEvaluacion: any;
-  preguntaCount = 30; //maximo de calificacion segun el numero de preguntas
+  preguntaCount = 52; //maximo de calificacion segun el numero de preguntas
   datosDesdeEvaluacion: any;
   calificacionPregunta:any = {};
+  observacionPregunta:any={};
   rutaListaEvaluacion: Boolean = false;
     
   colaboradores: ListaColaboresInterface;
@@ -88,9 +89,90 @@ export class VistaEvaluacionComponent implements OnInit{
     clfc_Pregunta28: new FormControl(),
     clfc_Pregunta29: new FormControl(),
     clfc_Pregunta30: new FormControl(),
-
+    clfc_Pregunta31: new FormControl(),
+    clfc_Pregunta32: new FormControl(),
+    clfc_Pregunta33: new FormControl(),
+    clfc_Pregunta34: new FormControl(),
+    clfc_Pregunta35: new FormControl(),
+    clfc_Pregunta36: new FormControl(),
+    clfc_Pregunta37: new FormControl(),
+    clfc_Pregunta38: new FormControl(),
+    clfc_Pregunta39: new FormControl(),
+    clfc_Pregunta40: new FormControl(),
+    clfc_Pregunta41: new FormControl(),
+    clfc_Pregunta42: new FormControl(),
+    clfc_Pregunta43: new FormControl(),
+    clfc_Pregunta44: new FormControl(),
+    clfc_Pregunta45: new FormControl(),
+    clfc_Pregunta46: new FormControl(),
+    clfc_Pregunta47: new FormControl(),
+    clfc_Pregunta48: new FormControl(),
+    clfc_Pregunta49: new FormControl(),
+    clfc_Pregunta50: new FormControl(),
+    clfc_Pregunta51: new FormControl(),
+    clfc_Pregunta52: new FormControl(),
+    observacion_id: new FormControl(),
+    observacionModel: new FormControl(),
   });
 
+  observacionSingle = new FormGroup({
+    id_Observacion: new FormControl(),
+    evaluacion_id: new FormControl(),
+    observacion1: new FormControl(),
+    observacion2: new FormControl(),
+    observacion3: new FormControl(),
+    observacion4: new FormControl(),
+    observacion5: new FormControl(),
+    observacion6: new FormControl(),
+    observacion7: new FormControl(),
+    observacion8: new FormControl(),
+    observacion9: new FormControl(),
+    observacion10: new FormControl(),
+    observacion11: new FormControl(),
+    observacion12: new FormControl(),
+    observacion13: new FormControl(),
+    observacion14: new FormControl(),
+    observacion15: new FormControl(),
+    observacion16: new FormControl(),
+    observacion17: new FormControl(),
+    observacion18: new FormControl(),
+    observacion19: new FormControl(),
+    observacion20: new FormControl(),
+    observacion21: new FormControl(),
+    observacion22: new FormControl(),
+    observacion23: new FormControl(),
+    observacion24: new FormControl(),
+    observacion25: new FormControl(),
+    observacion26: new FormControl(),
+    observacion27: new FormControl(),
+    observacion28: new FormControl(),
+    observacion29: new FormControl(),
+    observacion30: new FormControl(),
+    observacion31: new FormControl(),
+    observacion32: new FormControl(),
+    observacion33: new FormControl(),
+    observacion34: new FormControl(),
+    observacion35: new FormControl(),
+    observacion36: new FormControl(),
+    observacion37: new FormControl(),
+    observacion38: new FormControl(),
+    observacion39: new FormControl(),
+    observacion40: new FormControl(),
+    observacion41: new FormControl(),
+    observacion42: new FormControl(),
+    observacion43: new FormControl(),
+    observacion44: new FormControl(),
+    observacion45: new FormControl(),
+    observacion46: new FormControl(),
+    observacion47: new FormControl(),
+    observacion48: new FormControl(),
+    observacion49: new FormControl(),
+    observacion50: new FormControl(),
+    observacion51: new FormControl(),
+    observacion52: new FormControl(),
+    fecha_Creacion: new FormControl(),
+    evaluacionModel: new FormControl()
+  });
 
   ngOnInit(): void {
     this.datosEvaluacion = history.state.datos;
@@ -121,6 +203,9 @@ export class VistaEvaluacionComponent implements OnInit{
     }); 
     console.log("Datos de la Evaluacion",this.datosEvaluacion);
     this.evaluacionSingle.setValue(this.datosEvaluacion.state.evaluaciones[0]);
+    this.observacionSingle.setValue(this.datosEvaluacion.state.observaciones);
+
+    console.log("OBSERVACOPNES", this.observacionSingle);
 
     this.api.getAllPreguntaByEvaluacion().subscribe(data =>{
       console.log(data);
@@ -137,16 +222,9 @@ export class VistaEvaluacionComponent implements OnInit{
       console.warn(data);
     });
 
-    this.api.getAllModulosPreguntas(sessionData.tipo_Evaluacion_Id).subscribe(data =>{
-      console.log(data);
-      //this.modulosPreguntas = data;
-      //Se filtra los modulos segun el tipo de evaluacion del login
-      this.modulosPreguntas = data.filter
-      (
-        modulo => modulo.tipo_Evaluacion_Id === sessionData.tipo_Evaluacion_Id
-      );
-      console.log(this.modulosPreguntas);
-      
+    this.api.getPreguntaModuloCargo(sessionData.cargo_Id).subscribe(data => {
+      this.modulosPreguntas = data
+      console.log("AAAA",this.modulosPreguntas)
     });
 
   }
@@ -159,22 +237,42 @@ export class VistaEvaluacionComponent implements OnInit{
     }
   }
 
+  generarObservacionesPreguntas() {
+    for (let i = 1; i <= this.preguntaCount; i++) {
+      const key = `Observacion${i}`;
+      this.observacionPregunta[key] = 0;
+    }
+  }
+
   async guardarEvaluacion()
   {
     const id_Colaborador = this.evaluacionForm.get('id_Colaborador')?.value;
     const id_Usuario = this.usuarioForm.get('id_Usuario')?.value;
     const estado = "Realizada";
     
-    const formData: any = {
+    const evaluacionDto: any = {
       colaborador_id: id_Colaborador,
       usuario_id: id_Usuario,
       estado: estado
-    };
+    }
+
+    const observacionDto: any = {};
 
     for (let i = 1; i <= this.preguntaCount; i++) {
       const key = `clfc_Pregunta${i}`;
-      formData[key] = this.calificacionPregunta[key];
+      evaluacionDto[key] = this.calificacionPregunta[key];
     }
+    
+    for (let i = 1; i <= this.preguntaCount; i++) {
+      const key = `observacion${i}`;
+      observacionDto[key] = this.observacionPregunta[key];
+    }
+
+    const formData: any = {
+      evaluacionDto,
+      observacionDto
+      
+    };
 
     try {
       const result = await Swal.fire({
@@ -208,57 +306,87 @@ export class VistaEvaluacionComponent implements OnInit{
     console.log(formData);
   }
 
-  async actualizarEvaluacion(){
-    let estadoEvaluacion = "Borrador";
-    let id_Evaluacion = this.datosEvaluacion.state.evaluaciones[0].id_Evaluacion;
-    let usuarioId = this.datosEvaluacion.state.evaluaciones[0].usuario_id;
-    let colaborador_id = this.datosEvaluacion.state.evaluaciones[0].colaborador_id;
+  async actualizarEvaluacion(estadoActualizacion: string){
 
-    console.log("id_Evaluacion", id_Evaluacion);
-    console.log("usuarioId", usuarioId);
+    try 
+    {
+      let estadoEvaluacion = estadoActualizacion;
+      let id_Evaluacion = this.datosEvaluacion.state.evaluaciones[0].id_Evaluacion;
+      let usuarioId = this.datosEvaluacion.state.evaluaciones[0].usuario_id;
+      let colaborador_id = this.datosEvaluacion.state.evaluaciones[0].colaborador_id;
 
-    // Obtener los valores del formulario reactivo evaluacionSingle
-    const dataEvaluacion = this.evaluacionSingle.value;
+      console.log("id_Evaluacion", id_Evaluacion);
+      console.log("usuarioId", usuarioId);
 
-    // Agregar los campos adicionales necesarios
-    dataEvaluacion.estado = estadoEvaluacion;
-    dataEvaluacion.id_Evaluacion = id_Evaluacion;
-    dataEvaluacion.usuario_id = usuarioId;
-    dataEvaluacion.colaborador_id = colaborador_id;
+      // Obtener los valores del formulario reactivo evaluacionSingle
+      const dataEvaluacion = this.evaluacionSingle.value;
+      const dataObservacion = this.observacionSingle.value;
+      console.log("dataEvaluacion",dataEvaluacion);
+      console.log("dataObservacion",dataObservacion);
 
-    // this.api.updateEvaluacion(dataEvaluacion).subscribe(
-    //   next => {
-    //     console.log('Evaluacion registrada exitosamente', next);
-    //   },
-    //   error => {
-    //     console.error('Error al registrar Evaluacion', error);
-    //   }
+
+      // Agregar los campos adicionales necesarios
+      dataEvaluacion.estado = estadoEvaluacion;
+      dataEvaluacion.id_Evaluacion = id_Evaluacion;
+      dataEvaluacion.usuario_id = usuarioId;
+      dataEvaluacion.colaborador_id = colaborador_id;
+
+      const dataFinal: any = 
+      {
+        evaluacionDtoPut: dataEvaluacion,
+        observacionDtoPut: dataObservacion
+
+      } 
       
-    // );
+      console.log("IDDDDD", dataFinal.evaluacionDtoPut.id_Evaluacion);
+      console.log("dataFinal", dataFinal);
 
-
-
-    try {
-      const result = await Swal.fire({
-        title: '¿Está seguro de guardar la evaluación como borrador? Podrá continuar evaluandola más adelante',
-        showDenyButton: true,
-        showCancelButton: true,
-        confirmButtonText: 'Guardar como borrador',
-        denyButtonText: `No guardar`,
-      });
-
-      if (result.isConfirmed) {
-        // Llamada al servicio y registro de datos solo si el usuario confirma
-        const next = await firstValueFrom(this.api.updateEvaluacion(dataEvaluacion));
-        await Swal.fire('Ok', 'Evaluación guardada como borrador', 'success');
-        console.log('Evaluacion registrada exitosamente', next);
-        this.router.navigate(['evaluacion']);
-      } else if (result.isDenied) {
-        Swal.fire('Cancelado', '', 'info');
+    
+      if (estadoEvaluacion == "Borrador") {
+       
+        const result = await Swal.fire({
+          title: '¿Está seguro de guardar la evaluación como borrador?, Podra continuar evaluandola más adelante',
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'Guardar como borrador',
+          denyButtonText: `No guardar`,
+        });
+  
+        if (result.isConfirmed) {
+          // Llamada al servicio y registro de datos solo si el usuario confirma
+          const next = await firstValueFrom(this.api.updateEvaluacion(dataFinal));
+          await Swal.fire('Ok', 'Evaluación guardada como borrador', 'success');
+          console.log('Evaluacion registrada exitosamente', next);
+          this.router.navigate(['evaluacion']);
+        } else if (result.isDenied) {
+          Swal.fire('Cancelado', '', 'info');
+        }
+        
+      }
+      else{
+        const result = await Swal.fire({
+          title: '¿Está seguro de guardar la evaluación definitavemente?',
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'Guardar evaluación',
+          denyButtonText: `No guardar`,
+        });
+  
+        if (result.isConfirmed) {
+          // Llamada al servicio y registro de datos solo si el usuario confirma
+          const next = await firstValueFrom(this.api.updateEvaluacion(dataFinal));
+          console.log('Evaluacion registrada exitosamente', next);
+          await Swal.fire('Ok', 'Evaluacion guardada correctamente', 'success');   
+          this.router.navigate(['evaluacion']);
+          
+        } else if (result.isDenied) {
+          Swal.fire('Cancelado', '', 'info');
+        }
+          
       }
       
     } catch (error) {
-      console.error('Error al registrar Evaluacion', error);
+      console.error('Error al actualizar la Evaluacion', error);
       Swal.fire({
         icon: 'error',
         title: 'Error',

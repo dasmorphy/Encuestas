@@ -19,17 +19,17 @@ export const navbarData: INavbarData[] =
                 routeLink: 'gestion-evaluaciones/lista-evaluaciones',
                 label: 'Lista de Evaluaciones',
                 rol: 1
-            },
-            {
-                routeLink: 'gestion-evaluaciones/nueva-evaluacion',
-                label: 'Nuevo formato de evaluación',
-                rol: 1
-            },
-            {
-                routeLink: 'gestion-evaluaciones/editar-evaluacion',
-                label: 'Editar formato de evaluación',
-                rol: 1
             }
+            // {
+            //     routeLink: 'gestion-evaluaciones/nueva-evaluacion',
+            //     label: 'Nuevo formato de evaluación',
+            //     rol: 1
+            // },
+            // {
+            //     routeLink: 'gestion-evaluaciones/editar-evaluacion',
+            //     label: 'Editar formato de evaluación',
+            //     rol: 1
+            // }
         ]
     },
     {
@@ -48,7 +48,7 @@ export const navbarData: INavbarData[] =
         routeLink: 'gestion-usuarios',
         icon: 'fa-solid fa-user-group',
         label: 'Gestión de Usuarios',
-        rol: 1,
+        rol: null,
         items:
         [
             {

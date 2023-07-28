@@ -1,17 +1,108 @@
 use [WebAppProject];
 DELETE FROM Evaluacion;
-
+select * from [dbo].[Cargos]
 select * from [dbo].[Usuarios];
 select * from [dbo].[Colaborador];
 select * from [dbo].[Roles];
 
 select * from [dbo].[Evaluacion];
+select * from ObservacionEvaluacion;
 select * from [dbo].[PreguntasByEvaluacion];
 select * from [dbo].[ModuloEvaluacion];
 select * from [dbo].[Tipo_Evaluacion];
-select * from [dbo].[PreguntasEvaluacion];
+select * from [dbo].[PreguntasModuloCargo];
+select * from [dbo].[Cargos]
 
-select * from [dbo].[PreguntasByEvaluacion] where Tipo_Evaluacion_Id = 2 and Modulo_Id = 4;
+
+insert into [dbo].[PreguntasModuloCargo] (Modulo_Id, Cargo_Id, Tipo_Evaluacion_Id)
+values
+(
+1012,8,3
+)
+
+
+insert into [dbo].[PreguntasModuloCargo] (Modulo_Id, Cargo_Id, Tipo_Evaluacion_Id)
+values
+(
+1011,8,3
+);
+
+
+insert into [dbo].[PreguntasModuloCargo] (Modulo_Id, Cargo_Id, Tipo_Evaluacion_Id)
+values
+(
+1013,8,3
+);
+
+
+insert into [dbo].[PreguntasModuloCargo] (Modulo_Id, Cargo_Id, Tipo_Evaluacion_Id)
+values
+(
+1014,8,4
+);
+
+
+insert into [dbo].[PreguntasModuloCargo] (Modulo_Id, Cargo_Id, Tipo_Evaluacion_Id)
+values
+(
+1009,8,3
+);
+
+insert into [dbo].[PreguntasModuloCargo] (Modulo_Id, Cargo_Id, Tipo_Evaluacion_Id)
+values
+(
+1007,8,4
+);
+
+insert into [dbo].[PreguntasModuloCargo] (Modulo_Id, Cargo_Id, Tipo_Evaluacion_Id)
+values
+(
+1008,8,3
+);
+
+
+insert into [dbo].[PreguntasModuloCargo] (Modulo_Id, Cargo_Id, Tipo_Evaluacion_Id)
+values
+(
+1010,8,2
+);
+
+insert into [dbo].[PreguntasModuloCargo] (Modulo_Id, Cargo_Id, Tipo_Evaluacion_Id)
+values
+(
+1008,8,3
+);
+
+--delete from Usuarios where Id_Usuario in (1025,1026)
+
+select * from [dbo].[PreguntasByEvaluacion] where Modulo_Id = 5 and Tipo_Evaluacion_Id = 2;
+
+insert into Usuarios (Identificacion, Usuario, Password,Fecha_Creacion, Tipo_Evaluacion_Id, Rol_Id, RolesModelId_Rol, Cargo_Id, [CargosModelId_Cargo])
+values ('0931694848', 'Auxiliar', '12345', GETDATE(), 2, 1, 1,8,8)
+
+
+update Usuarios  set Tipo_Evaluacion_Id = 3 where Id_Usuario = 1022
+
+UPDATE Tipo_Evaluacion set Nombre_Tipo = 'Basico' where Id_Tipo_Evaluacion =4;
+
+update PreguntasByEvaluacion set Tipo_Evaluacion_Id =2
+where Id_Preguntas_Tipo = 65
+
+
+delete from Usuarios
+
+--delete from Tipo_Evaluacion where Id_Tipo_Evaluacion in (5,6,7,8,9)
+
+insert into Tipo_Evaluacion (Nombre_Tipo, Fecha_Creacion) values ('AUX/ASIST', GETDATE())
+
+update evaluacion set Estado = 'Borrador' where Id_Evaluacion = 2092;
+
+UPDATE ModuloEvaluacion set Nombre_Modulo = 'Desarrollo estratégico del Talento Humano', Definicion = 'Es la capacidad para dirigir, analizar y evaluar el desempeño actual y potencial de los colaboradores y definir e implementar acciones de desarrollo para las personas y equipos en el marco de las estrategias de la organización, adoptando un rol de facilitador y guía' where Id_Modulo_Evaluacion = 5;
+
+insert into ModuloEvaluacion (Nombre_Modulo, Definicion, Fecha_Creacion, TipoEvaluacionModelId_Tipo_Evaluacion, Tipo_Evaluacion_Id)
+values('Diversidad e Inclusión', 'Es incluir las diferencias tanto de género como de grupos étnicos, razas, culturas, tradiciones, lenguajes, gustos, preferencias, religión y discapacidad, entre otras características. Valorar la diversidad en el trabajo significa reconocer la dignidad de todos los colaboradores, apreciando las cualidades que les hacen únicos.',
+GETDATE(),2,2)
+
 
 UPDATE Colaborador set Estado = 'Evaluado' where Id_Colaborador in (2037)
 update Usuarios set Identificacion = '0931694848' where Id_Usuario = 1021;
@@ -96,8 +187,18 @@ INSERT INTO  [dbo].[PreguntasByEvaluacion] (Modulo_Id, Pregunta ,Fecha_Creacion,
 VALUES (5,'Pregunta 28', GETDATE(),4,28,3);
 INSERT INTO  [dbo].[PreguntasByEvaluacion] (Modulo_Id, Pregunta ,Fecha_Creacion, ModuloEvaluacionModelId_Modulo_Evaluacion, Numero_Pregunta, Tipo_Evaluacion_Id)
 VALUES (5,'Pregunta 29', GETDATE(),4,29,3);
+
+
 INSERT INTO  [dbo].[PreguntasByEvaluacion] (Modulo_Id, Pregunta ,Fecha_Creacion, ModuloEvaluacionModelId_Modulo_Evaluacion, Numero_Pregunta, Tipo_Evaluacion_Id)
-VALUES (5,'Pregunta 30', GETDATE(),4,30,3);
+VALUES (
+1014,
+'Trabaja en equipo y respeta las diferencias que existen entre los miembros,  fomenta la importancia que tiene pertenecer a un equipo diverso. Procura que el ambiente de trabajo esté orientado hacia el respeto, aprendizaje mutuo y el crecimiento.',
+GETDATE(),
+1014,
+52,
+4);
+
+
 
 DELETE FROM Colaborador;
 

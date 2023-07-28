@@ -68,7 +68,7 @@ export class NuevaEvaluacionComponent implements OnInit {
   }
 
   AddQuestion(){
-    if (this.preguntaCount <= 30) {
+    if (this.preguntaCount <= 52) {
       const nuevaPregunta: any = document.getElementById('preguntas');
       let input = document.createElement("input");
       input.setAttribute("class", "form-control");

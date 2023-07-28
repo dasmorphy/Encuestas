@@ -8,7 +8,7 @@
         <table class="table table-hover">
             <thead class="thead-dark">
                 <tr>
-                    <th scope="col">ID</th>
+                    <!-- <th scope="col">ID</th> -->
                     <th scope="col">Usuario</th>
                     <th scope="col">Identificacion</th>
                     <th scope="col">Acciones</th>
@@ -18,12 +18,17 @@
             <tbody>
                 <tr *ngFor="let usuario of usuarios">
                     <input type="hidden" value="{{usuario.id_Usuario}}">
-                    <td >{{usuario.id_Usuario}}</td>
+                    <td hidden>{{usuario.id_Usuario}}</td>
                     <td>{{usuario.usuario}}</td>
                     <td>{{usuario.identificacion}}</td>
                     <td>
-                        <button class="btn btn-dark" (click) = "editarUsuario(usuario.id_Usuario)">Editar</button>
-                        <button class="btn btn-dark">Cambiar Contraseña</button>
+                        <button class="btn btn-warning" (click) = "editarUsuario(usuario.id_Usuario)">Editar</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-success" (click)="cambioPass(usuario.id_Usuario)">Cambiar Contraseña</button>                        
+                    </td>
+                    <td>
+                        <button class="btn btn-danger" (click)="eliminarUsuario(usuario.id_Usuario)">Eliminar Usuario</button>                        
                     </td>
 
 

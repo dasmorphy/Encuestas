@@ -4,7 +4,8 @@ import { Router } from "@angular/router";
 import { ListaColaboresInterface } from "../../models/colaboradores";
 import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
 import { SessionService } from 'src/app/services/SessionService';
-
+import Swal from 'sweetalert2';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-colaboradores',
@@ -31,6 +32,23 @@ export class ColaboradoresComponent implements OnInit {
       console.log(data);
       this.colaboradores = data;
     })
+  }
+
+  async eliminarColaborador(id_Colaborador: number){
+    const result = await Swal.fire({
+      title: '¿Está seguro de continuar?',
+      text: "Se eliminará el colaborador definitivamente",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, eliminar'
+    });
+    
+    if (result.isConfirmed) {
+      const next = await firstValueFrom(this.api.deleteColaborador(id_Colaborador));
+      await Swal.fire('Eliminado', 'Colaborador eliminado', 'success');
+    }
   }
 
   onUserActivity(): void {

@@ -6,6 +6,7 @@ import { InactivitySessionService } from 'src/app/services/InactivitySessionServ
 import { SessionService } from 'src/app/services/SessionService';
 import { ListaEvaluacionesInterface } from 'src/app/models/evaluacion';
 import Swal from 'sweetalert2';
+import { ListaObservacionesInterface } from 'src/app/models/observaciones';
 
 @Component({
   selector: 'app-evaluacion',
@@ -13,10 +14,12 @@ import Swal from 'sweetalert2';
   styleUrls: ['./evaluacion.component.css']
 })
 export class EvaluacionComponent implements OnInit {
-  preguntaCount = 30; //maximo de calificacion segun el numero de preguntas
+  preguntaCount = 52; //maximo de calificacion segun el numero de preguntas
   sessionData = this.sessionService.getSession();
   colaboradores: ListaColaboresInterface[];
   evaluaciones: ListaEvaluacionesInterface[];
+  observaciones: ListaObservacionesInterface[];
+
   desactivarBoton: boolean = false;
   constructor(private api:ApiService, private router: Router,
     private sessionService: SessionService, 
@@ -50,19 +53,28 @@ export class EvaluacionComponent implements OnInit {
         this.evaluaciones = data;
         console.log(data);
 
-        const datosParaVista = {
-          evaluaciones: data
-          // Agrega otros datos si lo necesitas
-        };
-        console.log("datosParaVista", datosParaVista)
-        // Preparar los extras de navegación con el objeto de datos
-        const navigationExtras: NavigationExtras = {
-          state: datosParaVista
-        };
-        console.log("navigationExtras", navigationExtras)
-        this.router.navigate(['vistaEvaluacion', id_Colaborador, usuarioId], {state: {datos: navigationExtras}});
+        const id_Evaluacion = this.evaluaciones[0].id_Evaluacion;
 
-
+        this.api.getObservacionByEvaluacion(id_Evaluacion).subscribe((dataObservacion: any) => {
+          this.observaciones = dataObservacion;
+          console.log("observaciones", this.observaciones);
+    
+          const datosParaVista = {
+            evaluaciones: data,
+            observaciones: this.observaciones
+          };
+    
+          console.log("datosParaVista", datosParaVista);
+    
+          // Preparar los extras de navegación con el objeto de datos
+          const navigationExtras: NavigationExtras = {
+            state: datosParaVista
+          };
+          
+          console.log("navigationExtras", navigationExtras);
+    
+          this.router.navigate(['vistaEvaluacion', id_Colaborador, usuarioId], {state: {datos: navigationExtras}});
+        });
       },
       error => {
         console.error('Evaluacion no encontrada', error);

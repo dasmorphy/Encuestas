@@ -29,15 +29,15 @@
                         <td>{{evaluacion.estado}}</td>
 
                         <!-- <button class="btn btn-dark" (click) = "editarUsuario(usuario.id_Usuario)">Editar</button> -->
-                        <td><button (click)="visualizarEvaluacion(evaluacion.colaborador_id, evaluacion.usuario_id)" class="btn btn-primary">Visualizar</button></td>
+                        <td><button (click)="visualizarEvaluacion(evaluacion.colaborador_id, evaluacion.usuario_id, evaluacion.id_Evaluacion)" class="btn btn-primary">Visualizar</button></td>
 
                         <td *ngIf="evaluacion.estado === 'Borrador'">
                             <button [disabled]="BotonDesactivado(evaluacion)" 
-                            class="btn btn-dark">Reversar</button>
+                            class="btn btn-success">Reversar</button>
                         </td>
                         <td *ngIf="evaluacion.estado !== 'Borrador'">
                             <button (click)="reversarEvaluacion(evaluacion.colaborador_id, evaluacion.id_Evaluacion)" 
-                            class="btn btn-dark">Reversar</button>
+                            class="btn btn-success">Reversar</button>
                         </td>
 
                         <td><button (click)="imprimirPdf(evaluacion.colaborador_id, evaluacion.usuario_id)" class="btn btn-dark">Imprimir</button></td>

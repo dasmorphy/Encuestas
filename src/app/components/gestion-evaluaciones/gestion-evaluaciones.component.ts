@@ -12,6 +12,7 @@ import * as pdfFonts from "pdfmake/build/vfs_fonts";
 import { ListaModuloPreguntasInterface } from 'src/app/models/moduloPreguntas';
 import Swal from 'sweetalert2';
 import { firstValueFrom } from 'rxjs';
+import { ListaObservacionesInterface } from 'src/app/models/observaciones';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class GestionEvaluacionesComponent implements OnInit{
   evaluacionesData: ListaEvaluacionesInterface[];
   colaborador: ListaColaboresInterface;
   evaluaciones: ListaEvaluacionesInterface[];
+  observaciones: ListaObservacionesInterface[];
   nombreEvaluador: string;
   cargoEvaluador: string;
   nombreEvaluado: string;
@@ -39,9 +41,9 @@ export class GestionEvaluacionesComponent implements OnInit{
     const sessionData = this.sessionService.getSession();
     this.inactivityService.initInactivityTimer();
     
-    if (sessionData == null){
-      this.router.navigate(['login']);
-    }
+    // if (sessionData == null){
+    //   this.router.navigate(['login']);
+    // }
 
     this.api.getAllEvaluacionByUsuario(sessionData.id_Usuario).subscribe(data =>{
       console.log(data)
@@ -49,7 +51,7 @@ export class GestionEvaluacionesComponent implements OnInit{
     })
   }
 
-  reversarEvaluacion(id_Colaborador: number, id_Evaluacion: number): void {
+  async reversarEvaluacion(id_Colaborador: number, id_Evaluacion: number) {
     let estadoColaborador = "Borrador";
     let estadoEvaluacion = "Borrador";
     const dataColaborador = {
@@ -62,35 +64,56 @@ export class GestionEvaluacionesComponent implements OnInit{
       estado: estadoEvaluacion
     }
 
-    this.api.updateColaborador(dataColaborador).subscribe(data => {});
-    this.api.updateEvaluacion(dataEvaluacion).subscribe(data => {
-      console.log("data",data);
+    const result = await Swal.fire({
+      title: '¿Está seguro de continuar?',
+      text: "Se reversará la evaluación",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, reversar'
     });
+    
+    if (result.isConfirmed) {
+      const colaborador = await firstValueFrom(this.api.updateColaborador(dataColaborador));
+      const evaluacion = await firstValueFrom(this.api.updateEvaluacionEstado(dataEvaluacion));
+      await Swal.fire('Reversada', 'Evaluación reversada', 'success');
+    }
   }
 
   BotonDesactivado(colaborador: any): boolean {
     return colaborador.estado === 'Borrador';
   }
 
-  visualizarEvaluacion(id_Colaborador: number, usuarioId: number){
-    this.api.getSingleEvaluacion(id_Colaborador, usuarioId).subscribe(data =>{ 
+  visualizarEvaluacion(id_Colaborador: number, usuarioId: number, id_Evaluacion: number){
+    this.api.getSingleEvaluacion(id_Colaborador, usuarioId).subscribe(data => { 
       this.evaluaciones = data;
       console.log(data);
-
-      const datosParaVista = {
-        evaluaciones: data,
-        rutaListaEvaluacion: true
-      };
-      console.log("datosParaVista", datosParaVista)
-      // Preparar los extras de navegación con el objeto de datos
-      const navigationExtras: NavigationExtras = {
-        state: datosParaVista
-      };
-      console.log("navigationExtras", navigationExtras)
-      this.router.navigate(['vistaEvaluacion', id_Colaborador, usuarioId], {state: {datos: navigationExtras}});
-
-    })
+  
+      this.api.getObservacionByEvaluacion(id_Evaluacion).subscribe((dataObservacion: any) => {
+        this.observaciones = dataObservacion;
+        console.log("observaciones", this.observaciones);
+  
+        const datosParaVista = {
+          evaluaciones: data,
+          rutaListaEvaluacion: true,
+          observaciones: this.observaciones
+        };
+  
+        console.log("datosParaVista", datosParaVista);
+  
+        // Preparar los extras de navegación con el objeto de datos
+        const navigationExtras: NavigationExtras = {
+          state: datosParaVista
+        };
+        
+        console.log("navigationExtras", navigationExtras);
+  
+        this.router.navigate(['vistaEvaluacion', id_Colaborador, usuarioId], {state: {datos: navigationExtras}});
+      });
+    });
   }
+  
 
   async eliminarEvaluacion(id_Evaluacion: number){
     const result = await Swal.fire({
@@ -120,13 +143,15 @@ export class GestionEvaluacionesComponent implements OnInit{
     });
   }
 
-  async getModulosPreguntasByTipoEvaluacion(tipo_Evaluacion_Id: number): Promise<void> {
+  async getModulosPreguntasByCargo(cargo_Id: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.api.getAllModulosPreguntas(tipo_Evaluacion_Id).subscribe(data =>{
-        this.modulosPreguntas = data.filter
-        (
-          modulo => modulo.tipo_Evaluacion_Id === tipo_Evaluacion_Id
-        );
+      this.api.getPreguntaModuloCargo(cargo_Id).subscribe(data =>{
+        this.modulosPreguntas = data;
+
+        // this.modulosPreguntas = data.filter
+        // (
+        //   modulo => modulo.tipo_Evaluacion_Id === tipo_Evaluacion_Id
+        // );
         resolve(); // Resuelve la promesa cuando se reciben los datos
       }, error => {
         reject(error); // Rechaza la promesa en caso de error
@@ -140,6 +165,17 @@ export class GestionEvaluacionesComponent implements OnInit{
       console.log(data);
     })
   }
+
+  async getObservacion(id_Evaluacion:number) {
+    this.api.getObservacionByEvaluacion(id_Evaluacion).subscribe((data: any) => {
+      // Si data es un objeto JSON, conviértelo en un arreglo de un solo elemento
+      const dataArray = Array.isArray(data) ? data : [data];
+  
+      this.observaciones = dataArray;
+      console.log("Data Observaciones PDF", this.observaciones);
+    });
+  }
+  
   
   async imprimirPdf(id_Colaborador: number, usuarioId: number){
     PdfMakeWrapper.setFonts(pdfFonts);
@@ -157,7 +193,8 @@ export class GestionEvaluacionesComponent implements OnInit{
     
     await this.getEvaluacion(id_Colaborador, usuarioId);
     await this.obtenerDatosUsuario(usuarioId);
-    await this.getModulosPreguntasByTipoEvaluacion(this.datosUsuario.tipo_Evaluacion_Id);
+    await this.getModulosPreguntasByCargo(this.datosUsuario.cargo_Id);
+    await this.getObservacion(this.evaluaciones[0].id_Evaluacion);
     console.log("this.evaluaciones", this.evaluaciones); 
     console.log("this.datosUsuario", this.datosUsuario); 
     console.log("this.modulosPreguntas", this.modulosPreguntas); 
@@ -214,59 +251,35 @@ export class GestionEvaluacionesComponent implements OnInit{
 
       new Txt('         ').end,
 
-      new Columns([
-        // Primera tabla
-        new Table([
-          [
-            new Txt('Competencias a Evaluar').color('white').alignment('center').fontSize(15).end,
-          ],
-          
-        ]).heights([80]).widths(['*']).layout({
-          paddingTop: () => 50,
-          fillColor: (rowIndex) => (rowIndex === 0 ? '#3f60a8' : '#ffffff'), // Color de fondo de la tabla
-          paddingBottom: () => 0,
-        }).end,
-
-
-
-        // Segunda tabla
-
-
-        new Table([
-          [
-            new Txt('Calificacion').color('white').alignment('center').fontSize(15).end,
-          ],
-        ]).heights([30]).widths(['*']).layout({
-          paddingTop: () => 11,
-          fillColor: (rowIndex) => (rowIndex === 0 ? '#3f60a8' : '#ffffff'), // Color de fondo de la tabla
-          paddingBottom: () => 0,
-        }).end,
-        new Table([
-          [
-            new Txt('Observaciones').color('white').alignment('center').fontSize(15).end,
-          ],
-        ]).heights([30]).widths(['*']).layout({
-          paddingTop: () => 11,
-          fillColor: (rowIndex) => (rowIndex === 0 ? '#3f60a8' : '#ffffff'), // Color de fondo de la tabla
-          paddingBottom: () => 0,
-        }).end,
-      ]).end,
+      new Table([
+        [
+          new Txt('Competencias a Evaluar').color('white').alignment('center').fontSize(15).end,
+          new Txt('Calificacion').color('white').alignment('center').fontSize(15).end,
+          new Txt('Observaciones').color('white').alignment('center').fontSize(15).end,
+  
+        ],
+        
+      ]).heights([40]).widths([220,100,'*']).layout({
+        paddingTop: () => 20,
+        fillColor: (rowIndex) => (rowIndex === 0 ? '#3f60a8' : '#ffffff'), // Color de fondo de la tabla
+        paddingBottom: () => 0,
+      }).end,
 
     ]);
-
+    
     pdf.add(new Txt('         ').end);
     
     for (const modulosPreguntas of this.modulosPreguntas) {
       pdf.add(
         new Table([
           [new Txt(modulosPreguntas.nombre_Modulo).color('white').end],
-        ]).widths(['*', '*', '*']).layout({
+        ]).widths(['*', 50, '*']).layout({
           fillColor: (rowIndex) => (rowIndex === 0 ? '#3f60a8' : '#ffffff'), // Color de fondo de la tabla
         }).end
       );
       // Crear una matriz para almacenar las preguntas y calificaciones
       const tableContent = [];
-    
+      console.log("OBSERVACIONES PRUEBAS",this.observaciones[0]);
       for (const preguntas of modulosPreguntas.preguntasByEvaluacionModel) {
         const row = [];
     
@@ -276,7 +289,17 @@ export class GestionEvaluacionesComponent implements OnInit{
         // Agregar la calificación en la segunda columna
         const key = `clfc_Pregunta${preguntas.numero_Pregunta}`;
         const calificacion = this.evaluaciones[0][key as keyof ListaEvaluacionesInterface];
+
+        // const keyObservacion:string = `observacion${preguntas.numero_Pregunta}`;
+        // const observacion = this.observaciones[0];
+
+        const keyObservacion: string = `observacion${preguntas.numero_Pregunta}`;
+        const observacion = this.observaciones[0][keyObservacion as keyof ListaObservacionesInterface];
+
+
         row.push(calificacion);
+        row.push(observacion);//CAMPO OBSERVACIONES
+
     
         // Agregar la fila completa con pregunta y calificación a la matriz
         tableContent.push(row);
@@ -286,12 +309,13 @@ export class GestionEvaluacionesComponent implements OnInit{
       pdf.add(
         new Table([
           ...tableContent, // Contenido de la tabla con todas las preguntas y calificaciones
-        ]).widths(['*', '*', '*']).layout({
+        ]).widths([220, 100, '*']).layout({
           fillColor: (rowIndex) => (rowIndex === 0 ? '' : '#ffffff'),
         }).end
       );
+      
     }
-    pdf.create().download();
+    pdf.create().download(`Evaluacion ${this.nombreEvaluado}`);
   }
 
   onUserActivity(): void {
