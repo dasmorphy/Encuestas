@@ -20,6 +20,8 @@ export class EvaluacionComponent implements OnInit {
   evaluaciones: ListaEvaluacionesInterface[];
   observaciones: ListaObservacionesInterface[];
 
+  searchTerm: string = ''; // Término de búsqueda
+
   desactivarBoton: boolean = false;
   constructor(private api:ApiService, private router: Router,
     private sessionService: SessionService, 

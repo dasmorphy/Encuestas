@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { ListaColaboresInterface } from '../models/colaboradores'
 import { Observable } from 'rxjs';
 import { ListaUsuariosInterface } from '../models/usuarios';
@@ -13,6 +13,7 @@ import { ListaModuloPreguntasInterface } from '../models/moduloPreguntas';
 import { ListaObservacionesInterface } from '../models/observaciones';
 import { ListaRolesInterface } from '../models/roles';
 import { ListaPreguntaModuloCargo } from '../models/preguntaModuloCargo';
+import { ListaCargosInterface } from '../models/cargos';
 
 
 @Injectable({
@@ -54,6 +55,24 @@ export class ApiService {
         console.warn (urlPostColaborador);
         return this.http.post<ResponseInit>(urlPostColaborador, formData);
     }
+
+    deleteColaborador(id_Colaborador: number):Observable<any>
+    {
+        let urlDeleteColaborador: string = 'https://localhost:7091/api/colaborador/' + id_Colaborador;
+        return this.http.delete<any>(urlDeleteColaborador);
+
+    }
+
+    getExportarColaboradores(estadosSeleccionados: string[]): Observable<any> 
+    {
+        const urlExportar = 'https://localhost:7091/api/colaborador/exportarColaboradores';
+        
+        // Construir los parámetros de la solicitud GET
+        const params = new HttpParams().set('estadosSeleccionados', estadosSeleccionados.join(','));
+    
+        // Realizar la solicitud GET con los parámetros
+        return this.http.get<any>(urlExportar, { params });
+    }
       
     getAllUsuarios():Observable<ListaUsuariosInterface[]>
     {
@@ -80,6 +99,13 @@ export class ApiService {
         let urlUpdateUsuario: string = 'https://localhost:7091/api/usuarios/' + form.id_Usuario;
         console.warn (urlUpdateUsuario);
         return this.http.put<ResponseInit>(urlUpdateUsuario, form);
+    }
+
+    deleteUser(id_Usuario: number):Observable<any>
+    {
+        let urlDeleteUsuario: string = 'https://localhost:7091/api/usuarios/' + id_Usuario;
+        return this.http.delete<any>(urlDeleteUsuario);
+
     }
 
     getAllEvaluacion():Observable<ListaEvaluacionesInterface[]>
@@ -189,6 +215,12 @@ export class ApiService {
     {
         let urlPreguntaModuloCargo: string = 'https://localhost:7091/api/preguntaModuloCargo/' +  id_Cargo
         return this.http.get<any[]>(urlPreguntaModuloCargo);
+    }
+
+    getAllCargo():Observable<ListaCargosInterface[]>
+    {
+        let urlCargo: string = 'https://localhost:7091/api/cargos';
+        return this.http.get<ListaCargosInterface[]>(urlCargo); 
     }
     
     

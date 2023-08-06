@@ -1,15 +1,25 @@
 <h1>Mis Colaboradores</h1>
-<input class="form-control " type="text" placeholder="Buscar">
+<input class="form-control" [(ngModel)]="searchTerm" type="text" placeholder="Buscar">
 
 <div (mousemove)="onUserActivity()" (click)="onUserActivity()">
     <button (click)="agregarColaboradores()" class="btn btn-primary">Agregar Colaboradores</button>
+
+
+    <label for="">Estados:</label>
+        <div *ngFor="let estado of estados; let i = index">
+        
+            <input type="checkbox" [checked]="estadosSeleccionados.includes(estado)" (change)="toggleEstado(i)">
+            {{ estado }}
+        </div>
+        <button class="btn btn-primary" (click)="descargarArchivo()">Exportar Colaboradores</button>
+      
+
     <div class="card">
-        <div class="card-head"></div>
         <div class="card-body">
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th scope="col">ID</th>
+                        <!-- <th scope="col">ID</th> -->
                         <th scope="col">Nombres</th>
                         <th scope="col">Cedula</th>
                         <th scope="col">I. Colaborador</th>
@@ -24,12 +34,13 @@
                         <th scope="col">I. Jefe</th>
                         <th scope="col">Cargo Jefe</th>
                         <th scope="col">Estado</th>
+                        <th scope="col">Acciones</th>
 
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let colaborador of colaboradores">
-                        <th scope="row">{{colaborador.id_Colaborador}}</th>
+                    <tr *ngFor="let colaborador of colaboradores | searchFilter: searchTerm">
+                        <th hidden>{{colaborador.id_Colaborador}}</th>
                         <td>{{colaborador.nombres}}</td>
                         <td>{{colaborador.cedula}}</td>
                         <td>{{colaborador.fe_Ingreso_Colaborador}}</td>
@@ -44,10 +55,15 @@
                         <td>{{colaborador.fe_Ingreso_Jefe}}</td>
                         <td>{{colaborador.cargo_Jefe}}</td>
                         <td>{{colaborador.estado}}</td> 
+                        <td>
+                            <button 
+                            style="width: 5rem;"
+                            class="btn btn-danger" (click)="eliminarColaborador(colaborador.id_Colaborador)">Eliminar</button>
+                        </td> 
+
 
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
-</div>

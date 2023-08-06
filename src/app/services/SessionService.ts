@@ -7,8 +7,7 @@ import { Router } from '@angular/router';
 export class SessionService {
   private sessionData:{
     id_Usuario: number,
-    usuario: string,
-    tipo_Evaluacion_Id: number
+    usuario: string
     cargo_Id: number;
   };
   private isLoggedIn = false;

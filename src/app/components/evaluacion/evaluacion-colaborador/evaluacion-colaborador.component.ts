@@ -33,7 +33,7 @@ export class EvaluacionColaboradorComponent implements OnInit {
   preguntasByEvaluacion: ListaPreguntasByEvaluacionInterface[];
   usuario: ListaUsuariosInterface;
   modulosPreguntas: ListaModuloPreguntasInterface[];
-
+  calificacionInvalida: { [preguntaNumero: number]: boolean } = {};
 
   evaluacionForm = new FormGroup({
     id_Colaborador: new FormControl(),
@@ -84,7 +84,7 @@ export class EvaluacionColaboradorComponent implements OnInit {
     });
 
     this.api.getPreguntaModuloCargo(sessionData.cargo_Id).subscribe(data => {
-      this.modulosPreguntas = data
+      this.modulosPreguntas = data;
     });
 
     console.log(this.modulosPreguntas);
@@ -104,6 +104,19 @@ export class EvaluacionColaboradorComponent implements OnInit {
 
   }
 
+  
+  validarCalificacion(event: any, preguntaNumero: number) {
+    const inputValue = event.target.value;
+    const validValue = parseFloat(inputValue);
+    
+    if (isNaN(validValue) || validValue < 0 || validValue > 5) {
+      this.calificacionInvalida[preguntaNumero] = true;
+    } else {
+      this.calificacionInvalida[preguntaNumero] = false;
+      const key = `clfc_Pregunta${preguntaNumero}`;
+      this.calificacionPregunta[key] = validValue.toString();
+    }
+  }
   generarCalificacionesPreguntas() {
     for (let i = 1; i <= this.preguntaCount; i++) {
       const key = `clfc_Pregunta${i}`;

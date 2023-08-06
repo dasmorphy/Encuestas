@@ -9,6 +9,7 @@ import { InactivitySessionService } from 'src/app/services/InactivitySessionServ
 import { SessionService } from 'src/app/services/SessionService';
 import Swal from 'sweetalert2';
 import { firstValueFrom } from 'rxjs';
+import { ListaCargosInterface } from 'src/app/models/cargos';
 
 @Component({
   selector: 'app-nuevo-usuario',
@@ -17,8 +18,10 @@ import { firstValueFrom } from 'rxjs';
 })
 export class NuevoUsuarioComponent implements OnInit{
 
-  tipoEvaluacion: ListaTipoEvaluacionInterface[];
   roles: ListaRolesInterface[]; 
+  grupos: ListaCargosInterface[];
+  tipos: string[] = ["JEFE", "CLIENTE", "EQUIPO"];
+
 
   constructor (private router: Router, private api:ApiService,
     private sessionService: SessionService, 
@@ -31,8 +34,10 @@ export class NuevoUsuarioComponent implements OnInit{
     usuario: new FormControl(''),
     password: new FormControl(''),
     identificacion: new FormControl(''),
-    tipoEvaluacion: new FormControl(''),
     roles: new FormControl(''),
+    grupos: new FormControl(''),
+    tipos: new FormControl('')
+
   })
 
   ngOnInit(): void {
@@ -42,14 +47,19 @@ export class NuevoUsuarioComponent implements OnInit{
       this.router.navigate(['login']);
     }
 
-    this.api.getAllTipoEvaluacion().subscribe(data =>{
-      console.log(data)
-      this.tipoEvaluacion = data; 
-    })
+    // this.api.getAllTipoEvaluacion().subscribe(data =>{
+    //   console.log(data)
+    //   this.tipoEvaluacion = data; 
+    // })
 
     this.api.getAllRoles().subscribe(data =>{
       console.log(data)
       this.roles = data; 
+    })
+
+    this.api.getAllCargo().subscribe(data =>{
+      console.log(data)
+      this.grupos = data; 
     })
 
     
@@ -62,13 +72,17 @@ export class NuevoUsuarioComponent implements OnInit{
       const identificacion = this.registroForm.get('identificacion')?.value;
       const tipoEvaluacion = this.registroForm.get('tipoEvaluacion')?.value;
       const roles = this.registroForm.get('roles')?.value;
+      const grupos = this.registroForm.get('grupos')?.value;
+      const tipos = this.registroForm.get('tipos')?.value;
 
       const newUser: any = {
         usuario: usuario,
         password: password,
         identificacion: identificacion,
         tipo_Evaluacion_Id: tipoEvaluacion,
-        rol_Id: roles
+        rol_Id: roles,
+        cargo_Id: grupos,
+        grupo: tipos
       };
 
       try

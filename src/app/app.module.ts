@@ -20,6 +20,7 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { EvaluacionModule } from './components/evaluacion/evaluacion.module';
 import { EvaluacionComponent } from './components/evaluacion/utils/evaluacion.component';
 import { NuevoColaboradorComponent } from './components/colaboradores/nuevo-colaborador/nuevo-colaborador.component';
+import { SearchPipeComponent } from './components/search-pipe-colaborador/search-pipe.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { NuevoColaboradorComponent } from './components/colaboradores/nuevo-cola
     LoginComponent,
     NotFoundComponent,
     NuevoColaboradorComponent,
+    SearchPipeComponent
     //EvaluacionComponent
   ],
   imports: [

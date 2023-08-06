@@ -12,6 +12,37 @@
             <input type="text" onkeyup="this.value = this.value.replace(/[^0-9]/g, '').replace(/,/g);" maxlength="10" class="form-control controls" formControlName="identificacion" required>
         </div>
 
+        <!-- <div class="form-group">
+            <label for="">Cargo</label>
+            <select id="selectCargo" class="form-control" required formControlName="tipoEvaluacion" name="tipoEvaluacion">
+                <option *ngFor="let tipoEvaluacion of tipoEvaluacion" value="{{tipoEvaluacion.id_Tipo_Evaluacion}}">{{tipoEvaluacion.nombre_Tipo}}</option>
+            </select>
+        </div> -->
+
+        <!-- Tipo == rol -->
+        <div class="form-group">
+            <label for="">Tipo</label>
+            <select id="selectTipo" class="form-control" required formControlName="roles" name="roles">
+                <option *ngFor="let roles of roles" value="{{roles.id_Rol}}">{{roles.nombre_Rol}}</option>
+            </select>
+        </div>
+
+        <!-- Grupo == Cargo -->
+        <div class="form-group">
+            <label for="">Grupo</label>
+            <select id="selectGrupo" class="form-control" required formControlName="grupos" name="grupos">
+                <option *ngFor="let grupo of grupos" value="{{grupo.id_Cargo}}">{{grupo.nombre_Cargo}}</option>
+            </select>
+        </div>
+
+        <!-- Rol == grupo -->
+        <div class="form-group">
+            <label for="">Rol</label>
+            <select id="selectRol" class="form-control" required formControlName="tipos" name="tipo">
+                <option *ngFor="let tipo of tipos" value="{{tipo}}">{{tipo}}</option>
+            </select>
+        </div>
+
         <div class="form-group">
             <label for="">Cargo</label>
             <select id="selectCargo" class="form-control" required formControlName="tipoEvaluacion" name="tipoEvaluacion">

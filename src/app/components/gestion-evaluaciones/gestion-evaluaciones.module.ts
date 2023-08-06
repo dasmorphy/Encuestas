@@ -7,6 +7,7 @@ import { GestionEvaluacionesComponent } from './gestion-evaluaciones.component';
 import { NuevaEvaluacionComponent } from './nueva-evaluacion/nueva-evaluacion.component';
 import { EditarEvaluacionComponent } from './editar-evaluacion/editar-evaluacion.component';
 import { NuevaCompetenciaComponent } from './nueva-competencia/nueva-competencia.component';
+import { SearchPipeListaEvaluacionesComponent } from '../search-pipe-lista-evaluaciones/search-pipe-lista-evaluaciones.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { NuevaCompetenciaComponent } from './nueva-competencia/nueva-competencia
     GestionEvaluacionesComponent,
     NuevaEvaluacionComponent,
     EditarEvaluacionComponent,
-    NuevaCompetenciaComponent
+    NuevaCompetenciaComponent,
+    SearchPipeListaEvaluacionesComponent
   ],
   imports: [
     FormsModule,

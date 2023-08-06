@@ -13,6 +13,7 @@ import { ListaModuloPreguntasInterface } from 'src/app/models/moduloPreguntas';
 import Swal from 'sweetalert2';
 import { firstValueFrom } from 'rxjs';
 import { ListaObservacionesInterface } from 'src/app/models/observaciones';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 
 @Component({
@@ -31,13 +32,22 @@ export class GestionEvaluacionesComponent implements OnInit{
   cargoEvaluador: string;
   nombreEvaluado: string;
   cargoEvaluado: string;
+  evaluacionesConNombres: { evaluacion: ListaEvaluacionesInterface, nombreUsuario: any, nombreColaborador: any }[] = [];
+  searchTerm: string = ''; // Término de búsqueda
+
+  estados: string[] = ['Realizada', 'Borrador'];
+  rolesEstados: string[] = ['Realizada', 'Borrador'];
+  estadosSeleccionados: string[] = [];
+  estadosRoles: string[] = [];
+
 
   constructor(private api:ApiService, private router: Router,
+    private http: HttpClient,
     private sessionService: SessionService, 
     private inactivityService: InactivitySessionService
   ){}
 
-  ngOnInit(): void {
+  async ngOnInit(){
     const sessionData = this.sessionService.getSession();
     this.inactivityService.initInactivityTimer();
     
@@ -45,11 +55,30 @@ export class GestionEvaluacionesComponent implements OnInit{
     //   this.router.navigate(['login']);
     // }
 
-    this.api.getAllEvaluacionByUsuario(sessionData.id_Usuario).subscribe(data =>{
-      console.log(data)
-      this.evaluacionesData = data; 
-    })
+
+    //Se obtiene los nombres del colaborador y del usuario para que se reflejen en la lista de evaluaciones
+    let evalua = await firstValueFrom(this.api.getAllEvaluacionByUsuario(sessionData.id_Usuario))
+    console.log(evalua);
+    this.evaluacionesData = evalua
+    for (const evaluacion of this.evaluacionesData) {
+      const nombreUsuario = await firstValueFrom(this.api.getSingleUsuario(evaluacion.usuario_id));
+      const nombreColaborador = await firstValueFrom(this.api.getSingleColaborador(evaluacion.colaborador_id));
+      this.evaluacionesConNombres.push({ evaluacion, nombreUsuario, nombreColaborador });
+    }
   }
+
+  async getNombreUsuario(id_Usuario: number){
+    
+      const data = await firstValueFrom(this.api.getSingleUsuario(id_Usuario));
+      if (data) {
+        console.log("USUARIO", data.usuario);
+        return data.usuario;
+      } else {
+        return 'Usuario no encontrado';
+      }
+    
+  }
+  
 
   async reversarEvaluacion(id_Colaborador: number, id_Evaluacion: number) {
     let estadoColaborador = "Borrador";
@@ -78,6 +107,92 @@ export class GestionEvaluacionesComponent implements OnInit{
       const colaborador = await firstValueFrom(this.api.updateColaborador(dataColaborador));
       const evaluacion = await firstValueFrom(this.api.updateEvaluacionEstado(dataEvaluacion));
       await Swal.fire('Reversada', 'Evaluación reversada', 'success');
+    }
+  }
+
+  toggleEstado(index: number): void {
+    const estado = this.estados[index];
+    if (this.estadosSeleccionados.includes(estado)) {
+      this.estadosSeleccionados = this.estadosSeleccionados.filter(e => e !== estado);
+    } else {
+      this.estadosSeleccionados.push(estado);
+    }
+  }
+
+  toggleEstadoRoles(index: number): void {
+    const estado = this.rolesEstados[index];
+    if (this.estadosRoles.includes(estado)) {
+      this.estadosRoles = this.estadosRoles.filter(e => e !== estado);
+    } else {
+      this.estadosRoles.push(estado);
+    }
+  }
+  
+  exportarCalificaciones(): void {
+    console.log(this.estadosSeleccionados);
+
+    if(this.estadosSeleccionados.length === 0)
+    {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Por favor, seleccione al menos un estado',
+      });
+    }
+    else
+    {
+      const estadosQuery = this.estadosSeleccionados.join(',');
+      const url = `https://localhost:7091/api/evaluacion/exportarEvaluaciones?estadosSeleccionados=${estadosQuery}`;  
+      const params = new HttpParams().set('estadosSeleccionados', this.estadosSeleccionados.join(','));
+      console.log(this.estadosSeleccionados);
+      console.log(params)  
+      this.http.get(url, {
+        responseType: 'blob',
+        headers: new HttpHeaders().append('Accept', 'application/octet-stream'),
+        params: params // Agregar los parámetros de consulta
+      }).subscribe(blobData => {
+        const blob = new Blob([blobData], { type: 'application/octet-stream' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Evaluaciones.xlsx';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
+    }
+  }
+
+  calificacionesRoles(): void {
+    console.log(this.estadosRoles);
+
+    if(this.estadosRoles.length === 0)
+    {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Por favor, seleccione al menos un estado',
+      });
+    }
+    else
+    {
+      const estadosQuery = this.estadosRoles.join(',');
+      const url = `https://localhost:7091/api/evaluacion/evaluacionesRoles?estadosSeleccionados=${estadosQuery}`;  
+      const params = new HttpParams().set('estadosSeleccionados', this.estadosRoles.join(','));
+      console.log(this.estadosRoles);
+      console.log(params)  
+      this.http.get(url, {
+        responseType: 'blob',
+        headers: new HttpHeaders().append('Accept', 'application/octet-stream'),
+        params: params // Agregar los parámetros de consulta
+      }).subscribe(blobData => {
+        const blob = new Blob([blobData], { type: 'application/octet-stream' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Evaluaciones_Roles.xlsx';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
     }
   }
 
@@ -143,13 +258,15 @@ export class GestionEvaluacionesComponent implements OnInit{
     });
   }
 
-  async getModulosPreguntasByTipoEvaluacion(tipo_Evaluacion_Id: number): Promise<void> {
+  async getModulosPreguntasByCargo(cargo_Id: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this.api.getAllModulosPreguntas(tipo_Evaluacion_Id).subscribe(data =>{
-        this.modulosPreguntas = data.filter
-        (
-          modulo => modulo.tipo_Evaluacion_Id === tipo_Evaluacion_Id
-        );
+      this.api.getPreguntaModuloCargo(cargo_Id).subscribe(data =>{
+        this.modulosPreguntas = data;
+
+        // this.modulosPreguntas = data.filter
+        // (
+        //   modulo => modulo.tipo_Evaluacion_Id === tipo_Evaluacion_Id
+        // );
         resolve(); // Resuelve la promesa cuando se reciben los datos
       }, error => {
         reject(error); // Rechaza la promesa en caso de error
@@ -191,7 +308,7 @@ export class GestionEvaluacionesComponent implements OnInit{
     
     await this.getEvaluacion(id_Colaborador, usuarioId);
     await this.obtenerDatosUsuario(usuarioId);
-    await this.getModulosPreguntasByTipoEvaluacion(this.datosUsuario.tipo_Evaluacion_Id);
+    await this.getModulosPreguntasByCargo(this.datosUsuario.cargo_Id);
     await this.getObservacion(this.evaluaciones[0].id_Evaluacion);
     console.log("this.evaluaciones", this.evaluaciones); 
     console.log("this.datosUsuario", this.datosUsuario); 
@@ -288,12 +405,8 @@ export class GestionEvaluacionesComponent implements OnInit{
         const key = `clfc_Pregunta${preguntas.numero_Pregunta}`;
         const calificacion = this.evaluaciones[0][key as keyof ListaEvaluacionesInterface];
 
-        // const keyObservacion:string = `observacion${preguntas.numero_Pregunta}`;
-        // const observacion = this.observaciones[0];
-
         const keyObservacion: string = `observacion${preguntas.numero_Pregunta}`;
         const observacion = this.observaciones[0][keyObservacion as keyof ListaObservacionesInterface];
-
 
         row.push(calificacion);
         row.push(observacion);//CAMPO OBSERVACIONES

@@ -2,9 +2,29 @@
     <h1>Lista de Evaluaciones</h1>
     <p>Se presentan todas las evaluaciones calificadas</p>
 
+    <div class="reportes">
+        <div>
+            <div *ngFor="let estado of estados; let i = index">
+                
+                <input type="checkbox" [checked]="estadosSeleccionados.includes(estado)" (change)="toggleEstado(i)">
+                {{ estado }}
+            </div>
+            <button class="btn btn-primary" (click)="exportarCalificaciones()">Exportar Calificaciones</button>
+        </div>
+
+        <div class="roles">
+            <div *ngFor="let estado of rolesEstados; let i = index">
+                
+                <input type="checkbox" [checked]="estadosRoles.includes(estado)" (change)="toggleEstadoRoles(i)">
+                {{ estado }}
+            </div>
+            <button class="btn btn-primary" (click)="calificacionesRoles()">Calificaciones por Roles</button>
+        </div>
+    </div>
+    <input class="form-control mt-3 mb-2" [(ngModel)]="searchTerm" type="text" placeholder="Buscar">
     <div class="card">
 
-        <div class="card-head"></div>
+        <!-- <div class="card-head"></div> -->
         <div class="card-body">
             <table class="table table-hover">
                 <thead class="thead-dark">
@@ -20,28 +40,28 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let evaluacion of evaluacionesData">
-                        <input type="hidden" value="{{evaluacion.id_Evaluacion}}">
-                        <td >{{evaluacion.id_Evaluacion}}</td>
-                        <td>{{evaluacion.usuario_id}}</td>
-                        <td>{{evaluacion.colaborador_id}}</td>
-                        <td>{{evaluacion.calificacionFinal}}</td>
-                        <td>{{evaluacion.estado}}</td>
+                    <tr *ngFor="let item of evaluacionesConNombres | filtroEvaluaciones: searchTerm">
+                        <input type="hidden" value="{{ item.evaluacion.id_Evaluacion }}">
+                        <td>{{ item.evaluacion.id_Evaluacion }}</td>
+                        <td>{{ item.nombreUsuario.usuario }}</td>
+                        <td>{{ item.nombreColaborador.nombres }}</td>
+                        <td>{{ item.evaluacion.calificacionFinal }}</td>
+                        <td>{{ item.evaluacion.estado }}</td>
 
                         <!-- <button class="btn btn-dark" (click) = "editarUsuario(usuario.id_Usuario)">Editar</button> -->
-                        <td><button (click)="visualizarEvaluacion(evaluacion.colaborador_id, evaluacion.usuario_id, evaluacion.id_Evaluacion)" class="btn btn-primary">Visualizar</button></td>
+                        <td><button (click)="visualizarEvaluacion(item.evaluacion.colaborador_id, item.evaluacion.usuario_id, item.evaluacion.id_Evaluacion)" class="btn btn-primary">Visualizar</button></td>
 
-                        <td *ngIf="evaluacion.estado === 'Borrador'">
-                            <button [disabled]="BotonDesactivado(evaluacion)" 
+                        <td *ngIf="item.evaluacion.estado === 'Borrador'">
+                            <button [disabled]="BotonDesactivado(item.evaluacion)" 
                             class="btn btn-success">Reversar</button>
                         </td>
-                        <td *ngIf="evaluacion.estado !== 'Borrador'">
-                            <button (click)="reversarEvaluacion(evaluacion.colaborador_id, evaluacion.id_Evaluacion)" 
+                        <td *ngIf="item.evaluacion.estado !== 'Borrador'">
+                            <button (click)="reversarEvaluacion(item.evaluacion.colaborador_id, item.evaluacion.id_Evaluacion)" 
                             class="btn btn-success">Reversar</button>
                         </td>
 
-                        <td><button (click)="imprimirPdf(evaluacion.colaborador_id, evaluacion.usuario_id)" class="btn btn-dark">Imprimir</button></td>
-                        <td><button (click)="eliminarEvaluacion(evaluacion.id_Evaluacion)" class="btn btn-danger">Eliminar</button></td>    
+                        <td><button (click)="imprimirPdf(item.evaluacion.colaborador_id, item.evaluacion.usuario_id)" class="btn btn-dark">Imprimir</button></td>
+                        <td><button (click)="eliminarEvaluacion(item.evaluacion.id_Evaluacion)" class="btn btn-danger">Eliminar</button></td>    
                     </tr>
                 
                 </tbody>
