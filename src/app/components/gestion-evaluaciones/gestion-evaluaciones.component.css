@@ -1,0 +1,13 @@
+.reportes {
+    display: flex;
+    /* margin-right: 5rem; */
+}
+.roles{
+    justify-content: space-between;
+    margin-right: 8rem;
+}
+
+td, th{
+    text-align: center;
+}
+  

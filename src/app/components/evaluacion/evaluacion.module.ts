@@ -6,12 +6,14 @@ import { EvaluacionRoutingModule } from './evaluacion-routing.module';
 import { EvaluacionColaboradorComponent } from './evaluacion-colaborador/evaluacion-colaborador.component';
 import { EvaluacionComponent } from './utils/evaluacion.component';
 import { VistaEvaluacionComponent } from './vista-evaluacion/vista-evaluacion.component';
+import { SearchPipeEvaluacionComponent } from '../search-pipe-evaluacion/search-pipe-evaluacion.component';
 
 @NgModule({
   declarations: [
     EvaluacionColaboradorComponent,
     EvaluacionComponent,
-    VistaEvaluacionComponent
+    VistaEvaluacionComponent,
+    SearchPipeEvaluacionComponent
   
   ],
   imports: [

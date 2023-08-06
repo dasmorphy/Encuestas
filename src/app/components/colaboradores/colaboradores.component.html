@@ -1,10 +1,20 @@
 <h1>Mis Colaboradores</h1>
-<input class="form-control " type="text" placeholder="Buscar">
+<input class="form-control" [(ngModel)]="searchTerm" type="text" placeholder="Buscar">
 
 <div (mousemove)="onUserActivity()" (click)="onUserActivity()">
     <button (click)="agregarColaboradores()" class="btn btn-primary">Agregar Colaboradores</button>
+
+
+    <label for="">Estados:</label>
+        <div *ngFor="let estado of estados; let i = index">
+        
+            <input type="checkbox" [checked]="estadosSeleccionados.includes(estado)" (change)="toggleEstado(i)">
+            {{ estado }}
+        </div>
+        <button class="btn btn-primary" (click)="descargarArchivo()">Exportar Colaboradores</button>
+      
+
     <div class="card">
-        <div class="card-head"></div>
         <div class="card-body">
             <table class="table table-hover">
                 <thead>
@@ -29,7 +39,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let colaborador of colaboradores">
+                    <tr *ngFor="let colaborador of colaboradores | searchFilter: searchTerm">
                         <th hidden>{{colaborador.id_Colaborador}}</th>
                         <td>{{colaborador.nombres}}</td>
                         <td>{{colaborador.cedula}}</td>
@@ -57,4 +67,3 @@
             </table>
         </div>
     </div>
-</div>

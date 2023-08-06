@@ -15,6 +15,9 @@ import { firstValueFrom } from 'rxjs';
 export class GestionUsuariosComponent implements OnInit{
 
   usuarios: ListaUsuariosInterface[];
+
+  searchTerm: string = ''; // Término de búsqueda
+
   constructor(private api:ApiService, private router: Router,
     private sessionService: SessionService, 
     private inactivityService: InactivitySessionService  

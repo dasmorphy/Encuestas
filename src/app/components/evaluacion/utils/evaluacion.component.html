@@ -1,9 +1,8 @@
 <h1>Evaluacion</h1>
-<input class="form-control " type="text" placeholder="Buscar">
+<input class="form-control " type="text" [(ngModel)]="searchTerm" placeholder="Buscar">
 
 <div class="card" (mousemove)="onUserActivity()" (click)="onUserActivity()">
 
-    <div class="card-head"></div>
     <div class="card-body">
         <table class="table table-hover">
             <thead>
@@ -23,7 +22,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let colaborador of colaboradores">
+                <tr *ngFor="let colaborador of colaboradores | filtroEvaluacion: searchTerm">
                     <input id ="id" type="hidden" value = {{colaborador.id_Colaborador}}>
                     <th scope="row">{{colaborador.id_Colaborador}}</th>
                     <td>{{colaborador.nombres}}</td>
@@ -36,9 +35,6 @@
                     <td>{{colaborador.area}}</td>
                     <td>{{colaborador.departamento}}</td>
                     <td>{{colaborador.estado}}</td> 
-                    <!-- <td><button [disabled]="BotonDesactivado(colaborador)" (click)="evaluacionColaborador(colaborador.id_Colaborador)" class="btn btn-primary">Evaluar</button></td>
-                    <td><button [disabled]="BotonDesactivado(colaborador)" (click)="evaluacionColaborador(colaborador.id_Colaborador)" class="btn btn-primary">Evaluar</button></td>
-                     -->
                     <td *ngIf="colaborador.estado === 'Borrador'">
                         <button (click)="continuarEvaluacion(colaborador.id_Colaborador)" class="btn btn-warning">Continuar</button>
                     </td>

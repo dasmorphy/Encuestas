@@ -220,12 +220,18 @@ export class VistaEvaluacionComponent implements OnInit{
 
       })
       console.warn(data);
-    });
 
-    this.api.getPreguntaModuloCargo(sessionData.cargo_Id).subscribe(data => {
-      this.modulosPreguntas = data
-      console.log("AAAA",this.modulosPreguntas)
+      console.warn(this.usuario);
+      this.api.getPreguntaModuloCargo(this.usuario.cargo_Id).subscribe(data => {
+        this.modulosPreguntas = data
+        console.log("AAAA",this.modulosPreguntas)
+        console.log("ssss",sessionData.cargo_Id)
+      });
+
+
     });
+    
+    
 
   }
   

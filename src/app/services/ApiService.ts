@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { ListaColaboresInterface } from '../models/colaboradores'
 import { Observable } from 'rxjs';
 import { ListaUsuariosInterface } from '../models/usuarios';
@@ -61,6 +61,17 @@ export class ApiService {
         let urlDeleteColaborador: string = 'https://localhost:7091/api/colaborador/' + id_Colaborador;
         return this.http.delete<any>(urlDeleteColaborador);
 
+    }
+
+    getExportarColaboradores(estadosSeleccionados: string[]): Observable<any> 
+    {
+        const urlExportar = 'https://localhost:7091/api/colaborador/exportarColaboradores';
+        
+        // Construir los parámetros de la solicitud GET
+        const params = new HttpParams().set('estadosSeleccionados', estadosSeleccionados.join(','));
+    
+        // Realizar la solicitud GET con los parámetros
+        return this.http.get<any>(urlExportar, { params });
     }
       
     getAllUsuarios():Observable<ListaUsuariosInterface[]>

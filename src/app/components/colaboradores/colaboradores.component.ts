@@ -6,6 +6,7 @@ import { InactivitySessionService } from 'src/app/services/InactivitySessionServ
 import { SessionService } from 'src/app/services/SessionService';
 import Swal from 'sweetalert2';
 import { firstValueFrom } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-colaboradores',
@@ -15,7 +16,14 @@ import { firstValueFrom } from 'rxjs';
 export class ColaboradoresComponent implements OnInit {
   
   colaboradores: ListaColaboresInterface[];
+  estados: string[] = ['Evaluado', 'Borrador', 'No Evaluado'];
+
+  estadosSeleccionados: string[] = [];
+
+  searchTerm: string = ''; // Término de búsqueda
+
   constructor(private api:ApiService, private router: Router,
+    private http: HttpClient,
     private sessionService: SessionService, 
     private inactivityService: InactivitySessionService  
   ){}
@@ -51,6 +59,61 @@ export class ColaboradoresComponent implements OnInit {
     }
   }
 
+  exportarEstadosSeleccionados(){
+    this.api.getExportarColaboradores(this.estadosSeleccionados).subscribe(data =>{
+      console.log("Corecto ",data);
+      //this.colaboradores = data;
+    })
+
+    
+  }
+
+  toggleEstado(index: number): void {
+    const estado = this.estados[index];
+    if (this.estadosSeleccionados.includes(estado)) {
+      this.estadosSeleccionados = this.estadosSeleccionados.filter(e => e !== estado);
+    } else {
+      this.estadosSeleccionados.push(estado);
+    }
+  }
+  
+  descargarArchivo(): void {
+    console.log(this.estadosSeleccionados);
+
+    if(this.estadosSeleccionados.length === 0)
+    {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Por favor, seleccione al menos un estado',
+      });
+    }
+    else
+    {
+      const estadosQuery = this.estadosSeleccionados.join(',');
+      const url = `https://localhost:7091/api/colaborador/exportarColaboradores?estadosSeleccionados=${estadosQuery}`;
+  
+      //const url = 'https://localhost:7091/api/colaborador/exportarColaboradores';
+    
+      const params = new HttpParams().set('estadosSeleccionados', this.estadosSeleccionados.join(','));
+      console.log(this.estadosSeleccionados);
+      console.log(params)  
+      this.http.get(url, {
+        responseType: 'blob',
+        headers: new HttpHeaders().append('Accept', 'application/octet-stream'),
+        params: params // Agregar los parámetros de consulta
+      }).subscribe(blobData => {
+        const blob = new Blob([blobData], { type: 'application/octet-stream' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Colaboradores.xlsx';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
+    }
+  }
+    
   onUserActivity(): void {
     this.inactivityService.resetInactivityTimer();
   }

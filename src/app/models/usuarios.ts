@@ -6,4 +6,5 @@ export interface ListaUsuariosInterface
     identificacion: string;
     rol_Id: number;
     cargo_Id: number;
+    grupo: string;
 }

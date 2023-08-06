@@ -55,9 +55,16 @@
             
             <div class="form-group col-md-11" *ngFor="let preguntas of modulo.preguntasByEvaluacionModel">
               <b><label id="{{preguntas.id_Preguntas_Tipo}}">{{preguntas.pregunta}}</label></b>
+
               <input class="form-control" type="text" [(ngModel)]="calificacionPregunta['clfc_Pregunta' + preguntas.numero_Pregunta]" 
               [id]="'clfc_Pregunta' + preguntas.numero_Pregunta" [name]="'clfc_Pregunta' + preguntas.numero_Pregunta"
+              (input)="validarCalificacion($event, preguntas.numero_Pregunta)"
               onkeyup="this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');">
+
+              <div *ngIf="calificacionInvalida[preguntas.numero_Pregunta]">
+                Debe ser un número entre 0 y 5
+              </div>
+              
               <label for="">Observaciones:</label>
               <textarea class="form-control" cols="28" rows="2"
               [id]="'observacion' + preguntas.numero_Pregunta" [(ngModel)]="observacionPregunta['observacion' + preguntas.numero_Pregunta]" 

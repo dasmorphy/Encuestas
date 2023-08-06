@@ -20,6 +20,8 @@ export class NuevoUsuarioComponent implements OnInit{
 
   roles: ListaRolesInterface[]; 
   grupos: ListaCargosInterface[];
+  tipos: string[] = ["JEFE", "CLIENTE", "EQUIPO"];
+
 
   constructor (private router: Router, private api:ApiService,
     private sessionService: SessionService, 
@@ -33,7 +35,9 @@ export class NuevoUsuarioComponent implements OnInit{
     password: new FormControl(''),
     identificacion: new FormControl(''),
     roles: new FormControl(''),
-    grupos: new FormControl('')
+    grupos: new FormControl(''),
+    tipos: new FormControl('')
+
   })
 
   ngOnInit(): void {
@@ -69,7 +73,7 @@ export class NuevoUsuarioComponent implements OnInit{
       const tipoEvaluacion = this.registroForm.get('tipoEvaluacion')?.value;
       const roles = this.registroForm.get('roles')?.value;
       const grupos = this.registroForm.get('grupos')?.value;
-
+      const tipos = this.registroForm.get('tipos')?.value;
 
       const newUser: any = {
         usuario: usuario,
@@ -77,7 +81,8 @@ export class NuevoUsuarioComponent implements OnInit{
         identificacion: identificacion,
         tipo_Evaluacion_Id: tipoEvaluacion,
         rol_Id: roles,
-        cargo_Id: grupos
+        cargo_Id: grupos,
+        grupo: tipos
       };
 
       try
