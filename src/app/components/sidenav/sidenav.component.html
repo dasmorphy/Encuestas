@@ -13,7 +13,7 @@
     <ul class="sidenav-nav">
         <li class="sidenav-nav-item" *ngFor="let data of navData">
             <!-- <div *ngFor="let roles of opcionesRoles"> -->
-                <a class="sidenav-nav-link" (click)="handClick(data)" *ngIf="data.items && data.items.length > 0 && shouldShowOption(data)"
+                <a class="sidenav-nav-link" (click)="handClick(data)" *ngIf="data.items && data.items.length > 0"
                     
                     [ngClass]="getActiveClass(data)">
                     <i class="sidenav-link-icon" [className] = "data.icon"></i>
@@ -25,7 +25,7 @@
                 </a>
 
                 <a class="sidenav-nav-link" 
-                    *ngIf="!data.items || (data.items && data.items.length === 0) && shouldShowOption(data)"
+                    *ngIf="!data.items || (data.items && data.items.length === 0)"
                     [routerLink]="[data.routeLink]" 
                     routerLinkActive="active" 
                     [routerLinkActiveOptions]="{exact: true}"
@@ -34,7 +34,7 @@
                     <span class="sidenav-link-text" @fadeInOut *ngIf="collapsed">{{data.label}}</span>
                 </a>
             <!-- </div> -->
-            <div *ngIf="collapsed && data.items && data.items.length > 0 && shouldShowOption(data)">
+            <div *ngIf="collapsed && data.items && data.items.length > 0">
                 <app-sublevel-menu
                     [data]="data"
                     [collapsed] = "collapsed"

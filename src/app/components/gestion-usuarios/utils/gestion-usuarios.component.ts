@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ListaUsuariosInterface } from 'src/app/models/usuarios';
 import { ApiService } from 'src/app/services/ApiService';
-import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
+//import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
 import { SessionService } from 'src/app/services/SessionService';
 import Swal from 'sweetalert2';
 import { firstValueFrom } from 'rxjs';
@@ -20,7 +20,7 @@ export class GestionUsuariosComponent implements OnInit{
 
   constructor(private api:ApiService, private router: Router,
     private sessionService: SessionService, 
-    private inactivityService: InactivitySessionService  
+    //private inactivityService: InactivitySessionService  
   ){}
 
   ngOnInit(): void {
@@ -30,7 +30,7 @@ export class GestionUsuariosComponent implements OnInit{
     })
 
     const sessionData = this.sessionService.getSession();
-    this.inactivityService.initInactivityTimer();
+    //this.inactivityService.initInactivityTimer();
     if (sessionData == null){
       this.router.navigate(['login']);
     }
@@ -62,7 +62,7 @@ export class GestionUsuariosComponent implements OnInit{
     }
   }
 
-  onUserActivity(): void {
-    this.inactivityService.resetInactivityTimer();
-  }
+  // onUserActivity(): void {
+  //   this.inactivityService.resetInactivityTimer();
+  // }
 }

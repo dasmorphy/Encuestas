@@ -20,8 +20,10 @@ export class CambiarContrasenaComponent {
     id_Usuario: new FormControl(''),
     usuario: new FormControl(''),
     password: new FormControl(''),
-    identificacion: new FormControl('')
-
+    identificacion: new FormControl(''),
+    grupo: new FormControl(''),
+    rol_id: new FormControl(),
+    cargo_id: new FormControl(),
   })
 
   ngOnInit(): void {
@@ -33,6 +35,9 @@ export class CambiarContrasenaComponent {
         'usuario': this.datosUsuario.usuario,
         'password': this.datosUsuario.password,
         'identificacion': this.datosUsuario.identificacion,
+        'grupo': this.datosUsuario.grupo,
+        'rol_id': this.datosUsuario.rol_Id,
+        'cargo_id': this.datosUsuario.cargo_Id
       })
     });
 

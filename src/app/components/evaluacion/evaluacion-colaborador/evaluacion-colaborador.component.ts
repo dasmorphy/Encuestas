@@ -7,7 +7,7 @@ import { ListaModuloPreguntasInterface } from 'src/app/models/moduloPreguntas';
 import { ListaPreguntasByEvaluacionInterface } from 'src/app/models/preguntasByEvaluacion';
 import { ListaUsuariosInterface } from 'src/app/models/usuarios';
 import { ApiService } from 'src/app/services/ApiService';
-import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
+// import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
 import { SessionService } from 'src/app/services/SessionService';
 import Swal from 'sweetalert2';
 import { firstValueFrom } from 'rxjs';
@@ -21,7 +21,7 @@ import { ListaPreguntaModuloCargo } from 'src/app/models/preguntaModuloCargo';
 export class EvaluacionColaboradorComponent implements OnInit {
   constructor(private activedRoute: ActivatedRoute, private api:ApiService, private router: Router,
     private sessionService: SessionService, 
-    private inactivityService: InactivitySessionService  
+    //private inactivityService: InactivitySessionService  
   ){}
 
   preguntaCount = 52; //maximo de calificacion segun el numero de preguntas
@@ -50,7 +50,7 @@ export class EvaluacionColaboradorComponent implements OnInit {
   ngOnInit(): void {
     const sessionData = this.sessionService.getSession();
     console.log(sessionData);
-    this.inactivityService.initInactivityTimer();
+    //this.inactivityService.initInactivityTimer();
     if (sessionData == null){
       this.router.navigate(['login']);
     }
@@ -231,7 +231,7 @@ export class EvaluacionColaboradorComponent implements OnInit {
     this.router.navigate(['evaluacion']);
   }
 
-  onUserActivity(): void {
-    this.inactivityService.resetInactivityTimer();
-  }
+  // onUserActivity(): void {
+  //   this.inactivityService.resetInactivityTimer();
+  // }
 }

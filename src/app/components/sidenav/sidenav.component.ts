@@ -3,6 +3,7 @@ import { navbarData } from './nav-data';
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { INavbarData, fadeInOut } from './option';
 import { Router } from '@angular/router';
+import { SessionService } from 'src/app/services/SessionService';
 
 interface SideNavToggle {
   screenWidth: number;
@@ -26,7 +27,7 @@ export class SidenavComponent implements OnInit {
   navData = navbarData;
   multiple: boolean = false;
   opcionesRoles: any;
-  currentRole: any = null;
+  currentRole: any = 0;
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any){
@@ -38,19 +39,29 @@ export class SidenavComponent implements OnInit {
 
     }
   }
-
-  constructor (public router: Router){}
+  sessionData: any;
+  constructor (public router: Router, private sessionService: SessionService){}
 
   //vista se adapate al desplegar el sidebar 
   ngOnInit(): void {
     this.screenWidth = window.innerWidth;
-    // this.navData = this.getMenuOptionsForRole(3);
-    this.navData = this.getMenuOptionsForRole(this.currentRole);
+    const sessionData = this.sessionService.getSession();
+    this.sessionData = sessionData;
+    console.log(sessionData);
+
+    if (sessionData == null) {
+      this.router.navigate(['login']);
+    } else {
+      this.currentRole = sessionData.rol_Id; // Asigna el valor de sessionData.rol_Id a currentRole
+      console.log("rol2",this.currentRole);
+      this.navData = this.getMenuOptionsForRole(this.currentRole);
+    }
   }
 
-  shouldShowOption(data: INavbarData): any {
-    return data.rol === this.currentRole || (data.items && data.items.some(subItem => subItem.rol === this.currentRole));
-  }
+  // shouldShowOption(data: INavbarData): any {
+  //   console.log(this.currentRole)
+  //   return data.rol === this.currentRole || (data.items && data.items.some(subItem => subItem.rol === this.currentRole));
+  // }
   
 
   toggleCollapse(): void {
@@ -75,8 +86,17 @@ export class SidenavComponent implements OnInit {
     item.expanded = !item.expanded
   }
 
-  getMenuOptionsForRole(role: number): INavbarData[] {
-    return this.navData.filter((item) => item.rol === role || (item.items && item.items.some(subItem => subItem.rol === role)));
+  
+  getMenuOptionsForRole(roleId: number) {
+    console.log("rol",this.currentRole)
+    console.log("data",this.navData);
+    if (roleId === 1) {
+      console.log("data2",this.navData);
+      return this.navData;
+    } else {
+      console.log("data3",this.navData);
+      return this.navData.filter(option => option.label === 'Inicio' || option.label === 'Evaluar');
+    }
   }
   
 

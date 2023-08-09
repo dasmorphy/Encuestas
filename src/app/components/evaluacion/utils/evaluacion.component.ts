@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../services/ApiService'
 import { NavigationExtras, Router } from "@angular/router";
 import { ListaColaboresInterface } from "../../../models/colaboradores";
-import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
+// import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
 import { SessionService } from 'src/app/services/SessionService';
 import { ListaEvaluacionesInterface } from 'src/app/models/evaluacion';
 import Swal from 'sweetalert2';
@@ -25,11 +25,11 @@ export class EvaluacionComponent implements OnInit {
   desactivarBoton: boolean = false;
   constructor(private api:ApiService, private router: Router,
     private sessionService: SessionService, 
-    private inactivityService: InactivitySessionService
+    //private inactivityService: InactivitySessionService
   ){}
 
   ngOnInit(): void {
-    this.inactivityService.initInactivityTimer();
+    //this.inactivityService.initInactivityTimer();
     if (this.sessionData == null){
       this.router.navigate(['login']);
     }
@@ -97,9 +97,9 @@ export class EvaluacionComponent implements OnInit {
     return colaborador.estado === 'Evaluado';
   }
 
-  onUserActivity(): void {
-    this.inactivityService.resetInactivityTimer();
-  }
+  // onUserActivity(): void {
+  //   this.inactivityService.resetInactivityTimer();
+  // }
 
   
 }

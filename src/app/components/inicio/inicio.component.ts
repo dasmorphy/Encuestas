@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ListaUsuariosInterface } from 'src/app/models/usuarios';
 import { ApiService } from 'src/app/services/ApiService';
-import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
+//import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
 import { SessionService } from 'src/app/services/SessionService';
 
 @Component({
@@ -15,7 +15,7 @@ export class InicioComponent implements OnInit{
   sessionData: any;
   constructor(
     private api:ApiService, private router: Router, private sessionService: SessionService, 
-    private inactivityService: InactivitySessionService
+   // private inactivityService: InactivitySessionService
   ){}
 
   ngOnInit(): void {
@@ -26,13 +26,13 @@ export class InicioComponent implements OnInit{
     const sessionData = this.sessionService.getSession();
     this.sessionData = sessionData;
     console.log(sessionData);
-    this.inactivityService.initInactivityTimer();
+    //this.inactivityService.initInactivityTimer();
     if (sessionData == null){
       this.router.navigate(['login']);
     }
   }
 
-  onUserActivity(): void {
-    this.inactivityService.resetInactivityTimer();
-  }
+  // onUserActivity(): void {
+  //   this.inactivityService.resetInactivityTimer();
+  // }
 }
