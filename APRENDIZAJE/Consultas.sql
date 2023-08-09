@@ -39,7 +39,6 @@ GETDATE(),
 )
 
 select * from [dbo].[Evaluacion];
-select * from ObservacionEvaluacion;
 select * from [dbo].[PreguntasByEvaluacion];
 select * from ObservacionEvaluacion;
 select * from [dbo].[ModuloEvaluacion];

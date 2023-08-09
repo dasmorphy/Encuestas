@@ -44,19 +44,6 @@
         </div>
 
         <div class="form-group">
-            <label for="">Cargo</label>
-            <select id="selectCargo" class="form-control" required formControlName="tipoEvaluacion" name="tipoEvaluacion">
-                <option *ngFor="let tipoEvaluacion of tipoEvaluacion" value="{{tipoEvaluacion.id_Tipo_Evaluacion}}">{{tipoEvaluacion.nombre_Tipo}}</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="">Rol</label>
-            <select id="selectRol" class="form-control" required formControlName="roles" name="tipoEvaluacion">
-                <option *ngFor="let roles of roles" value="{{roles.id_Rol}}">{{roles.nombre_Rol}}</option>
-            </select>
-        </div>
-
-        <div class="form-group">
             <label for="">Contraseña</label>
             <input type="password" class="form-control controls" formControlName="password" maxlength="12" required>
         </div>

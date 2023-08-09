@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/ApiService';
-import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
+// import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
 import { SessionService } from 'src/app/services/SessionService';
 import Swal from 'sweetalert2';
 
@@ -17,7 +17,7 @@ export class NuevoColaboradorComponent implements OnInit{
   
   constructor(private api:ApiService, private router: Router,
     private sessionService: SessionService, 
-    private inactivityService: InactivitySessionService  
+    //private inactivityService: InactivitySessionService  
   ){}
   
   // onFileSelected(event: any) {
@@ -82,8 +82,8 @@ export class NuevoColaboradorComponent implements OnInit{
     // }
   }
 
-  onUserActivity(): void {
-    this.inactivityService.resetInactivityTimer();
-  }
+  // onUserActivity(): void {
+  //   this.inactivityService.resetInactivityTimer();
+  // }
 
 }

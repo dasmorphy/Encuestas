@@ -7,7 +7,7 @@ import { ListaModuloPreguntasInterface } from 'src/app/models/moduloPreguntas';
 import { ListaPreguntasByEvaluacionInterface } from 'src/app/models/preguntasByEvaluacion';
 import { ListaUsuariosInterface } from 'src/app/models/usuarios';
 import { ApiService } from 'src/app/services/ApiService';
-import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
+// import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
 import { SessionService } from 'src/app/services/SessionService';
 import Swal from 'sweetalert2';
 import { firstValueFrom } from 'rxjs';
@@ -21,7 +21,7 @@ export class VistaEvaluacionComponent implements OnInit{
   
   constructor(private activedRoute: ActivatedRoute, private api:ApiService, private router: Router,
     private sessionService: SessionService, 
-    private inactivityService: InactivitySessionService  
+    //private inactivityService: InactivitySessionService  
   ){}
 
   datosEvaluacion: any;
@@ -181,7 +181,7 @@ export class VistaEvaluacionComponent implements OnInit{
     console.log("Datos de la Evaluacion",this.datosEvaluacion);
     const sessionData = this.sessionService.getSession();
     console.log(sessionData);
-    this.inactivityService.initInactivityTimer();
+    // this.inactivityService.initInactivityTimer();
     if (sessionData == null){
       this.router.navigate(['login']);
     }
@@ -222,6 +222,7 @@ export class VistaEvaluacionComponent implements OnInit{
       console.warn(data);
 
       console.warn(this.usuario);
+      //CAMBIO SOLICITADO
       this.api.getPreguntaModuloCargo(this.usuario.cargo_Id).subscribe(data => {
         this.modulosPreguntas = data
         console.log("AAAA",this.modulosPreguntas)
@@ -408,7 +409,7 @@ export class VistaEvaluacionComponent implements OnInit{
       this.router.navigate(['evaluacion']);
     }
   }
-  onUserActivity(): void {
-    this.inactivityService.resetInactivityTimer();
-  }
+  // onUserActivity(): void {
+  //   this.inactivityService.resetInactivityTimer();
+  // }
 }

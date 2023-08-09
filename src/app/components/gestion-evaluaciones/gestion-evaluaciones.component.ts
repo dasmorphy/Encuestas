@@ -5,7 +5,7 @@ import { ListaColaboresInterface } from 'src/app/models/colaboradores';
 import { ListaEvaluacionesInterface } from 'src/app/models/evaluacion';
 import { ListaUsuariosInterface } from 'src/app/models/usuarios';
 import { ApiService } from 'src/app/services/ApiService';
-import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
+//import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
 import { SessionService } from 'src/app/services/SessionService';
 import { Columns, Img, PdfMakeWrapper, Table, Txt } from 'pdfmake-wrapper';
 import * as pdfFonts from "pdfmake/build/vfs_fonts";
@@ -44,12 +44,12 @@ export class GestionEvaluacionesComponent implements OnInit{
   constructor(private api:ApiService, private router: Router,
     private http: HttpClient,
     private sessionService: SessionService, 
-    private inactivityService: InactivitySessionService
+    //private inactivityService: InactivitySessionService
   ){}
 
   async ngOnInit(){
     const sessionData = this.sessionService.getSession();
-    this.inactivityService.initInactivityTimer();
+    //this.inactivityService.initInactivityTimer();
     
     // if (sessionData == null){
     //   this.router.navigate(['login']);
@@ -368,6 +368,34 @@ export class GestionEvaluacionesComponent implements OnInit{
 
       new Table([
         [
+          new Txt('Escala de calificaciones').alignment('center').color('white').italics().end, // Establece el ancho de la celda a '*'
+        ],
+      ]).widths(['*']).heights([20]).layout({
+        paddingTop: () =>10,
+        fillColor: (rowIndex) => (rowIndex === 0 ? '#3f60a8' : '#ffffff')
+      }).end,
+      new Table([
+        [
+          new Txt('1').bold().color('black').fontSize(10).alignment('center').end,
+          new Txt('2').color('black').fontSize(10).alignment('center').end,
+          new Txt('3').color('black').fontSize(10).alignment('center').end,
+          new Txt('4').color('black').fontSize(10).alignment('center').end,
+          new Txt('5').color('black').fontSize(10).alignment('center').end,
+        ],
+        [
+          new Txt('Por debajo de lo esperado: No alcanza los estándares mínimos esperados del puesto.').bold().fontSize(10).alignment('center').end,
+          new Txt('En algunas ocasiones no alcanza los parámetros establecidos; requiere iniciar un plan de mejoramiento.').color('black').fontSize(10).alignment('center').end,
+          new Txt('Cumple dentro de lo esperado con los compromisos y exigencias establecidas para el cargo.').color('black').fontSize(10).alignment('center').end,
+          new Txt('Supera las expectativas: Excede de manera parcial o temporal los resultados esperados del cargo.').color('black').fontSize(10).alignment('center').end,
+          new Txt('Excepcional: Sobrepasa de manera visible, evidente, y consistente los resultados del puesto.').color('black').fontSize(10).alignment('center').end,
+        ],
+      ]).widths(['*', '*', '*', '*', '*']).end,
+
+      new Txt('         ').end,
+      new Txt('         ').end,
+
+      new Table([
+        [
           new Txt('Competencias a Evaluar').color('white').alignment('center').fontSize(15).end,
           new Txt('Calificacion').color('white').alignment('center').fontSize(15).end,
           new Txt('Observaciones').color('white').alignment('center').fontSize(15).end,
@@ -429,8 +457,8 @@ export class GestionEvaluacionesComponent implements OnInit{
     pdf.create().download(`Evaluacion ${this.nombreEvaluado}`);
   }
 
-  onUserActivity(): void {
-    this.inactivityService.resetInactivityTimer();
-  }
+  // onUserActivity(): void {
+  //   this.inactivityService.resetInactivityTimer();
+  // }
 
 }

@@ -5,7 +5,7 @@ import { ListaModuloEvaluacionInterface } from 'src/app/models/moduloEvaluacion'
 import { ListaPreguntasByEvaluacionInterface } from 'src/app/models/preguntasByEvaluacion';
 import { ListaTipoEvaluacionInterface } from 'src/app/models/tipoEvaluacion';
 import { ApiService } from 'src/app/services/ApiService';
-import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
+//import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
 import { SessionService } from 'src/app/services/SessionService';
 
 @Component({
@@ -21,7 +21,7 @@ export class NuevaEvaluacionComponent implements OnInit {
   
   constructor(private api:ApiService, private router: Router,
     private sessionService: SessionService, 
-    private inactivityService: InactivitySessionService  
+    // private inactivityService: InactivitySessionService  
   ){}
 
   
@@ -54,7 +54,7 @@ export class NuevaEvaluacionComponent implements OnInit {
     })
 
     const sessionData = this.sessionService.getSession();
-    this.inactivityService.initInactivityTimer();
+    //this.inactivityService.initInactivityTimer();
     if (sessionData == null){
       this.router.navigate(['login']);
     }
@@ -86,7 +86,7 @@ export class NuevaEvaluacionComponent implements OnInit {
 
   }
 
-  onUserActivity(): void {
-    this.inactivityService.resetInactivityTimer();
-  }
+  // onUserActivity(): void {
+  //   this.inactivityService.resetInactivityTimer();
+  // }
 }

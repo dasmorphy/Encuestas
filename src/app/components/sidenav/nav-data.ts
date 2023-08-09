@@ -18,7 +18,7 @@ export const navbarData: INavbarData[] =
             {
                 routeLink: 'gestion-evaluaciones/lista-evaluaciones',
                 label: 'Lista de Evaluaciones',
-                rol: 1
+                rol: null
             }
             // {
             //     routeLink: 'gestion-evaluaciones/nueva-evaluacion',
