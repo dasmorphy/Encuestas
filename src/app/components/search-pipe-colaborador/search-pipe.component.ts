@@ -22,9 +22,9 @@ export class SearchPipeComponent implements PipeTransform {
         colaborador.zona.toLowerCase().includes(searchTerm) ||
         colaborador.area.toLowerCase().includes(searchTerm) ||
         colaborador.departamento.toLowerCase().includes(searchTerm) ||
-        colaborador.cedula_Jefe.toLowerCase().includes(searchTerm) ||
-        colaborador.nombres_Jefe.toLowerCase().includes(searchTerm) ||
-        colaborador.cargo_Jefe.toLowerCase().includes(searchTerm) ||
+        colaborador.cedula_Evaluador.toLowerCase().includes(searchTerm) ||
+        colaborador.nombres_Evaluador.toLowerCase().includes(searchTerm) ||
+        colaborador.cargo_Evaluador.toLowerCase().includes(searchTerm) ||
         colaborador.estado.toLowerCase().includes(searchTerm)
       );
     });

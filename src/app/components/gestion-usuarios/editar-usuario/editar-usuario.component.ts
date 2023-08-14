@@ -30,8 +30,8 @@ export class EditarUsuarioComponent implements OnInit {
     password: new FormControl(''),
     identificacion: new FormControl(''),
     rol_Id: new FormControl(),
-    cargo_Id: new FormControl(),
-    grupo: new FormControl('')
+    //cargo_Id: new FormControl(),
+    //grupo: new FormControl('')
   })
 
   ngOnInit(): void {
@@ -55,8 +55,8 @@ export class EditarUsuarioComponent implements OnInit {
         'password': this.datosUsuario.password,
         'identificacion': this.datosUsuario.identificacion,
         'rol_Id': this.datosUsuario.rol_Id,
-        'cargo_Id': this.datosUsuario.cargo_Id,
-        'grupo': this.datosUsuario.grupo
+        //'cargo_Id': this.datosUsuario.cargo_Id,
+        //'grupo': this.datosUsuario.grupo
       })
     });
   }

@@ -63,6 +63,10 @@ export const navbarData: INavbarData[] =
             }
         ]
     },
-    
-
+    {
+        routeLink: '',
+        icon: 'fa-solid fa-key',
+        label: 'Cambiar contraseña',
+        rol: null
+    },
 ];

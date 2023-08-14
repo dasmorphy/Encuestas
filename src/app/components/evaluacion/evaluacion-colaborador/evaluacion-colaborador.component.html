@@ -1,7 +1,7 @@
 
 <h1>Proceso de Evaluación</h1>
 
-<form (mousemove)="onUserActivity()" (click)="onUserActivity()">
+<form>
 
   <div [formGroup]="usuarioForm" class="col-12">
     <div class="card" style="border-radius: 21px;">
@@ -56,15 +56,22 @@
             <div class="form-group col-md-11" *ngFor="let preguntas of modulo.preguntasByEvaluacionModel">
               <b><label id="{{preguntas.id_Preguntas_Tipo}}">{{preguntas.pregunta}}</label></b>
 
-              <input class="form-control" type="text" [(ngModel)]="calificacionPregunta['clfc_Pregunta' + preguntas.numero_Pregunta]" 
+              <!-- <input class="form-control" type="text" [(ngModel)]="calificacionPregunta['clfc_Pregunta' + preguntas.numero_Pregunta]" 
               [id]="'clfc_Pregunta' + preguntas.numero_Pregunta" [name]="'clfc_Pregunta' + preguntas.numero_Pregunta"
               (input)="validarCalificacion($event, preguntas.numero_Pregunta)"
-              onkeyup="this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');">
+              onkeyup="this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');"> -->
 
-              <div *ngIf="calificacionInvalida[preguntas.numero_Pregunta]">
-                Debe ser un número entre 0 y 5
-              </div>
-              
+
+              <select class="form-control" [(ngModel)]="calificacionPregunta['clfc_Pregunta' + preguntas.numero_Pregunta]"
+              [id]="'clfc_Pregunta' + preguntas.numero_Pregunta" [name]="'clfc_Pregunta' + preguntas.numero_Pregunta" required
+              (ngModelChange)="actualizarCalificacion('clfc_Pregunta' + preguntas.numero_Pregunta, $event)">
+                <option value="5">Excepcional</option>
+                <option value="4">Supera las expectativas</option>
+                <option value="3">Cumple dentro de lo esperado</option>
+                <option value="2">Apenas cumple con lo esperado</option>
+                <option value="1">Por debajo de lo esperado</option>
+              </select>
+      
               <label for="">Observaciones:</label>
               <textarea class="form-control" cols="28" rows="2"
               [id]="'observacion' + preguntas.numero_Pregunta" [(ngModel)]="observacionPregunta['observacion' + preguntas.numero_Pregunta]" 

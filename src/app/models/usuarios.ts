@@ -5,6 +5,5 @@ export interface ListaUsuariosInterface
     password: string;
     identificacion: string;
     rol_Id: number;
-    cargo_Id: number;
-    grupo: string;
+
 }

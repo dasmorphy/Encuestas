@@ -9,7 +9,7 @@
                 <input type="checkbox" [checked]="estadosSeleccionados.includes(estado)" (change)="toggleEstado(i)">
                 {{ estado }}
             </div>
-            <button class="btn btn-primary" (click)="exportarCalificaciones()">Exportar Calificaciones</button>
+            <button class="btn btn-primary" (click)="exportarCalificaciones()">Calificaciones Individual</button>
         </div>
 
         <div class="roles">
@@ -18,7 +18,7 @@
                 <input type="checkbox" [checked]="estadosRoles.includes(estado)" (change)="toggleEstadoRoles(i)">
                 {{ estado }}
             </div>
-            <button class="btn btn-primary" (click)="calificacionesRoles()">Calificaciones por Roles</button>
+            <button class="btn btn-primary" (click)="calificacionesRoles()">Calificaciones Acumulado</button>
         </div>
     </div>
     <input class="form-control mt-3 mb-2" [(ngModel)]="searchTerm" type="text" placeholder="Buscar">
@@ -33,6 +33,7 @@
                         <th scope="col">Usuario</th>
                         <th scope="col">Colaborador</th>
                         <th scope="col">Calificacion Final</th>
+                        <th scope="col">Rol</th>
                         <th scope="col">Estado</th>
                         <th scope="col">Acciones</th>
 
@@ -46,6 +47,7 @@
                         <td>{{ item.nombreUsuario.usuario }}</td>
                         <td>{{ item.nombreColaborador.nombres }}</td>
                         <td>{{ item.evaluacion.calificacionFinal }}</td>
+                        <td>{{ item.nombreColaborador.grupo}}</td>
                         <td>{{ item.evaluacion.estado }}</td>
 
                         <!-- <button class="btn btn-dark" (click) = "editarUsuario(usuario.id_Usuario)">Editar</button> -->

@@ -16,8 +16,7 @@ export class SearchPipeUsuariosComponent implements PipeTransform {
     return usuarios.filter(usuarios => {
       return (
         usuarios.usuario.toLowerCase().includes(searchTerm) ||
-        usuarios.identificacion.toLowerCase().includes(searchTerm) ||
-        usuarios.grupo.toLowerCase().includes(searchTerm) 
+        usuarios.identificacion.toLowerCase().includes(searchTerm)
       );
     });
   }

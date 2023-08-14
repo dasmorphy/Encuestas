@@ -39,6 +39,7 @@ export class SidenavComponent implements OnInit {
 
     }
   }
+  linkSesion: string = '';
   sessionData: any;
   constructor (public router: Router, private sessionService: SessionService){}
 
@@ -52,6 +53,7 @@ export class SidenavComponent implements OnInit {
     if (sessionData == null) {
       this.router.navigate(['login']);
     } else {
+      this.linkSesion = `gestion-usuarios/cambiarPassword/${sessionData.id_Usuario}`
       this.currentRole = sessionData.rol_Id; // Asigna el valor de sessionData.rol_Id a currentRole
       console.log("rol2",this.currentRole);
       this.navData = this.getMenuOptionsForRole(this.currentRole);
@@ -95,7 +97,7 @@ export class SidenavComponent implements OnInit {
       return this.navData;
     } else {
       console.log("data3",this.navData);
-      return this.navData.filter(option => option.label === 'Inicio' || option.label === 'Evaluar');
+      return this.navData.filter(option => option.label === 'Inicio' || option.label === 'Evaluar' || option.label === 'Cambiar contraseña');
     }
   }
   

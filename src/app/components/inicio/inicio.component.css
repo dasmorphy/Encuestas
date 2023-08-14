@@ -1,3 +1,45 @@
-h1{
+h1 {
     margin-bottom: 2rem;
+}
+
+.cerrarSesion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url("../../../assets/img/fondo.jpg");
+    background-color: rgba(0, 0, 0, 0.3); /* Ajustar la opacidad aquí */
+    background-size: cover; /* Ajustar el tamaño de la imagen */
+    background-position: center; /* Asegurar que esté centrada */
+}
+
+.container {
+    text-align: center;
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.9); /* Color de fondo con opacidad */
+    border-radius: 10px;
+}
+
+.botones-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+    height: 50%;
+}
+
+.container p {
+    font-family: 'Unna', serif;
+
+    color: #666;
+    font-size: 25px;
+    line-height: 1.5;
 }

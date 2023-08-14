@@ -10,9 +10,12 @@ export interface ListaColaboresInterface
     zona: string;
     area: string;
     departamento: string;
-    cedula_Jefe: string;
-    nombres_Jefe: string;
-    fe_Ingreso_Jefe: string;
-    cargo_Jefe: string;
-    estado: string
+    cedula_Evaluador: string;
+    nombres_Evaluador: string;
+    fe_Ingreso_Evaluador: string;
+    cargo_Evaluador: string;
+    cargo: string;
+    grupo: string;
+    cargo_Id: number;
+    estado: string;   
 }

@@ -1,0 +1,31 @@
+<h1>Período de evaluaciones</h1>
+
+<div>
+    <br>
+    <div *ngIf="ultmProceso.estado === 'Inactivo' ">
+        <label for="">Último período aperturado: {{ ultmProceso.fecha_Inicio | date:'mediumDate' }} - {{ ultmProceso.fecha_Fin | date:'mediumDate' }} </label>
+    </div>
+
+    <div *ngIf="ultmProceso.estado === 'Activo' ">
+        <label for="">Periodo Actual: {{ ultmProceso.fecha_Inicio | date:'mediumDate' }} - {{ ultmProceso.fecha_Fin | date:'mediumDate' }} </label>
+    </div>
+
+    <br>
+    <form [formGroup]="formProceso" (ngSubmit)="abrirPeriodo()" >
+        <label class="mt-2" for="">Fecha de inicio</label>
+        <input class="form-control" style="width: 25rem;" formControlName="fecha_Inicio" min="{{ fechaActual | date:'yyyy-MM-dd' }}" type="date"  />
+    
+        <label class="mt-2" for="">Fecha de fin</label>
+        <input class="form-control" style="width: 25rem;" formControlName="fecha_Fin" type="date"  />
+    
+        <div *ngIf="!procesoActivo">
+            <label style="color: red;">Hay un período activo, si desea abrir uno nuevo por favor cierre el actual</label>
+        </div>
+    
+        <button type="submit" class="btn btn-success mt-3" [disabled] = "!procesoActivo">Abrir Proceso</button>
+    </form>
+
+    <button class="btn btn-danger mt-3" (click)="cerrarPeriodo(ultmProceso.id_Proceso_Evaluacion)">Cerrar Proceso</button>
+</div>
+
+      

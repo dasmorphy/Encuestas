@@ -21,6 +21,7 @@ import { EvaluacionModule } from './components/evaluacion/evaluacion.module';
 import { EvaluacionComponent } from './components/evaluacion/utils/evaluacion.component';
 import { NuevoColaboradorComponent } from './components/colaboradores/nuevo-colaborador/nuevo-colaborador.component';
 import { SearchPipeComponent } from './components/search-pipe-colaborador/search-pipe.component';
+import { ProcesosEvaluacionesComponent } from './components/procesos-evaluaciones/procesos-evaluaciones.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { SearchPipeComponent } from './components/search-pipe-colaborador/search
     LoginComponent,
     NotFoundComponent,
     NuevoColaboradorComponent,
-    SearchPipeComponent
+    SearchPipeComponent,
+    ProcesosEvaluacionesComponent
     //EvaluacionComponent
   ],
   imports: [

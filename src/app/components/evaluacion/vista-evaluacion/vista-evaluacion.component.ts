@@ -174,7 +174,7 @@ export class VistaEvaluacionComponent implements OnInit{
     evaluacionModel: new FormControl()
   });
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.datosEvaluacion = history.state.datos;
     let accesoListaEvaluacion = this.datosEvaluacion.state.rutaListaEvaluacion;
   
@@ -194,13 +194,14 @@ export class VistaEvaluacionComponent implements OnInit{
     let colaboradorId = this.activedRoute.snapshot.paramMap.get('id_Colaborador');
     let usuarioId = this.activedRoute.snapshot.paramMap.get('id_Usuario');
 
-    this.api.getSingleColaborador(colaboradorId).subscribe(data => {
-      this.colaboradores = data
-      this.evaluacionForm.setValue({
-        'id_Colaborador': colaboradorId,
-        'nombres': this.colaboradores.nombres
-      })
-    }); 
+    const next = await firstValueFrom(this.api.getSingleColaborador(colaboradorId));
+    this.colaboradores = next;
+    
+    this.evaluacionForm.setValue({
+      'id_Colaborador': colaboradorId,
+      'nombres': this.colaboradores.nombres
+    })
+
     console.log("Datos de la Evaluacion",this.datosEvaluacion);
     this.evaluacionSingle.setValue(this.datosEvaluacion.state.evaluaciones[0]);
     this.observacionSingle.setValue(this.datosEvaluacion.state.observaciones);
@@ -220,10 +221,9 @@ export class VistaEvaluacionComponent implements OnInit{
 
       })
       console.warn(data);
-
       console.warn(this.usuario);
       //CAMBIO SOLICITADO
-      this.api.getPreguntaModuloCargo(this.usuario.cargo_Id).subscribe(data => {
+      this.api.getPreguntaModuloCargo(this.colaboradores.cargo_Id).subscribe(data => {
         this.modulosPreguntas = data
         console.log("AAAA",this.modulosPreguntas)
         console.log("ssss",sessionData.cargo_Id)

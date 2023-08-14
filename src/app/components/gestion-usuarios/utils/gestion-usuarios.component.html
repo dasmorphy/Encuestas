@@ -11,7 +11,6 @@
                     <!-- <th scope="col">ID</th> -->
                     <th scope="col">Usuario</th>
                     <th scope="col">Identificacion</th>
-                    <th scope="col">Rol</th>
                     <th scope="col">Acciones</th>
 
                 </tr>
@@ -22,7 +21,6 @@
                     <td hidden>{{usuario.id_Usuario}}</td>
                     <td>{{usuario.usuario}}</td>
                     <td>{{usuario.identificacion}}</td>
-                    <td>{{usuario.grupo}}</td>
                     <td>
                         <button class="btn btn-warning" (click) = "editarUsuario(usuario.id_Usuario)">Editar</button>
                     </td>

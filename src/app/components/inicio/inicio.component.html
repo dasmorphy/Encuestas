@@ -1,10 +1,43 @@
-<h1>Inicio</h1>
+<!-- <h1>Inicio</h1>
 
 
 <div >
+  
+  
 
-    <div *ngIf="sessionData">
-        <h3>Bienvenido {{ sessionData.usuario }}!</h3>
-      </div>
+  <div *ngIf="sessionData">
+      <h3>Bienvenido {{ sessionData.usuario }}!</h3>
+
+    <button class="btn btn-danger cerrarSesion" (click)="confirmLogout()">Cerrar sesion</button>
+    <button class="btn btn-primary mt-3" *ngIf="rolAdmi" (click)="procesosEvaluacion()">Procesos de Evaluación</button>
+
+  </div>
       
-</div>
+</div> -->
+
+
+<body>
+
+
+  <div class="container">
+    
+      <h1>¡Bienvenido {{ sessionData.usuario }}!</h1>
+
+      <!-- <img src="../../../assets/img/fondo.jpg" alt=""> -->
+
+      <p>El objetivo de la evaluación de desempeño es medir, analizar y mejorar el rendimiento de los colaboradores en relación con los objetivos organizacionales y las expectativas laborales de Negfar.</p>
+      <p>El modelo de competencias seleccionado, ha sido diseñado con tres grupos de competencias: Organizacionales, estratégicas y de gestión y competencias funcionales.</p>
+      <p> Para que el proceso de evalaución sea exitoso, es necesario que se realice de forma objetiva, justa, imparcial y con criterio profesional, esto permitirá la identificación de las brechas y planes de acción acorde a los resultados</p>
+      <p>Para valorar cada competencia, tendrás 5 opciones de acuerdo a la escala de Likert que son: Excepcional, Supera las expectativas, Cumple dentro de lo esperado, Apenas cumple con lo esperado, Por debajo de lo esperado.</p>
+      
+      <p>Tú participación es muy importante y te convierte en protagonista del cambio.</p>
+      <br>
+      <p> ¡Te deseamos éxitos!  </p>      
+      
+      <div class="botones-container">
+        <button class="btn btn-danger cerrarSesion" (click)="confirmLogout()">Cerrar sesión</button>
+        <button class="btn btn-primary mt-3" *ngIf="rolAdmi" (click)="procesosEvaluacion()">Procesos de Evaluación</button>
+    </div>
+  </div>
+  
+</body>

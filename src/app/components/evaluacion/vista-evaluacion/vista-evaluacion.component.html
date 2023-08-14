@@ -56,7 +56,17 @@
             <form [formGroup]="evaluacionSingle">                
                 <div class="form-group col-md-11" *ngFor="let preguntas of modulo.preguntasByEvaluacionModel">
                   <b><label id="{{preguntas.id_Preguntas_Tipo}}">{{preguntas.pregunta}}</label></b>
-                  <input class="form-control" type="text" formControlName="clfc_Pregunta{{preguntas.numero_Pregunta}}">
+                  <!-- <input class="form-control" type="text" formControlName="clfc_Pregunta{{preguntas.numero_Pregunta}}"> -->
+
+                  <select class="form-control" formControlName="clfc_Pregunta{{preguntas.numero_Pregunta}}">
+                    <option value="5">Excepcional</option>
+                    <option value="4">Supera las expectativas</option>
+                    <option value="3">Cumple dentro de lo esperado</option>
+                    <option value="2">Apenas cumple con lo esperado</option>
+                    <option value="1">Por debajo de lo esperado</option>
+                  </select>
+
+
                   <form [formGroup]="observacionSingle">
                     
                       <label for="">Observaciones:</label>

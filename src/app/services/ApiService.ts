@@ -14,6 +14,7 @@ import { ListaObservacionesInterface } from '../models/observaciones';
 import { ListaRolesInterface } from '../models/roles';
 import { ListaPreguntaModuloCargo } from '../models/preguntaModuloCargo';
 import { ListaCargosInterface } from '../models/cargos';
+import { ListaProcesosEvalaucion } from '../models/procesosEvaluacion';
 
 
 @Injectable({
@@ -85,6 +86,13 @@ export class ApiService {
         let urlSingleUsuario: string = 'https://localhost:7091/api/usuarios/' + id_Usuario;
         console.warn (urlSingleUsuario);
         return this.http.get<ListaUsuariosInterface>(urlSingleUsuario);
+    }
+
+    getSingleByUsuarioString(usuario: string ):Observable<ListaUsuariosInterface>
+    {
+        let urlUsuario: string = 'https://localhost:7091/api/usuarios/usuario/' + usuario;
+        console.warn (urlUsuario);
+        return this.http.get<ListaUsuariosInterface>(urlUsuario);
     }
 
     postUser(form:ListaUsuariosInterface):Observable<ResponseInit>
@@ -211,6 +219,12 @@ export class ApiService {
         return this.http.get<ListaRolesInterface[]>(urlRoles); 
     }
 
+    getSingleRol(id_rol: number):Observable<ListaRolesInterface>
+    {
+        let urlSingleRol: string = 'https://localhost:7091/api/rol/' + id_rol;
+        return this.http.get<ListaRolesInterface>(urlSingleRol); 
+    }
+
     getPreguntaModuloCargo(id_Cargo:number):Observable<any[]>
     {
         let urlPreguntaModuloCargo: string = 'https://localhost:7091/api/preguntaModuloCargo/' +  id_Cargo
@@ -222,6 +236,26 @@ export class ApiService {
         let urlCargo: string = 'https://localhost:7091/api/cargos';
         return this.http.get<ListaCargosInterface[]>(urlCargo); 
     }
+
+    getUltmProcesoEvaluacion():Observable<ListaProcesosEvalaucion>
+    {
+        let urlProceso: string = 'https://localhost:7091/api/procesosEvaluacion/ultimoRegistro';
+        return this.http.get<ListaProcesosEvalaucion>(urlProceso); 
+    }
     
+    postProcesoEvaluacion(form:any):Observable<ResponseInit>
+    {
+        let urlProcesos: string = 'https://localhost:7091/api/procesosEvaluacion'
+        console.warn (urlProcesos);
+        return this.http.post<ResponseInit>(urlProcesos, form);
+    }
+
+
+    updateProcesoEstado(procesoEvaluacion:any):Observable<any>
+    {
+        let urlUpdateProcesoEstado: string = 'https://localhost:7091/api/procesosEvaluacion/' + procesoEvaluacion.id_Proceso_Evaluacion;
+        console.warn (urlUpdateProcesoEstado);
+        return this.http.put<any>(urlUpdateProcesoEstado, procesoEvaluacion);
+    }
     
 }

@@ -8,6 +8,7 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { EvaluacionColaboradorComponent } from './components/evaluacion/evaluacion-colaborador/evaluacion-colaborador.component';
 import { NuevoColaboradorComponent } from './components/colaboradores/nuevo-colaborador/nuevo-colaborador.component';
 import { VistaEvaluacionComponent } from './components/evaluacion/vista-evaluacion/vista-evaluacion.component';
+import { ProcesosEvaluacionesComponent } from './components/procesos-evaluaciones/procesos-evaluaciones.component';
 
 
 
@@ -30,6 +31,10 @@ const routes: Routes = [
   {path: 'evaluacion-colaborador/:id_Colaborador', component: EvaluacionColaboradorComponent},
   {
     path: 'vistaEvaluacion/:id_Colaborador/:id_Usuario', component: VistaEvaluacionComponent
+  },
+
+  {
+    path: 'procesosEvaluacion', component: ProcesosEvaluacionesComponent
   },
 
   {path: '**', component: NotFoundComponent},

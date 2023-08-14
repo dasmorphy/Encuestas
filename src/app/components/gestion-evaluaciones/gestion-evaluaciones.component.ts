@@ -30,6 +30,7 @@ export class GestionEvaluacionesComponent implements OnInit{
   observaciones: ListaObservacionesInterface[];
   nombreEvaluador: string;
   cargoEvaluador: string;
+  cargoBDColaborador: number; //CARGO DEL COLABORADOR A NIVEL DE BASES (JEFATURAS, GESTOR, ETC)
   nombreEvaluado: string;
   cargoEvaluado: string;
   evaluacionesConNombres: { evaluacion: ListaEvaluacionesInterface, nombreUsuario: any, nombreColaborador: any }[] = [];
@@ -176,7 +177,7 @@ export class GestionEvaluacionesComponent implements OnInit{
     else
     {
       const estadosQuery = this.estadosRoles.join(',');
-      const url = `https://localhost:7091/api/evaluacion/evaluacionesRoles?estadosSeleccionados=${estadosQuery}`;  
+      const url = `https://localhost:7091/api/evaluacion/detalladoAcumulado?estadosSeleccionados=${estadosQuery}`;  
       const params = new HttpParams().set('estadosSeleccionados', this.estadosRoles.join(','));
       console.log(this.estadosRoles);
       console.log(params)  
@@ -297,18 +298,20 @@ export class GestionEvaluacionesComponent implements OnInit{
     const pdf = new PdfMakeWrapper();
     
     // Leer la imagen como dataURL
-    let imagenLogo = '../../../assets/img/logo.png'; 
+    let imagenLogo = '../../../assets/img/logo.png';
+    let lineaFirma =  '../../../assets/img/Linea_Firma.png';
 
     this.api.getSingleColaborador(id_Colaborador).subscribe(data => { 
       this.nombreEvaluado = data.nombres;
       this.cargoEvaluado = data.cargo_Colaborador;
-      this.nombreEvaluador = data.nombres_Jefe;
-      this.cargoEvaluador = data.cargo_Jefe;
+      this.nombreEvaluador = data.nombres_Evaluador;
+      this.cargoEvaluador = data.cargo_Evaluador;
+      this.cargoBDColaborador = data.cargo_Id;
     });
     
     await this.getEvaluacion(id_Colaborador, usuarioId);
     await this.obtenerDatosUsuario(usuarioId);
-    await this.getModulosPreguntasByCargo(this.datosUsuario.cargo_Id);
+    await this.getModulosPreguntasByCargo(this.cargoBDColaborador);
     await this.getObservacion(this.evaluaciones[0].id_Evaluacion);
     console.log("this.evaluaciones", this.evaluaciones); 
     console.log("this.datosUsuario", this.datosUsuario); 
@@ -376,18 +379,18 @@ export class GestionEvaluacionesComponent implements OnInit{
       }).end,
       new Table([
         [
-          new Txt('1').bold().color('black').fontSize(10).alignment('center').end,
-          new Txt('2').color('black').fontSize(10).alignment('center').end,
-          new Txt('3').color('black').fontSize(10).alignment('center').end,
-          new Txt('4').color('black').fontSize(10).alignment('center').end,
-          new Txt('5').color('black').fontSize(10).alignment('center').end,
+          new Txt('Por debajo de lo esperado').color('black').fontSize(10).alignment('center').end,
+          new Txt('Apenas cumple con lo esperado').color('black').fontSize(10).alignment('center').end,
+          new Txt('Cumple dentro de lo esperado').color('black').fontSize(10).alignment('center').end,
+          new Txt('Supera las expectativas').color('black').fontSize(10).alignment('center').end,
+          new Txt('Excepcional').color('black').fontSize(10).alignment('center').end,
         ],
         [
-          new Txt('Por debajo de lo esperado: No alcanza los estándares mínimos esperados del puesto.').bold().fontSize(10).alignment('center').end,
+          new Txt('No alcanza los estándares mínimos esperados del puesto.').color('black').fontSize(10).alignment('center').end,
           new Txt('En algunas ocasiones no alcanza los parámetros establecidos; requiere iniciar un plan de mejoramiento.').color('black').fontSize(10).alignment('center').end,
           new Txt('Cumple dentro de lo esperado con los compromisos y exigencias establecidas para el cargo.').color('black').fontSize(10).alignment('center').end,
-          new Txt('Supera las expectativas: Excede de manera parcial o temporal los resultados esperados del cargo.').color('black').fontSize(10).alignment('center').end,
-          new Txt('Excepcional: Sobrepasa de manera visible, evidente, y consistente los resultados del puesto.').color('black').fontSize(10).alignment('center').end,
+          new Txt('Excede de manera parcial o temporal los resultados esperados del cargo.').color('black').fontSize(10).alignment('center').end,
+          new Txt('Sobrepasa de manera visible, evidente, y consistente los resultados del puesto.').color('black').fontSize(10).alignment('center').end,
         ],
       ]).widths(['*', '*', '*', '*', '*']).end,
 
@@ -397,7 +400,7 @@ export class GestionEvaluacionesComponent implements OnInit{
       new Table([
         [
           new Txt('Competencias a Evaluar').color('white').alignment('center').fontSize(15).end,
-          new Txt('Calificacion').color('white').alignment('center').fontSize(15).end,
+          new Txt('Valoración').color('white').alignment('center').fontSize(15).end,
           new Txt('Observaciones').color('white').alignment('center').fontSize(15).end,
   
         ],
@@ -413,13 +416,20 @@ export class GestionEvaluacionesComponent implements OnInit{
     pdf.add(new Txt('         ').end);
     
     for (const modulosPreguntas of this.modulosPreguntas) {
-      pdf.add(
+      pdf.add([
+        new Txt('         ').end,
         new Table([
           [new Txt(modulosPreguntas.nombre_Modulo).color('white').end],
         ]).widths(['*', 50, '*']).layout({
           fillColor: (rowIndex) => (rowIndex === 0 ? '#3f60a8' : '#ffffff'), // Color de fondo de la tabla
+        }).end,
+
+        new Table([
+          [new Txt(modulosPreguntas.definicion).color('white').end],
+        ]).widths(['*']).layout({
+          fillColor: (rowIndex) => (rowIndex === 0 ? '#c91877' : '#ffffff'), // Color de fondo de la tabla
         }).end
-      );
+      ]);
       // Crear una matriz para almacenar las preguntas y calificaciones
       const tableContent = [];
       console.log("OBSERVACIONES PRUEBAS",this.observaciones[0]);
@@ -431,7 +441,31 @@ export class GestionEvaluacionesComponent implements OnInit{
     
         // Agregar la calificación en la segunda columna
         const key = `clfc_Pregunta${preguntas.numero_Pregunta}`;
-        const calificacion = this.evaluaciones[0][key as keyof ListaEvaluacionesInterface];
+        let calificacion = this.evaluaciones[0][key as keyof ListaEvaluacionesInterface];
+
+        //Se muestran la clasificacion de la calificacion en base a la escala del 1 al 5
+        if (calificacion == 0){
+          calificacion = "";
+        }
+        else if (calificacion == 1){
+          calificacion = "Por debajo de lo esperado";
+        }
+        else if (calificacion == 2)
+        {
+          calificacion = "Apenas cumple con lo esperado";
+        }
+        else if (calificacion == 3)
+        {
+          calificacion = "Cumple dentro de lo esperado";
+        }
+        else if (calificacion == 4)
+        {
+          calificacion = "Supera las expectativas";
+        }
+        else if (calificacion == 5)
+        {
+          calificacion = "Excepcional";
+        }
 
         const keyObservacion: string = `observacion${preguntas.numero_Pregunta}`;
         const observacion = this.observaciones[0][keyObservacion as keyof ListaObservacionesInterface];
@@ -452,8 +486,68 @@ export class GestionEvaluacionesComponent implements OnInit{
           fillColor: (rowIndex) => (rowIndex === 0 ? '' : '#ffffff'),
         }).end
       );
-      
     }
+
+    let calificacionFinal = this.evaluaciones[0].calificacionFinal;
+    let calificacionMax = 5; //calificacion maxima en base a la suma de las tres competencias
+
+    console.log("calificacionFinal", calificacionFinal);
+    console.log("calificacionMax", calificacionMax);
+
+    let valoracionFinal: string = "";
+    
+    if (calificacionFinal === undefined) {
+      calificacionFinal = 0; // Asigna un valor predeterminado si es undefined
+    } else if (calificacionFinal >= 1 && calificacionFinal <= 1.99) {
+      valoracionFinal = "Por debajo de lo esperado";
+    } else if (calificacionFinal >= 2 && calificacionFinal <= 2.99) {
+      valoracionFinal = "Apenas cumple con lo esperado";
+    } else if (calificacionFinal >= 3 && calificacionFinal <= 3.99) {
+      valoracionFinal = "Cumple dentro de lo esperado";
+    } else if (calificacionFinal >= 4 && calificacionFinal <= 4.99) {
+      valoracionFinal = "Supera las expectativas";
+    } else if (calificacionFinal == 5) {
+      valoracionFinal = "Excepcional";
+    }
+
+    let porcentajeCalificacion = (calificacionFinal / calificacionMax) * 100; 
+    let porcentajeRedondeado = Math.floor(porcentajeCalificacion); //se quitan los decimales del porcentaje
+    console.log("porcentajeCalificacion", porcentajeCalificacion);
+    console.log("porcentajeRedondeado", porcentajeRedondeado);
+
+
+    pdf.add([
+
+      new Txt('         ').end,
+      new Txt('         ').end,
+
+      new Table([
+        [
+          new Txt('Valoración Final: ').bold().color('black').fontSize(10).end,
+          new Txt(`${porcentajeRedondeado}%`).color('black').fontSize(10).end,
+          new Txt(valoracionFinal).color('black').fontSize(10).end,
+        ]
+      ]).widths([220, 100, '*']).end
+    ]);
+
+
+    pdf.add([
+      new Txt('         ').end,
+      new Txt('         ').end,
+      new Txt('         ').end,
+      await new Img(lineaFirma).width(170).height(40).build(),
+      new Txt(this.nombreEvaluado).color('black').fontSize(10).end,
+      new Txt("Evaluado").bold().color('black').fontSize(10).end,
+
+      new Txt('         ').end,
+      new Txt('         ').end,
+
+      await new Img(lineaFirma).width(170).height(40).build(),
+      new Txt(this.nombreEvaluador).color('black').fontSize(10).end,
+      new Txt("Evaluador").bold().color('black').fontSize(10).end
+      
+    ]);
+
     pdf.create().download(`Evaluacion ${this.nombreEvaluado}`);
   }
 

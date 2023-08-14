@@ -15,11 +15,13 @@ export class SearchPipeListaEvaluacionesComponent implements PipeTransform {
       //const evaluacion = item.evaluacion;
       const nombreUsuario = item.nombreUsuario.usuario;
       const nombreColaborador = item.nombreColaborador.nombres;
+      const grupoColaborador = item.nombreColaborador.grupo;
       const estadoEvaluacion = item.evaluacion.estado;
       return (
         // evaluacion.calificacionFinal?.toString().includes(searchTermLower) ||
         nombreUsuario?.toLowerCase().includes(searchTermLower) ||
         nombreColaborador?.toLowerCase().includes(searchTermLower) ||
+        grupoColaborador?.toLowerCase().includes(searchTermLower) ||
         estadoEvaluacion.toLowerCase().includes(searchTermLower)
       );
     });
