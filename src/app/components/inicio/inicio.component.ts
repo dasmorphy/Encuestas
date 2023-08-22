@@ -7,6 +7,7 @@ import { SessionService } from 'src/app/services/SessionService';
 import Swal from 'sweetalert2';
 import { firstValueFrom } from 'rxjs';
 import { ListaRolesInterface } from 'src/app/models/roles';
+import { ListaColaboresInterface } from 'src/app/models/colaboradores';
 
 @Component({
   selector: 'app-inicio',
@@ -17,6 +18,7 @@ export class InicioComponent implements OnInit{
   usuarios: ListaUsuariosInterface[];
   sessionData: any;
   usuarioSesion: ListaUsuariosInterface;
+  nombreUsuario: ListaColaboresInterface;
   rolUsuario: ListaRolesInterface;
   rolAdmi: boolean = false;
 
@@ -32,6 +34,10 @@ export class InicioComponent implements OnInit{
     
     const sessionData = this.sessionService.getSession();
     this.sessionData = sessionData;
+    console.log("SESIONNN",sessionData);
+
+    const usuarioNombre = await firstValueFrom(this.api.getColaboradorByIdentificacion(sessionData.identificacion));
+    this.nombreUsuario = usuarioNombre;
 
 
     const usuarioLogin = await firstValueFrom(this.api.getSingleUsuario(sessionData.id_Usuario));

@@ -8,6 +8,7 @@ export class SessionService {
   private sessionData:{
     id_Usuario: number,
     usuario: string,
+    identificacion: string,
     cargo_Id: number,
     rol_Id: number
   };

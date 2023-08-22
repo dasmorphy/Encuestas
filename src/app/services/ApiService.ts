@@ -43,6 +43,12 @@ export class ApiService {
         return this.http.get<ListaColaboresInterface>(urlColaborador);
     }
 
+    getColaboradorByIdentificacion(cedula_colaborador: string):Observable<ListaColaboresInterface>
+    {
+        let urlColaborador: string = 'https://localhost:7091/api/colaborador/colaboradorByIdentificacion/' + cedula_colaborador;
+        return this.http.get<ListaColaboresInterface>(urlColaborador);
+    }
+
     updateColaborador(formColaborador: any):Observable<any>
     {
         let urlUpdateUsuario: string = 'https://localhost:7091/api/colaborador/' + formColaborador.id_Colaborador;
