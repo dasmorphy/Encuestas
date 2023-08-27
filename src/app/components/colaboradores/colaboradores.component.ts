@@ -32,12 +32,12 @@ export class ColaboradoresComponent implements OnInit {
 
     const sessionData = this.sessionService.getSession();
     //this.inactivityService.initInactivityTimer();
-    if (sessionData == null){
-      this.router.navigate(['login']);
-    }
+    // if (sessionData == null){
+    //   this.router.navigate(['login']);
+    // }
 
-    this.api.getAllCollaboradorByUsuario(sessionData.id_Usuario).subscribe(data =>{
-      console.log(data);
+    this.api.getAllColaboradores().subscribe(data =>{
+      //console.log(data);
       this.colaboradores = data;
     })
   }
@@ -61,7 +61,7 @@ export class ColaboradoresComponent implements OnInit {
 
   exportarEstadosSeleccionados(){
     this.api.getExportarColaboradores(this.estadosSeleccionados).subscribe(data =>{
-      console.log("Corecto ",data);
+      // console.log("Corecto ",data);
       //this.colaboradores = data;
     })
 
@@ -78,7 +78,7 @@ export class ColaboradoresComponent implements OnInit {
   }
   
   descargarArchivo(): void {
-    console.log(this.estadosSeleccionados);
+    // console.log(this.estadosSeleccionados);
 
     if(this.estadosSeleccionados.length === 0)
     {
@@ -91,13 +91,13 @@ export class ColaboradoresComponent implements OnInit {
     else
     {
       const estadosQuery = this.estadosSeleccionados.join(',');
-      const url = `https://localhost:7091/api/colaborador/exportarColaboradores?estadosSeleccionados=${estadosQuery}`;
+      const url = `https://webappevaluaciones.azurewebsites.net/api/colaborador/exportarColaboradores?estadosSeleccionados=${estadosQuery}`;
   
       //const url = 'https://localhost:7091/api/colaborador/exportarColaboradores';
     
       const params = new HttpParams().set('estadosSeleccionados', this.estadosSeleccionados.join(','));
-      console.log(this.estadosSeleccionados);
-      console.log(params)  
+      // console.log(this.estadosSeleccionados);
+      // console.log(params)  
       this.http.get(url, {
         responseType: 'blob',
         headers: new HttpHeaders().append('Accept', 'application/octet-stream'),

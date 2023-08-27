@@ -41,24 +41,11 @@ export class NuevoUsuarioComponent implements OnInit{
   })
 
   ngOnInit(): void {
-    const sessionData = this.sessionService.getSession();
-    //this.inactivityService.initInactivityTimer();
-    if (sessionData == null){
-      this.router.navigate(['login']);
-    }
-
-    // this.api.getAllTipoEvaluacion().subscribe(data =>{
-    //   console.log(data)
-    //   this.tipoEvaluacion = data; 
-    // })
-
     this.api.getAllRoles().subscribe(data =>{
-      console.log(data)
       this.roles = data; 
     })
 
     this.api.getAllCargo().subscribe(data =>{
-      console.log(data)
       this.grupos = data; 
     })
 
@@ -98,9 +85,22 @@ export class NuevoUsuarioComponent implements OnInit{
         });
   
         if (result.isConfirmed) {
-          const next = await firstValueFrom(this.api.postUser(newUser));
-          await Swal.fire('Ok', 'Usuario registrado', 'success');
-          this.router.navigate(['gestion-usuarios/lista-usuarios']);
+          this.api.postUser(newUser).subscribe(
+            async (response) =>{
+              await Swal.fire('Ok', 'Usuario registrado', 'success');
+              this.router.navigate(['gestion-usuarios/lista-usuarios']);
+            },
+            (error) =>{
+              if(error.status === 409){
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'El usuario ya existe',
+                });
+              }
+            }
+
+          );
         }
       }
       catch (error) {
@@ -119,7 +119,4 @@ export class NuevoUsuarioComponent implements OnInit{
     this.router.navigate(['gestion-usuarios/lista-usuarios']);
   }
 
-  // onUserActivity(): void {
-  //   this.inactivityService.resetInactivityTimer();
-  // }
 }

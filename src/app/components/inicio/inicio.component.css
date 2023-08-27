@@ -14,7 +14,7 @@
     margin-top: 1.3rem;
     display: flex;
     justify-content: flex-end;
-    height: 3rem;
+    height: auto;
 }
 
 .buttons button {
@@ -105,3 +105,132 @@ h1 {
 .btn {
     margin-top: 1rem;
 } */
+
+@media (max-width: 995px){
+
+    h4{
+        margin-top: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .buttons{
+        font-size: 5px;
+        height: auto;
+    }
+
+    .contenido{
+        display: flex;
+    }
+
+    .img-fondo{
+        display: none;
+    }    
+
+    @media (min-width: 581px) and (max-width: 777px){
+        h4{
+            margin-top: 8rem;
+            margin-bottom: 3rem;
+        }
+    }
+    
+}
+
+@media(max-width: 580px){
+    .imagen-footer{
+        height: 100%;
+        width: 100%;
+    }
+
+    .img-fondo{
+        display: none;
+    }
+
+    
+
+    /* .buttons{
+        display: block;
+        justify-content: initial;
+    } */
+
+    
+    /* body{
+        overflow-x: auto;
+
+    } */
+
+    .container {
+        flex-direction: column; 
+        height: auto; 
+        margin-bottom: 12rem;
+    }
+
+    h1{
+        margin-bottom: 0;
+    }
+    
+    .buttons {
+        margin-top: 0;
+        display: block;
+        text-align: center; 
+    }
+
+    h4{
+        margin-top: 4rem;
+        margin-bottom: 4rem;
+    }
+}
+
+@media (min-width: 385px) and (max-width: 480px){
+    body{
+        height: auto;
+    }
+
+    .imagen-footer{
+        height: 100%;
+        width: 100%;
+    }
+
+    .img-fondo{
+        display: none;
+    }
+
+    h4{
+        margin-top: 8rem;
+        margin-bottom: 6rem;
+    }
+
+    .container {
+        flex-direction: column; 
+        height: auto; 
+        margin-bottom: 16rem;
+    }
+}
+
+@media (max-width: 385px){
+   
+    h1{
+        font-size: 20px;
+    }
+    h4{
+        display: none;
+    }
+
+    body{
+        height: auto;
+    }
+
+    .imagen-footer{
+        height: 100%;
+        width: 100%;
+    }
+
+    .img-fondo{
+        display: none;
+    }
+
+    .container {
+        flex-direction: column; 
+        height: auto; 
+        margin-bottom: 20rem;
+    }
+}

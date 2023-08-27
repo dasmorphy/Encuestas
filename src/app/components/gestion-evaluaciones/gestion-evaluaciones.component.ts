@@ -58,9 +58,9 @@ export class GestionEvaluacionesComponent implements OnInit{
 
 
     //Se obtiene los nombres del colaborador y del usuario para que se reflejen en la lista de evaluaciones
-    let evalua = await firstValueFrom(this.api.getAllEvaluacionByUsuario(sessionData.id_Usuario))
-    console.log(evalua);
+    let evalua = await firstValueFrom(this.api.getAllEvaluacion())
     this.evaluacionesData = evalua
+
     for (const evaluacion of this.evaluacionesData) {
       const nombreUsuario = await firstValueFrom(this.api.getSingleUsuario(evaluacion.usuario_id));
       const nombreColaborador = await firstValueFrom(this.api.getSingleColaborador(evaluacion.colaborador_id));
@@ -72,7 +72,7 @@ export class GestionEvaluacionesComponent implements OnInit{
     
       const data = await firstValueFrom(this.api.getSingleUsuario(id_Usuario));
       if (data) {
-        console.log("USUARIO", data.usuario);
+        //console.log("USUARIO", data.usuario);
         return data.usuario;
       } else {
         return 'Usuario no encontrado';
@@ -130,7 +130,7 @@ export class GestionEvaluacionesComponent implements OnInit{
   }
   
   exportarCalificaciones(): void {
-    console.log(this.estadosSeleccionados);
+    //console.log(this.estadosSeleccionados);
 
     if(this.estadosSeleccionados.length === 0)
     {
@@ -143,10 +143,10 @@ export class GestionEvaluacionesComponent implements OnInit{
     else
     {
       const estadosQuery = this.estadosSeleccionados.join(',');
-      const url = `https://localhost:7091/api/evaluacion/exportarEvaluaciones?estadosSeleccionados=${estadosQuery}`;  
+      const url = `https://webappevaluaciones.azurewebsites.net/api/evaluacion/exportarEvaluaciones?estadosSeleccionados=${estadosQuery}`;  
       const params = new HttpParams().set('estadosSeleccionados', this.estadosSeleccionados.join(','));
-      console.log(this.estadosSeleccionados);
-      console.log(params)  
+      //console.log(this.estadosSeleccionados);
+      //console.log(params)  
       this.http.get(url, {
         responseType: 'blob',
         headers: new HttpHeaders().append('Accept', 'application/octet-stream'),
@@ -164,7 +164,7 @@ export class GestionEvaluacionesComponent implements OnInit{
   }
 
   calificacionesRoles(): void {
-    console.log(this.estadosRoles);
+    //console.log(this.estadosRoles);
 
     if(this.estadosRoles.length === 0)
     {
@@ -177,10 +177,10 @@ export class GestionEvaluacionesComponent implements OnInit{
     else
     {
       const estadosQuery = this.estadosRoles.join(',');
-      const url = `https://localhost:7091/api/evaluacion/detalladoAcumulado?estadosSeleccionados=${estadosQuery}`;  
+      const url = `https://webappevaluaciones.azurewebsites.net/api/evaluacion/detalladoAcumulado?estadosSeleccionados=${estadosQuery}`;  
       const params = new HttpParams().set('estadosSeleccionados', this.estadosRoles.join(','));
-      console.log(this.estadosRoles);
-      console.log(params)  
+      //console.log(this.estadosRoles);
+      //console.log(params)  
       this.http.get(url, {
         responseType: 'blob',
         headers: new HttpHeaders().append('Accept', 'application/octet-stream'),
@@ -204,11 +204,11 @@ export class GestionEvaluacionesComponent implements OnInit{
   visualizarEvaluacion(id_Colaborador: number, usuarioId: number, id_Evaluacion: number){
     this.api.getSingleEvaluacion(id_Colaborador, usuarioId).subscribe(data => { 
       this.evaluaciones = data;
-      console.log(data);
+      //console.log(data);
   
       this.api.getObservacionByEvaluacion(id_Evaluacion).subscribe((dataObservacion: any) => {
         this.observaciones = dataObservacion;
-        console.log("observaciones", this.observaciones);
+        //console.log("observaciones", this.observaciones);
   
         const datosParaVista = {
           evaluaciones: data,
@@ -216,14 +216,14 @@ export class GestionEvaluacionesComponent implements OnInit{
           observaciones: this.observaciones
         };
   
-        console.log("datosParaVista", datosParaVista);
+        //console.log("datosParaVista", datosParaVista);
   
         // Preparar los extras de navegación con el objeto de datos
         const navigationExtras: NavigationExtras = {
           state: datosParaVista
         };
         
-        console.log("navigationExtras", navigationExtras);
+        //console.log("navigationExtras", navigationExtras);
   
         this.router.navigate(['vistaEvaluacion', id_Colaborador, usuarioId], {state: {datos: navigationExtras}});
       });
@@ -278,7 +278,7 @@ export class GestionEvaluacionesComponent implements OnInit{
   async getEvaluacion(id_Colaborador: number, usuarioId: number){
     this.api.getSingleEvaluacion(id_Colaborador, usuarioId).subscribe(data =>{ 
       this.evaluaciones = data;
-      console.log(data);
+      //console.log(data);
     })
   }
 
@@ -288,7 +288,7 @@ export class GestionEvaluacionesComponent implements OnInit{
       const dataArray = Array.isArray(data) ? data : [data];
   
       this.observaciones = dataArray;
-      console.log("Data Observaciones PDF", this.observaciones);
+      //console.log("Data Observaciones PDF", this.observaciones);
     });
   }
   
@@ -313,9 +313,9 @@ export class GestionEvaluacionesComponent implements OnInit{
     await this.obtenerDatosUsuario(usuarioId);
     await this.getModulosPreguntasByCargo(this.cargoBDColaborador);
     await this.getObservacion(this.evaluaciones[0].id_Evaluacion);
-    console.log("this.evaluaciones", this.evaluaciones); 
-    console.log("this.datosUsuario", this.datosUsuario); 
-    console.log("this.modulosPreguntas", this.modulosPreguntas); 
+    //console.log("this.evaluaciones", this.evaluaciones); 
+    //console.log("this.datosUsuario", this.datosUsuario); 
+    //console.log("this.modulosPreguntas", this.modulosPreguntas); 
 
     // Agrega contenido al PDF
     // Dividir el texto del evaluador y el cargo en dos columnas usando Columns
@@ -432,7 +432,7 @@ export class GestionEvaluacionesComponent implements OnInit{
       ]);
       // Crear una matriz para almacenar las preguntas y calificaciones
       const tableContent = [];
-      console.log("OBSERVACIONES PRUEBAS",this.observaciones[0]);
+      //console.log("OBSERVACIONES PRUEBAS",this.observaciones[0]);
       for (const preguntas of modulosPreguntas.preguntasByEvaluacionModel) {
         const row = [];
     
@@ -491,8 +491,8 @@ export class GestionEvaluacionesComponent implements OnInit{
     let calificacionFinal = this.evaluaciones[0].calificacionFinal;
     let calificacionMax = 5; //calificacion maxima en base a la suma de las tres competencias
 
-    console.log("calificacionFinal", calificacionFinal);
-    console.log("calificacionMax", calificacionMax);
+    //console.log("calificacionFinal", calificacionFinal);
+    //console.log("calificacionMax", calificacionMax);
 
     let valoracionFinal: string = "";
     
@@ -512,8 +512,8 @@ export class GestionEvaluacionesComponent implements OnInit{
 
     let porcentajeCalificacion = (calificacionFinal / calificacionMax) * 100; 
     let porcentajeRedondeado = Math.floor(porcentajeCalificacion); //se quitan los decimales del porcentaje
-    console.log("porcentajeCalificacion", porcentajeCalificacion);
-    console.log("porcentajeRedondeado", porcentajeRedondeado);
+    //console.log("porcentajeCalificacion", porcentajeCalificacion);
+    //console.log("porcentajeRedondeado", porcentajeRedondeado);
 
 
     pdf.add([

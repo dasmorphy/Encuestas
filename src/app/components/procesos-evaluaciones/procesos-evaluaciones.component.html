@@ -13,10 +13,10 @@
     <br>
     <form [formGroup]="formProceso" (ngSubmit)="abrirPeriodo()" >
         <label class="mt-2" for="">Fecha de inicio</label>
-        <input class="form-control" style="width: 25rem;" formControlName="fecha_Inicio" min="{{ fechaActual | date:'yyyy-MM-dd' }}" type="date"  />
+        <input class="form-control"  formControlName="fecha_Inicio" min="{{ fechaActual | date:'yyyy-MM-dd' }}" type="date"  />
     
         <label class="mt-2" for="">Fecha de fin</label>
-        <input class="form-control" style="width: 25rem;" formControlName="fecha_Fin" type="date"  />
+        <input class="form-control"  formControlName="fecha_Fin" type="date"  />
     
         <div *ngIf="!procesoActivo">
             <label style="color: red;">Hay un período activo, si desea abrir uno nuevo por favor cierre el actual</label>

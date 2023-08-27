@@ -19,6 +19,7 @@ export class EvaluacionComponent implements OnInit {
   colaboradores: ListaColaboresInterface[];
   evaluaciones: ListaEvaluacionesInterface[];
   observaciones: ListaObservacionesInterface[];
+  loginAuth: any;
 
   searchTerm: string = ''; // Término de búsqueda
 
@@ -30,11 +31,18 @@ export class EvaluacionComponent implements OnInit {
 
   ngOnInit(): void {
     //this.inactivityService.initInactivityTimer();
-    if (this.sessionData == null){
-      this.router.navigate(['login']);
+    // if (this.sessionData == null){
+    //   this.router.navigate(['login']);
+    // }
+
+    const loginAuthString = localStorage.getItem('loginAuth');
+    if (loginAuthString) {
+      this.loginAuth = JSON.parse(loginAuthString);
     }
-    this.api.getAllCollaboradorByUsuario(this.sessionData.id_Usuario).subscribe(data =>{
-      console.log(data);
+
+
+    this.api.getAllCollaboradorByUsuario(this.loginAuth.id_Usuario).subscribe(data =>{
+      // console.log(data);
       this.colaboradores = data;
     })
   }
@@ -42,38 +50,38 @@ export class EvaluacionComponent implements OnInit {
   evaluacionColaborador(id_colaborador: number)
   {
     this.router.navigate(['evaluacion-colaborador', id_colaborador]);
-    console.log(id_colaborador);
+    //console.log(id_colaborador);
   }
 
   continuarEvaluacion(id_Colaborador: number){
-    const usuarioId = this.sessionData.id_Usuario;
+    const usuarioId = this.loginAuth.id_Usuario;
     if (usuarioId == null){
-      console.log("VACIO",this.sessionData.id_Usuario);
+      //console.log("VACIO",this.sessionData.id_Usuario);
     }
     this.api.getSingleEvaluacion(id_Colaborador, usuarioId).subscribe(
       data => {
         this.evaluaciones = data;
-        console.log(data);
+        //console.log(data);
 
         const id_Evaluacion = this.evaluaciones[0].id_Evaluacion;
 
         this.api.getObservacionByEvaluacion(id_Evaluacion).subscribe((dataObservacion: any) => {
           this.observaciones = dataObservacion;
-          console.log("observaciones", this.observaciones);
+          //console.log("observaciones", this.observaciones);
     
           const datosParaVista = {
             evaluaciones: data,
             observaciones: this.observaciones
           };
     
-          console.log("datosParaVista", datosParaVista);
+          //console.log("datosParaVista", datosParaVista);
     
           // Preparar los extras de navegación con el objeto de datos
           const navigationExtras: NavigationExtras = {
             state: datosParaVista
           };
           
-          console.log("navigationExtras", navigationExtras);
+          //console.log("navigationExtras", navigationExtras);
     
           this.router.navigate(['vistaEvaluacion', id_Colaborador, usuarioId], {state: {datos: navigationExtras}});
         });

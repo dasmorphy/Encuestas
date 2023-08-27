@@ -178,13 +178,13 @@ export class VistaEvaluacionComponent implements OnInit{
     this.datosEvaluacion = history.state.datos;
     let accesoListaEvaluacion = this.datosEvaluacion.state.rutaListaEvaluacion;
   
-    console.log("Datos de la Evaluacion",this.datosEvaluacion);
+    //console.log("Datos de la Evaluacion",this.datosEvaluacion);
     const sessionData = this.sessionService.getSession();
-    console.log(sessionData);
+    //console.log(sessionData);
     // this.inactivityService.initInactivityTimer();
-    if (sessionData == null){
-      this.router.navigate(['login']);
-    }
+    // if (sessionData == null){
+    //   this.router.navigate(['login']);
+    // }
 
     if(accesoListaEvaluacion){
       this.rutaListaEvaluacion = true;
@@ -202,14 +202,14 @@ export class VistaEvaluacionComponent implements OnInit{
       'nombres': this.colaboradores.nombres
     })
 
-    console.log("Datos de la Evaluacion",this.datosEvaluacion);
+    //console.log("Datos de la Evaluacion",this.datosEvaluacion);
     this.evaluacionSingle.setValue(this.datosEvaluacion.state.evaluaciones[0]);
     this.observacionSingle.setValue(this.datosEvaluacion.state.observaciones);
 
-    console.log("OBSERVACOPNES", this.observacionSingle);
+    //console.log("OBSERVACOPNES", this.observacionSingle);
 
     this.api.getAllPreguntaByEvaluacion().subscribe(data =>{
-      console.log(data);
+      //console.log(data);
       this.preguntasByEvaluacion = data;
     });
 
@@ -220,13 +220,13 @@ export class VistaEvaluacionComponent implements OnInit{
         'usuario': this.usuario.usuario
 
       })
-      console.warn(data);
-      console.warn(this.usuario);
+      //console.warn(data);
+      //console.warn(this.usuario);
       //CAMBIO SOLICITADO
       this.api.getPreguntaModuloCargo(this.colaboradores.cargo_Id).subscribe(data => {
         this.modulosPreguntas = data
-        console.log("AAAA",this.modulosPreguntas)
-        console.log("ssss",sessionData.cargo_Id)
+        //console.log("AAAA",this.modulosPreguntas)
+        //console.log("ssss",sessionData.cargo_Id)
       });
 
 
@@ -293,7 +293,7 @@ export class VistaEvaluacionComponent implements OnInit{
       if (result.isConfirmed) {
         // Llamada al servicio y registro de datos solo si el usuario confirma
         const next = await firstValueFrom(this.api.postEvaluacion(formData));
-        console.log('Evaluacion registrada exitosamente', next);
+        //console.log('Evaluacion registrada exitosamente', next);
         await Swal.fire('Ok', 'Evaluación guardada correctamente', 'success');   
         this.router.navigate(['evaluacion']);
         
@@ -310,7 +310,7 @@ export class VistaEvaluacionComponent implements OnInit{
       });
     }
 
-    console.log(formData);
+    //console.log(formData);
   }
 
   async actualizarEvaluacion(estadoActualizacion: string){
@@ -322,14 +322,14 @@ export class VistaEvaluacionComponent implements OnInit{
       let usuarioId = this.datosEvaluacion.state.evaluaciones[0].usuario_id;
       let colaborador_id = this.datosEvaluacion.state.evaluaciones[0].colaborador_id;
 
-      console.log("id_Evaluacion", id_Evaluacion);
-      console.log("usuarioId", usuarioId);
+      //console.log("id_Evaluacion", id_Evaluacion);
+      //console.log("usuarioId", usuarioId);
 
       // Obtener los valores del formulario reactivo evaluacionSingle
       const dataEvaluacion = this.evaluacionSingle.value;
       const dataObservacion = this.observacionSingle.value;
-      console.log("dataEvaluacion",dataEvaluacion);
-      console.log("dataObservacion",dataObservacion);
+      //console.log("dataEvaluacion",dataEvaluacion);
+      //console.log("dataObservacion",dataObservacion);
 
 
       // Agregar los campos adicionales necesarios
@@ -345,8 +345,8 @@ export class VistaEvaluacionComponent implements OnInit{
 
       } 
       
-      console.log("IDDDDD", dataFinal.evaluacionDtoPut.id_Evaluacion);
-      console.log("dataFinal", dataFinal);
+      //console.log("IDDDDD", dataFinal.evaluacionDtoPut.id_Evaluacion);
+      //console.log("dataFinal", dataFinal);
 
     
       if (estadoEvaluacion == "Borrador") {
@@ -363,7 +363,7 @@ export class VistaEvaluacionComponent implements OnInit{
           // Llamada al servicio y registro de datos solo si el usuario confirma
           const next = await firstValueFrom(this.api.updateEvaluacion(dataFinal));
           await Swal.fire('Ok', 'Evaluación guardada como borrador', 'success');
-          console.log('Evaluacion registrada exitosamente', next);
+          //console.log('Evaluacion registrada exitosamente', next);
           this.router.navigate(['evaluacion']);
         } else if (result.isDenied) {
           Swal.fire('Cancelado', '', 'info');
@@ -382,8 +382,9 @@ export class VistaEvaluacionComponent implements OnInit{
         if (result.isConfirmed) {
           // Llamada al servicio y registro de datos solo si el usuario confirma
           const next = await firstValueFrom(this.api.updateEvaluacion(dataFinal));
-          console.log('Evaluacion registrada exitosamente', next);
-          await Swal.fire('Ok', 'Evaluacion guardada correctamente', 'success');   
+          //console.log('Evaluacion registrada exitosamente', next);
+          await Swal.fire('Gracias', '¡Negfar, agradece tu dedicación en completar la evaluación de desempeño! Valoramos tu tiempo y esfuerzo al proporcionar una evaluación honesta y constructiva.'+
+          'Tus observaciones y comentarios son esenciales para el desarrollo profesional de nuestros colaboradores, así mismo tu perspectiva objetiva contribuye al crecimiento continuo de nuestro equipo.', 'success');   
           this.router.navigate(['evaluacion']);
           
         } else if (result.isDenied) {

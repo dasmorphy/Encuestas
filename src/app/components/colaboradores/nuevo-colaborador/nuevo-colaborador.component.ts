@@ -64,7 +64,7 @@ export class NuevoColaboradorComponent implements OnInit{
           title: 'Ok',
           text: 'Archivo CSV cargado correctamente.',
         });
-        console.log('Archivo CSV enviado correctamente.', formData);
+        // console.log('Archivo CSV enviado correctamente.', formData);
       },
       error => {
         console.error('Error al enviar el archivo CSV:', error);
@@ -72,18 +72,6 @@ export class NuevoColaboradorComponent implements OnInit{
     );
   }
   
-  ngOnInit(): void {
-    
-
-    // const sessionData = this.sessionService.getSession();
-    // this.inactivityService.initInactivityTimer();
-    // if (sessionData == null){
-    //   this.router.navigate(['login']);
-    // }
-  }
-
-  // onUserActivity(): void {
-  //   this.inactivityService.resetInactivityTimer();
-  // }
+  ngOnInit(): void {}
 
 }

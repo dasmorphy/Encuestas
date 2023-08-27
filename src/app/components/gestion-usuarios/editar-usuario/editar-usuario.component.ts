@@ -37,12 +37,12 @@ export class EditarUsuarioComponent implements OnInit {
   ngOnInit(): void {
 
     this.api.getAllRoles().subscribe(data =>{
-      console.log(data)
+      //console.log(data)
       this.roles = data; 
     })
 
     this.api.getAllCargo().subscribe(data =>{
-      console.log(data)
+      //console.log(data)
       this.grupos = data; 
     })
 
@@ -52,7 +52,7 @@ export class EditarUsuarioComponent implements OnInit {
       this.editForm.setValue({
         'id_Usuario': usuarioId,
         'usuario': this.datosUsuario.usuario,
-        'password': this.datosUsuario.password,
+        'password': '',
         'identificacion': this.datosUsuario.identificacion,
         'rol_Id': this.datosUsuario.rol_Id,
         //'cargo_Id': this.datosUsuario.cargo_Id,
@@ -82,7 +82,7 @@ export class EditarUsuarioComponent implements OnInit {
         }
       }
       catch (error) {
-        console.error('Error al actualizar al usuario', error);
+        //console.error('Error al actualizar al usuario', error);
         Swal.fire({
           icon: 'error',
           title: 'Error',

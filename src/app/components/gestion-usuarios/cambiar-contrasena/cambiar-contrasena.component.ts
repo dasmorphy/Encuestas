@@ -15,15 +15,14 @@ export class CambiarContrasenaComponent {
   constructor (private activedRoute: ActivatedRoute, private router: Router, private api:ApiService){}
 
   datosUsuario: ListaUsuariosInterface;
+  inputVacio: string = '';
  
   editForm = new FormGroup({
     id_Usuario: new FormControl(''),
     usuario: new FormControl(''),
     password: new FormControl(''),
     identificacion: new FormControl(''),
-    //grupo: new FormControl(''),
-    rol_id: new FormControl(),
-    //cargo_id: new FormControl(),
+    rol_id: new FormControl()  
   })
 
   ngOnInit(): void {
@@ -32,12 +31,10 @@ export class CambiarContrasenaComponent {
       this.datosUsuario = data
       this.editForm.setValue({
         'id_Usuario': usuarioId,
-        'usuario': this.datosUsuario.usuario,
-        'password': this.datosUsuario.password,
-        'identificacion': this.datosUsuario.identificacion,
-        //'grupo': this.datosUsuario.grupo,
+        'usuario': '',
+        'password': '',
+        'identificacion': '',
         'rol_id': this.datosUsuario.rol_Id
-        //'cargo_id': this.datosUsuario.cargo_Id
       })
     });
 
@@ -47,21 +44,30 @@ export class CambiarContrasenaComponent {
 
   async updateUser(editForm: any){
     // console.log(editForm)
-    const result = await Swal.fire({
-      title: '¿Está seguro de continuar?',
-      text: "Se realizará un cambio de contraseña",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, actualizar contraseña'
-    });
-    
-    if (result.isConfirmed) {
-      const next = await firstValueFrom(this.api.updateUser(editForm));
-      await Swal.fire('Ok', 'Cambio de contraña exitoso', 'success');
-      this.router.navigate(['inicio']);
+    try{
+      const result = await Swal.fire({
+        title: '¿Está seguro de continuar?',
+        text: "Se realizará un cambio de contraseña",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, actualizar contraseña'
+      });
+      
+      if (result.isConfirmed) {
+        const next = await firstValueFrom(this.api.updateUser(editForm));
+        await Swal.fire('Ok', 'Cambio de contraseña exitoso', 'success');
+        this.router.navigate(['inicio']);
+      }
+    }catch(error){
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ha ocurrido un error inesperado, por favor comuníquese con el adminitrador o sistemas',
+      });
     }
+    
   }
 
   backListUser(){

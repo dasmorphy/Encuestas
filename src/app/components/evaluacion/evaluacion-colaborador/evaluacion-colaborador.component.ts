@@ -28,6 +28,7 @@ export class EvaluacionColaboradorComponent implements OnInit {
   preguntasAMostrar: any[] = [];
   calificacionPregunta:any = {};
   observacionPregunta:any={};
+  loginAuth: any;
 
   colaboradores: ListaColaboresInterface;
   preguntasByEvaluacion: ListaPreguntasByEvaluacionInterface[];
@@ -49,15 +50,21 @@ export class EvaluacionColaboradorComponent implements OnInit {
 
   async ngOnInit() {
     const sessionData = this.sessionService.getSession();
-    console.log(sessionData);
+    // console.log(sessionData);
     //this.inactivityService.initInactivityTimer();
-    if (sessionData == null){
-      this.router.navigate(['login']);
+    // if (sessionData == null){
+    //   this.router.navigate(['login']);
+    // }
+
+    const loginAuthString = localStorage.getItem('loginAuth');
+    if (loginAuthString) {
+      this.loginAuth = JSON.parse(loginAuthString);
     }
+
 
     this.generarCalificacionesPreguntas();
     let colaboradorId = this.activedRoute.snapshot.paramMap.get('id_Colaborador');
-    let usuarioId = sessionData.id_Usuario;
+    let usuarioId = this.loginAuth.id_Usuario;
 
     const next = await firstValueFrom(this.api.getSingleColaborador(colaboradorId));
     this.colaboradores = next;
@@ -68,7 +75,7 @@ export class EvaluacionColaboradorComponent implements OnInit {
     })
 
     this.api.getAllPreguntaByEvaluacion().subscribe(data =>{
-      console.log(data);
+      // console.log(data);
       this.preguntasByEvaluacion = data;
     });
 
@@ -79,7 +86,7 @@ export class EvaluacionColaboradorComponent implements OnInit {
         'usuario': this.usuario.usuario
 
       })
-      console.warn(data);
+      //console.warn(data);
     });
 
     //Obtiene todas las preguntas a mostrar en la evaluacion
@@ -214,7 +221,7 @@ export class EvaluacionColaboradorComponent implements OnInit {
           // Llamada al servicio y registro de datos solo si el usuario confirma
           const next = await firstValueFrom(this.api.postEvaluacion(formData));
           await Swal.fire('Ok', 'Evaluación guardada como borrador', 'success');
-          console.log('Evaluacion registrada exitosamente', next);
+          // console.log('Evaluacion registrada exitosamente', next);
           this.router.navigate(['evaluacion']);
         } else if (result.isDenied) {
           Swal.fire('Cancelado', '', 'info');
@@ -242,7 +249,7 @@ export class EvaluacionColaboradorComponent implements OnInit {
         if (result.isConfirmed) {
           // Llamada al servicio y registro de datos solo si el usuario confirma
           const next = await firstValueFrom(this.api.postEvaluacion(formData));
-          console.log('Evaluacion registrada exitosamente', next);
+          // console.log('Evaluacion registrada exitosamente', next);
           await Swal.fire('Gracias', '¡Negfar, agradece tu dedicación en completar la evaluación de desempeño! Valoramos tu tiempo y esfuerzo al proporcionar una evaluación honesta y constructiva.'+
           'Tus observaciones y comentarios son esenciales para el desarrollo profesional de nuestros colaboradores, así mismo tu perspectiva objetiva contribuye al crecimiento continuo de nuestro equipo.', 'success');   
           this.router.navigate(['evaluacion']);
@@ -261,7 +268,7 @@ export class EvaluacionColaboradorComponent implements OnInit {
       }
     }
 
-    console.log(formData);
+    // console.log(formData);
   }
 
   cancelar(){

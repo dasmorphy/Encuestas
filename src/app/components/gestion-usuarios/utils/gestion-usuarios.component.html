@@ -5,37 +5,39 @@
 
     <div class="card-head"></div>
     <div class="card-body">
-        <table class="table table-hover">
-            <thead class="thead-dark">
-                <tr>
-                    <!-- <th scope="col">ID</th> -->
-                    <th scope="col">Usuario</th>
-                    <th scope="col">Identificacion</th>
-                    <th scope="col">Acciones</th>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <!-- <th scope="col">ID</th> -->
+                        <th scope="col">Usuario</th>
+                        <th scope="col">Identificacion</th>
+                        <th scope="col">Acciones</th>
 
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let usuario of usuarios | filtroUsuarios: searchTerm">
-                    <input type="hidden" value="{{usuario.id_Usuario}}">
-                    <td hidden>{{usuario.id_Usuario}}</td>
-                    <td>{{usuario.usuario}}</td>
-                    <td>{{usuario.identificacion}}</td>
-                    <td>
-                        <button class="btn btn-warning" (click) = "editarUsuario(usuario.id_Usuario)">Editar</button>
-                    </td>
-                    <td>
-                        <button class="btn btn-success" (click)="cambioPass(usuario.id_Usuario)">Cambiar Contraseña</button>                        
-                    </td>
-                    <td>
-                        <button class="btn btn-danger" (click)="eliminarUsuario(usuario.id_Usuario)">Eliminar Usuario</button>                        
-                    </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let usuario of usuarios | filtroUsuarios: searchTerm">
+                        <input type="hidden" value="{{usuario.id_Usuario}}">
+                        <td hidden>{{usuario.id_Usuario}}</td>
+                        <td data-titulo="Usuario:">{{usuario.usuario}}</td>
+                        <td data-titulo="Identificacion:">{{usuario.identificacion}}</td>
+                        <td>
+                            <button class="btn btn-warning" (click) = "editarUsuario(usuario.id_Usuario)">Editar</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-success" (click)="cambioPass(usuario.id_Usuario)">Cambiar Contraseña</button>                        
+                        </td>
+                        <td>
+                            <button class="btn btn-danger" (click)="eliminarUsuario(usuario.id_Usuario)">Eliminar Usuario</button>                        
+                        </td>
 
 
 
-                </tr>
-            
-            </tbody>
-        </table>
+                    </tr>
+                
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

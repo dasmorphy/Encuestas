@@ -21,6 +21,8 @@ export class InicioComponent implements OnInit{
   nombreUsuario: ListaColaboresInterface;
   rolUsuario: ListaRolesInterface;
   rolAdmi: boolean = false;
+  loginAuth: any;
+
 
   constructor(
     private api:ApiService, private router: Router, private sessionService: SessionService, 
@@ -34,34 +36,34 @@ export class InicioComponent implements OnInit{
     
     const sessionData = this.sessionService.getSession();
     this.sessionData = sessionData;
-    console.log("SESIONNN",sessionData);
+    //console.log("SESIONNN",sessionData);
 
-    const usuarioNombre = await firstValueFrom(this.api.getColaboradorByIdentificacion(sessionData.identificacion));
+
+    const loginAuthString = localStorage.getItem('loginAuth');
+    if (loginAuthString) {
+      this.loginAuth = JSON.parse(loginAuthString);
+      this.router.navigate(['inicio']);
+
+    }
+
+    const usuarioNombre = await firstValueFrom(this.api.getColaboradorByIdentificacion(this.loginAuth.identificacion));
     this.nombreUsuario = usuarioNombre;
 
 
-    const usuarioLogin = await firstValueFrom(this.api.getSingleUsuario(sessionData.id_Usuario));
+    const usuarioLogin = await firstValueFrom(this.api.getSingleUsuario(this.loginAuth.id_Usuario));
     this.usuarioSesion = usuarioLogin;
 
     const rolUsuario = await firstValueFrom(this.api.getSingleRol(this.usuarioSesion.rol_Id));
           
     this.rolUsuario = rolUsuario;
-
     if (this.rolUsuario.nombre_Rol == "administrador"){
       this.rolAdmi = true;
     }
-        
 
-    console.log(sessionData);
-    //this.inactivityService.initInactivityTimer();
-    if (sessionData == null){
-      this.router.navigate(['login']);
-    }
   }
 
   //Cierre de sesion 
   async confirmLogout() {
-    console.log("inini");
     const result = await Swal.fire({
       title: '¿Estás seguro?',
       text: '¿Quieres cerrar la sesión?',
@@ -73,7 +75,6 @@ export class InicioComponent implements OnInit{
     });
   
     if (result.isConfirmed) {
-      console.log("ini333ni");
       //this.logout();
       await Swal.fire('Ok', 'Sesión Cerrada', 'success');
       this.logout();

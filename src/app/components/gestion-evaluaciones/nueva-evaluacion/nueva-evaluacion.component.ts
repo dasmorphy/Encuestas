@@ -34,9 +34,9 @@ export class NuevaEvaluacionComponent implements OnInit {
   // moduloSeleccionado: number = 0;
   // tipoSeleccionado: number = 0;
   submitForm() {
-    console.log(this.registroForm.value.moduloSeleccionado);
-    console.log(this.registroForm.value.tipoSeleccionado);
-    console.log(this.registroForm.value.pregunta);
+    //console.log(this.registroForm.value.moduloSeleccionado);
+    //console.log(this.registroForm.value.tipoSeleccionado);
+    //console.log(this.registroForm.value.pregunta);
 
 
   }
@@ -44,12 +44,12 @@ export class NuevaEvaluacionComponent implements OnInit {
 
   ngOnInit(): void {
     this.api.getAllModulos().subscribe(data =>{
-      console.log(data)
+      //console.log(data)
       this.modulos = data; 
     })
 
     this.api.getAllTipoEvaluacion().subscribe(data =>{
-      console.log(data)
+      //console.log(data)
       this.tipoEvaluacion = data; 
     })
 

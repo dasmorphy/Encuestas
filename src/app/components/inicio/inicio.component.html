@@ -1,20 +1,3 @@
-<!-- <h1>Inicio</h1>
-
-
-<div >
-  
-  
-
-  <div *ngIf="sessionData">
-      <h3>Bienvenido {{ sessionData.usuario }}!</h3>
-
-    <button class="btn btn-danger cerrarSesion" (click)="confirmLogout()">Cerrar sesion</button>
-    <button class="btn btn-primary mt-3" *ngIf="rolAdmi" (click)="procesosEvaluacion()">Procesos de Evaluación</button>
-
-  </div>
-      
-</div> -->
-
 <body>
 
 
@@ -25,8 +8,9 @@
           <button class="btn btn-danger " (click)="confirmLogout()">Cerrar sesión</button>
           <button class="btn btn-primary" *ngIf="rolAdmi" (click)="procesosEvaluacion()">Procesos de Evaluación</button>
         </div>
+        
       </div>
-      <h4 style="padding: 2%; height: 10px;">¡Bienvenido {{ nombreUsuario.nombres }}!</h4>
+      <h4 style="padding: 2%; height: 10px; position: relative;">¡Bienvenido {{ nombreUsuario.nombres }}!</h4>
 
       <div class="contenido">
           <div class="paragraphs">
@@ -50,13 +34,13 @@
           </div>
 
           <div class="image">
-            <img style="margin-bottom: 2rem;" src="../../../assets/img/fondo.jpg" alt="Imagen de fondo">
+            <img class="img-fondo" style="margin-bottom: 2rem;" src="../../../assets/img/fondo.jpg" alt="Imagen de fondo">
           </div>
 
       </div>
 
   <footer style="background-color: #1e65b2;">
-    <img class="imagen-footer" src="../../../assets/img/logo_white.png" alt="logo footer">
+    <img class="imagen-footer img-responsive" src="../../../assets/img/logo_white.png" alt="logo footer">
 
   </footer>
 

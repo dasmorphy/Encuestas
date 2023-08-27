@@ -9,6 +9,7 @@ import { ApiService } from 'src/app/services/ApiService';
 import { SessionService } from 'src/app/services/SessionService';
 import Swal from 'sweetalert2';
 import { firstValueFrom } from 'rxjs';
+import * as Aos from 'aos';
 
 @Component({
   selector: 'app-login',
@@ -31,80 +32,106 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     
     this.api.getUltmProcesoEvaluacion().subscribe(data =>{
-      console.log(data);
+      //console.log(data);
       this.ultmProceso = data;
 
-      // if(this.ultmProceso.estado === "Activo"){
-      //   this.procesoActivo = false;
-      //   console.log("ddddddd", this.procesoActivo)
-      // }
-      // console.log("sss", this.procesoActivo)
+      Aos.init();
+
     })
+
+    const loginAuthString = localStorage.getItem('loginAuth');
+    if (loginAuthString) {
+      //const loginAuth = JSON.parse(loginAuthString);
+      this.router.navigate(['inicio']);
+
+    }
+
     
   }
 
   async submitForm() {
-    if (this.loginForm.valid) {
-      const usuario = this.loginForm.get('usuario')?.value;
-      const password = this.loginForm.get('password')?.value;
 
-      if (usuario){
-
-
-        const usuarioString = await firstValueFrom(this.api.getSingleByUsuarioString(usuario));
-
-        this.datosUsuario = usuarioString;
-
-
-        const rolUsuario = await firstValueFrom(this.api.getSingleRol(this.datosUsuario.rol_Id));
-          
-        this.rolUsuario = rolUsuario;
-        
-      
-      }
-
-      const loginAuth: any = {
-        usuario: usuario,
-        password: password,
-      };
-
-
-      console.log("this.datosUsuario",this.datosUsuario)
-
-      console.log("this.rolUsuario",this.rolUsuario)
-      
-      console.log("ESTADOOOOOOOOOOO",this.ultmProceso)
-      if(this.ultmProceso.estado === "Activo" || this.rolUsuario.nombre_Rol == "administrador"){
-        this.api.postLoginAuth(loginAuth).subscribe(
-          next => {
-            console.log('Usuario autenticado', next);
-            this.sessionService.saveSession(next);
-            this.router.navigate(['inicio']);
-
-          },
-          error => {
-            console.error('Error verifique los datos', error);
-
-            Swal.fire({
-              icon: 'error',
-              title: 'Ups!',
-              text: 'Verifique los datos ingresados, las credenciales son incorrectas.',
-            });
-
+    try{
+      if (this.loginForm.valid) {
+        const usuario = this.loginForm.get('usuario')?.value;
+        const password = this.loginForm.get('password')?.value;
+  
+        if (usuario){
+  
+  
+          const usuarioString = await firstValueFrom(this.api.getSingleByUsuarioString(usuario));
+  
+          if (usuarioString){
+            this.datosUsuario = usuarioString;
+  
+  
+            const rolUsuario = await firstValueFrom(this.api.getSingleRol(this.datosUsuario.rol_Id));
+              
+            this.rolUsuario = rolUsuario;
           }
-        );
-        console.log(loginAuth)
-      }
-      else{
-        console.error('Error verifique los datos');
+          else{
+            //console.error('Error verifique los datos', error);
+  
+              Swal.fire({
+                icon: 'error',
+                title: 'Ups!',
+                text: 'Verifique los datos ingresados, las credenciales son incorrectas.',
+              });
+          }
+  
+          
+          
+        
+        }
+  
+        const loginAuth: any = {
+          usuario: usuario,
+          password: password,
+        };
+  
+        if(this.ultmProceso.estado === "Activo" || this.rolUsuario.nombre_Rol == "administrador"){
+          this.api.postLoginAuth(loginAuth).subscribe(
+            next => {
+              //console.log('Usuario autenticado', next);
+              this.sessionService.saveSession(next);
 
-        Swal.fire({
-          icon: 'error',
-          title: 'Lo sentimos',
-          text: 'El período de evaluación ha terminado',
-        });
+              // Guardar loginAuth en el localStorage después de una autenticación exitosa
+              localStorage.setItem('loginAuth', JSON.stringify(next));
+              
+              this.router.navigate(['inicio']);
+  
+            },
+            error => {
+              //console.error('Error verifique los datos', error);
+  
+              Swal.fire({
+                icon: 'error',
+                title: 'Ups!',
+                text: 'Verifique los datos ingresados, las credenciales son incorrectas.',
+              });
+  
+            }
+          );
+          //console.log(loginAuth)
+        }
+        else{
+          console.error('Error verifique los datos');
+  
+          Swal.fire({
+            icon: 'error',
+            title: 'Lo sentimos',
+            text: 'El período de evaluación ha terminado',
+          });
+        }
       }
+    }catch(error){
+      Swal.fire({
+        icon: 'error',
+        title: 'Ups!',
+        text: 'Verifique los datos ingresados, las credenciales son incorrectas.',
+      });
     }
+    
   }
 
 }

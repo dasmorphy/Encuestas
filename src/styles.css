@@ -33,5 +33,38 @@ body{
 
 }
 
+@media (max-width: 30em ) {
+
+    table {
+        width: 100%;
+    }
+
+    table tr{
+        display: flex;
+        flex-direction: column;
+        font-size: 15px;
+        border: 1px solid grey;
+        padding: 1em;
+        margin-bottom: 1em;
+    }
+
+    table td[data-titulo]{
+        display: flex;
+        text-align: left;
+
+    }
+
+    table td[data-titulo]::before{
+        content: attr(data-titulo);
+        width: 100px;
+        font-weight: bold;
+    }
+
+    table thead{
+        display: none;
+    }
+    
+}
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

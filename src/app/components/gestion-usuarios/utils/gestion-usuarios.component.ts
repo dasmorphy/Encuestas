@@ -31,9 +31,9 @@ export class GestionUsuariosComponent implements OnInit{
 
     const sessionData = this.sessionService.getSession();
     //this.inactivityService.initInactivityTimer();
-    if (sessionData == null){
-      this.router.navigate(['login']);
-    }
+    // if (sessionData == null){
+    //   this.router.navigate(['login']);
+    // }
   }
 
   editarUsuario(id_usuario: number){

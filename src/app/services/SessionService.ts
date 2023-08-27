@@ -32,9 +32,12 @@ export class SessionService {
   logout() {
     
     // Lógica para cerrar sesión (si es necesario)
-    this.isLoggedIn = false;
+    // this.isLoggedIn = false;
+    // this.router.navigate(['login']);
+    localStorage.removeItem('loginAuth');
     this.router.navigate(['login']);
-  
+
+
   }
 
   isAuthenticated() {

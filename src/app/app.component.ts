@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 interface SideNavToggle {
   screenWidth: number;
@@ -12,6 +13,7 @@ interface SideNavToggle {
 })
 export class AppComponent {
   mostrarSidenav = true; // Mostrar Sidenav de forma predeterminada
+  constructor(private route: ActivatedRoute) {}
 
   // Método para determinar si se debe mostrar el Sidenav en la página actual
   shouldShowSidenav(): boolean {
@@ -27,5 +29,10 @@ export class AppComponent {
   onToggleSideNav(data: SideNavToggle): void {
     this.isSideNavCollapsed = data.collapsed;
     this.screenWidth = data.screenWidth;
+  }
+
+  // Se excluye al login del componente body
+  shouldShowBody(): boolean {
+    return !window.location.href.includes('login');
   }
 }

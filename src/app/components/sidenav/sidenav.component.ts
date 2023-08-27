@@ -28,6 +28,8 @@ export class SidenavComponent implements OnInit {
   multiple: boolean = false;
   opcionesRoles: any;
   currentRole: any = 0;
+  loginAuth: any;
+
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any){
@@ -48,16 +50,33 @@ export class SidenavComponent implements OnInit {
     this.screenWidth = window.innerWidth;
     const sessionData = this.sessionService.getSession();
     this.sessionData = sessionData;
-    console.log(sessionData);
+    //console.log(sessionData);
 
-    if (sessionData == null) {
-      this.router.navigate(['login']);
-    } else {
-      this.linkSesion = `gestion-usuarios/cambiarPassword/${sessionData.id_Usuario}`
-      this.currentRole = sessionData.rol_Id; // Asigna el valor de sessionData.rol_Id a currentRole
-      console.log("rol2",this.currentRole);
+    // if (sessionData == null) {
+    //   this.router.navigate(['login']);
+    // } else {
+    //   this.linkSesion = `gestion-usuarios/cambiarPassword/${sessionData.id_Usuario}`
+    //   this.currentRole = sessionData.rol_Id; // Asigna el valor de sessionData.rol_Id a currentRole
+    //   //console.log("rol2",this.currentRole);
+    //   this.navData = this.getMenuOptionsForRole(this.currentRole);
+    // }
+
+    const loginAuthString = localStorage.getItem('loginAuth');
+    if (loginAuthString) {
+      this.loginAuth = JSON.parse(loginAuthString);
+
+      this.linkSesion = `gestion-usuarios/cambiarPassword/${this.loginAuth.id_Usuario}`
+      this.currentRole = this.loginAuth.rol_Id; // Asigna el valor de sessionData.rol_Id a currentRole
+      //console.log("rol2",this.currentRole);
       this.navData = this.getMenuOptionsForRole(this.currentRole);
     }
+    else{
+      this.router.navigate(['login']);
+
+    }
+
+
+
   }
 
   // shouldShowOption(data: INavbarData): any {
@@ -90,13 +109,13 @@ export class SidenavComponent implements OnInit {
 
   
   getMenuOptionsForRole(roleId: number) {
-    console.log("rol",this.currentRole)
-    console.log("data",this.navData);
+    //console.log("rol",this.currentRole)
+    //console.log("data",this.navData);
     if (roleId === 1) {
-      console.log("data2",this.navData);
+      //console.log("data2",this.navData);
       return this.navData;
     } else {
-      console.log("data3",this.navData);
+      //console.log("data3",this.navData);
       return this.navData.filter(option => option.label === 'Inicio' || option.label === 'Evaluar' || option.label === 'Cambiar contraseña');
     }
   }

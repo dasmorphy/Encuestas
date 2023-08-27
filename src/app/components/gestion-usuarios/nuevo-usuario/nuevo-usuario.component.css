@@ -6,7 +6,7 @@ label{
     width: 900px;
     padding: 30px;
     margin: auto;
-    margin-top: 50px;
+    margin-top: 20px;
     border-radius: 4px;
     font-family: 'calibri';
     color: black;
@@ -51,10 +51,16 @@ label{
     font-size: 20px;
 }
 
-.button{
+button{
     width: 100%;
     padding: 12px;
     margin: 16px 0;
     font-size: 20px;
 
 } 
+
+@media (max-width: 1000px) {
+    form{
+        width: 100%!important;
+    }
+}

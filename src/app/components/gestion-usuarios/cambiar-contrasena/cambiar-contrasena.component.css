@@ -61,3 +61,15 @@ label{
     font-size: 20px;
 
 } 
+
+@media (max-width: 1000px) {
+    form{
+        width: 100%!important;
+    }
+}
+
+@media (max-width: 30em) {
+    .usuario{
+        font-size: 20px;
+    }
+}

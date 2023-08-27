@@ -28,14 +28,14 @@ export class ProcesosEvaluacionesComponent implements OnInit {
   ngOnInit(): void {
     
     this.api.getUltmProcesoEvaluacion().subscribe(data =>{
-      console.log(data);
+      //console.log(data);
       this.ultmProceso = data;
 
       if(this.ultmProceso.estado === "Activo"){
         this.procesoActivo = false;
-        console.log("ddddddd", this.procesoActivo)
+        //console.log("ddddddd", this.procesoActivo)
       }
-      console.log("sss", this.procesoActivo)
+      //console.log("sss", this.procesoActivo)
     })
     
   }
@@ -113,7 +113,7 @@ export class ProcesosEvaluacionesComponent implements OnInit {
 
 
   async cerrarPeriodo(id_Proceso:number){
-    console.log(id_Proceso)
+    //console.log(id_Proceso)
     const estadoProceso = "Inactivo";
     const dataProceso = {
       id_Proceso_Evaluacion: id_Proceso,
