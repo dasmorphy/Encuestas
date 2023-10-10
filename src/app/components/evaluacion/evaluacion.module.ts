@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule  } from '@angular/forms';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 import { EvaluacionRoutingModule } from './evaluacion-routing.module';
 import { EvaluacionColaboradorComponent } from './evaluacion-colaborador/evaluacion-colaborador.component';
@@ -20,7 +21,8 @@ import { SearchPipeEvaluacionComponent } from '../search-pipe-evaluacion/search-
     CommonModule,
     EvaluacionRoutingModule,
     ReactiveFormsModule,
-    FormsModule 
+    FormsModule,
+    NgxPaginationModule 
   ]
 })
 export class EvaluacionModule { }

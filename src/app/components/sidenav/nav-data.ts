@@ -69,4 +69,10 @@ export const navbarData: INavbarData[] =
         label: 'Cambiar contraseña',
         rol: null
     },
+    {
+        routeLink: 'estadisticas',
+        icon: 'fa-solid fa-chart-pie',
+        label: 'Estadísticas',
+        rol: null
+    },
 ];

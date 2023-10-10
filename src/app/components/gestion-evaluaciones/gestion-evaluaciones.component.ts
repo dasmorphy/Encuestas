@@ -31,6 +31,9 @@ export class GestionEvaluacionesComponent implements OnInit{
   nombreEvaluador: string;
   cargoEvaluador: string;
   cargoBDColaborador: number; //CARGO DEL COLABORADOR A NIVEL DE BASES (JEFATURAS, GESTOR, ETC)
+  cedulaColaborador: string;
+  promediosGeneralesColaborador: any;
+
   nombreEvaluado: string;
   cargoEvaluado: string;
   evaluacionesConNombres: { evaluacion: ListaEvaluacionesInterface, nombreUsuario: any, nombreColaborador: any }[] = [];
@@ -41,6 +44,9 @@ export class GestionEvaluacionesComponent implements OnInit{
   estadosSeleccionados: string[] = [];
   estadosRoles: string[] = [];
 
+  page: number = 1;//pagina inicial para paginacion
+
+  promediosGenerales: any = {};
 
   constructor(private api:ApiService, private router: Router,
     private http: HttpClient,
@@ -143,7 +149,7 @@ export class GestionEvaluacionesComponent implements OnInit{
     else
     {
       const estadosQuery = this.estadosSeleccionados.join(',');
-      const url = `https://webappevaluaciones.azurewebsites.net/api/evaluacion/exportarEvaluaciones?estadosSeleccionados=${estadosQuery}`;  
+      const url = `https://localhost:7091/api/evaluacion/exportarEvaluaciones?estadosSeleccionados=${estadosQuery}`;  
       const params = new HttpParams().set('estadosSeleccionados', this.estadosSeleccionados.join(','));
       //console.log(this.estadosSeleccionados);
       //console.log(params)  
@@ -177,7 +183,7 @@ export class GestionEvaluacionesComponent implements OnInit{
     else
     {
       const estadosQuery = this.estadosRoles.join(',');
-      const url = `https://webappevaluaciones.azurewebsites.net/api/evaluacion/detalladoAcumulado?estadosSeleccionados=${estadosQuery}`;  
+      const url = `http://localhost:9093/api/evaluacion/detalladoAcumulado?estadosSeleccionados=${estadosQuery}`;  
       const params = new HttpParams().set('estadosSeleccionados', this.estadosRoles.join(','));
       //console.log(this.estadosRoles);
       //console.log(params)  
@@ -291,9 +297,27 @@ export class GestionEvaluacionesComponent implements OnInit{
       //console.log("Data Observaciones PDF", this.observaciones);
     });
   }
+
+  async getPromediosGenerales(cedulaColaborador:string) {
+    this.api.getPromediosEvaluaciones(cedulaColaborador).subscribe((data: any) => {  
+      this.promediosGeneralesColaborador = data;
+    });
+  }
   
-  
-  async imprimirPdf(id_Colaborador: number, usuarioId: number){
+  /*
+    autor: Daniel Males
+    since: 25-06-2023
+    version: 1.0 
+    -Funcion que realiza la impresion de las evaluaciones en pdf
+
+    autor: Daniel Males
+    since: 09-10-2023
+    version: 1.1 
+    -Se agrega parametros para la funcionalidad de imprimir evaluacion general
+    params: cedulaColaborador
+
+  */
+  async imprimirPdf(id_Colaborador: number, usuarioId: number, accion?: string){
     PdfMakeWrapper.setFonts(pdfFonts);
     const pdf = new PdfMakeWrapper();
     
@@ -307,16 +331,36 @@ export class GestionEvaluacionesComponent implements OnInit{
       this.nombreEvaluador = data.nombres_Evaluador;
       this.cargoEvaluador = data.cargo_Evaluador;
       this.cargoBDColaborador = data.cargo_Id;
+      
+      if (accion){
+        this.cedulaColaborador = data.cedula;
+      }
+
     });
-    
+    console.log("COLABORADOOOOOOR",this.cedulaColaborador);
     await this.getEvaluacion(id_Colaborador, usuarioId);
     await this.obtenerDatosUsuario(usuarioId);
     await this.getModulosPreguntasByCargo(this.cargoBDColaborador);
     await this.getObservacion(this.evaluaciones[0].id_Evaluacion);
-    //console.log("this.evaluaciones", this.evaluaciones); 
-    //console.log("this.datosUsuario", this.datosUsuario); 
-    //console.log("this.modulosPreguntas", this.modulosPreguntas); 
+    await this.getPromediosGenerales(this.cedulaColaborador);
 
+    if (accion){
+      this.promediosGenerales = {
+        valueCompetencia1: 'Orientación al Servicio',
+        valueCompetencia2: 'Trabajo en Equipo',
+        valueCompetencia3: 'Orientación a los Resultados',
+        valueCompetencia4: 'Diversidad e Inclusión',
+        valueCompetencia5: 'Pensamiento creativo e innovador',
+        valueCompetencia6: 'Liderazgo',
+        valueCompetencia7: 'Planificación, seguimiento y control',
+        valueCompetencia8: 'Pensamiento crítico para la toma de decisiones',
+        valueCompetencia9: 'Responsabilidad',
+        valueCompetencia10: 'Pensamiento Analítico',
+        valueCompetencia11: 'Organización del trabajo',
+        valueCompetencia12: 'Instrucción y Entrenamiento',
+        valueCompetencia13: 'Asesoría y Ventas'
+      };
+    }
     // Agrega contenido al PDF
     // Dividir el texto del evaluador y el cargo en dos columnas usando Columns
     pdf.add([
@@ -438,27 +482,88 @@ export class GestionEvaluacionesComponent implements OnInit{
     
         // Agregar la pregunta en la primera columna
         row.push(preguntas.pregunta);
-    
-        // Agregar la calificación en la segunda columna
-        const key = `clfc_Pregunta${preguntas.numero_Pregunta}`;
-        let calificacion = this.evaluaciones[0][key as keyof ListaEvaluacionesInterface];
+        
+        let key: any;
+        let calificacion: any;
+        console.log(this.promediosGeneralesColaborador);
+        //Se agrega logica para calificaciones individuales y generales
+        if (modulosPreguntas.nombre_Modulo === this.promediosGenerales.valueCompetencia1){
+          calificacion = this.promediosGeneralesColaborador.valueCompetencia1;
+          console.log("ENTRO CONDICIONAL");
+        }
+        else if(modulosPreguntas.nombre_Modulo === this.promediosGenerales.valueCompetencia2){
+          calificacion = this.promediosGeneralesColaborador.valueCompetencia2;
+        }
+        else if(modulosPreguntas.nombre_Modulo === this.promediosGenerales.valueCompetencia3){
+          calificacion = this.promediosGeneralesColaborador.valueCompetencia3;
+
+        }
+        else if(modulosPreguntas.nombre_Modulo === this.promediosGenerales.valueCompetencia4){
+          calificacion = this.promediosGeneralesColaborador.valueCompetencia4;
+
+        }
+        else if(modulosPreguntas.nombre_Modulo === this.promediosGenerales.valueCompetencia5){
+          calificacion = this.promediosGeneralesColaborador.valueCompetencia5;
+
+        }
+        else if(modulosPreguntas.nombre_Modulo === this.promediosGenerales.valueCompetencia6){
+          calificacion = this.promediosGeneralesColaborador.valueCompetencia6;
+
+        }
+        else if(modulosPreguntas.nombre_Modulo === this.promediosGenerales.valueCompetencia7){
+          calificacion = this.promediosGeneralesColaborador.valueCompetencia7;
+
+        }
+        else if(modulosPreguntas.nombre_Modulo === this.promediosGenerales.valueCompetencia8){
+          calificacion = this.promediosGeneralesColaborador.valueCompetencia8;
+
+        }
+        else if(modulosPreguntas.nombre_Modulo === this.promediosGenerales.valueCompetencia9){
+          calificacion = this.promediosGeneralesColaborador.valueCompetencia9;
+
+        }
+        else if(modulosPreguntas.nombre_Modulo === this.promediosGenerales.valueCompetencia10){
+          calificacion = this.promediosGeneralesColaborador.valueCompetencia10;
+
+        }
+        else if(modulosPreguntas.nombre_Modulo === this.promediosGenerales.valueCompetencia11){
+          calificacion = this.promediosGeneralesColaborador.valueCompetencia11;
+
+        }
+        else if(modulosPreguntas.nombre_Modulo === this.promediosGenerales.valueCompetencia12){
+          calificacion = this.promediosGeneralesColaborador.valueCompetencia12;
+
+        }
+        else if(modulosPreguntas.nombre_Modulo === this.promediosGenerales.valueCompetencia13){
+          calificacion = this.promediosGeneralesColaborador.valueCompetencia13;
+
+        }
+        else{
+          // Agregar la calificación en la segunda columna
+          key = `clfc_Pregunta${preguntas.numero_Pregunta}`;
+          calificacion = this.evaluaciones[0][key as keyof ListaEvaluacionesInterface];
+
+        }
+        console.log("KEY",key);
+        console.log("calificacion",calificacion);
+
 
         //Se muestran la clasificacion de la calificacion en base a la escala del 1 al 5
         if (calificacion == 0){
           calificacion = "";
         }
-        else if (calificacion == 1){
+        else if (calificacion >= 1 && calificacion <= 1.99){
           calificacion = "Por debajo de lo esperado";
         }
-        else if (calificacion == 2)
+        else if (calificacion >= 2 && calificacion <= 2.99)
         {
           calificacion = "Apenas cumple con lo esperado";
         }
-        else if (calificacion == 3)
+        else if (calificacion >= 3 && calificacion <= 3.99)
         {
           calificacion = "Cumple dentro de lo esperado";
         }
-        else if (calificacion == 4)
+        else if (calificacion >= 4 && calificacion <= 4.99)
         {
           calificacion = "Supera las expectativas";
         }
@@ -468,7 +573,11 @@ export class GestionEvaluacionesComponent implements OnInit{
         }
 
         const keyObservacion: string = `observacion${preguntas.numero_Pregunta}`;
-        const observacion = this.observaciones[0][keyObservacion as keyof ListaObservacionesInterface];
+        let observacion:any = "";
+
+        if (!accion){
+          observacion = this.observaciones[0][keyObservacion as keyof ListaObservacionesInterface];
+        }
 
         row.push(calificacion);
         row.push(observacion);//CAMPO OBSERVACIONES
@@ -491,10 +600,11 @@ export class GestionEvaluacionesComponent implements OnInit{
     let calificacionFinal = this.evaluaciones[0].calificacionFinal;
     let calificacionMax = 5; //calificacion maxima en base a la suma de las tres competencias
 
-    //console.log("calificacionFinal", calificacionFinal);
-    //console.log("calificacionMax", calificacionMax);
-
     let valoracionFinal: string = "";
+    let valoracionJefe: string = "";
+    let valoracionCliente: string = "";
+    let valoracionEquipo: string = "";
+
     
     if (calificacionFinal === undefined) {
       calificacionFinal = 0; // Asigna un valor predeterminado si es undefined
@@ -512,24 +622,101 @@ export class GestionEvaluacionesComponent implements OnInit{
 
     let porcentajeCalificacion = (calificacionFinal / calificacionMax) * 100; 
     let porcentajeRedondeado = Math.floor(porcentajeCalificacion); //se quitan los decimales del porcentaje
-    //console.log("porcentajeCalificacion", porcentajeCalificacion);
-    //console.log("porcentajeRedondeado", porcentajeRedondeado);
+
+    //Asignacion de valoraciones para evaluaciones acumuladas y/o generales
+    if (accion){
+      porcentajeRedondeado = this.promediosGeneralesColaborador.valueFinal;
+      let clfcJefe = this.promediosGeneralesColaborador.valueJefe
+      let clfcCliente = this.promediosGeneralesColaborador.valueCliente
+      let clfcEquipo =this.promediosGeneralesColaborador.valueEquipo
+
+      if (porcentajeRedondeado || clfcJefe || clfcCliente || clfcEquipo === undefined) { // Asigna un valor predeterminado si es undefined
+        porcentajeRedondeado = 0;
+        clfcJefe = 0;
+        clfcCliente = 0; 
+        clfcEquipo = 0; 
+      } else if (porcentajeRedondeado || clfcJefe || clfcCliente || clfcEquipo >= 20 && porcentajeRedondeado || clfcJefe || clfcCliente || clfcEquipo <= 39.99) {
+        valoracionFinal = "Por debajo de lo esperado";
+        valoracionJefe = "Por debajo de lo esperado";
+        valoracionCliente = "Por debajo de lo esperado";
+        valoracionEquipo = "Por debajo de lo esperado";
+
+      } else if (porcentajeRedondeado || clfcJefe || clfcCliente || clfcEquipo >= 40 && porcentajeRedondeado || clfcJefe || clfcCliente || clfcEquipo <= 59.99) {
+        valoracionFinal = "Apenas cumple con lo esperado";
+        valoracionJefe = "Apenas cumple con lo esperado";
+        valoracionCliente = "Apenas cumple con lo esperado";
+        valoracionEquipo = "Apenas cumple con lo esperado";
+      } else if (porcentajeRedondeado || clfcJefe || clfcCliente || clfcEquipo >= 60 && porcentajeRedondeado || clfcJefe || clfcCliente || clfcEquipo <= 79.99) {
+        valoracionFinal = "Cumple dentro de lo esperado";
+        valoracionJefe = "Cumple dentro de lo esperado";
+        valoracionCliente = "Cumple dentro de lo esperado";
+        valoracionEquipo = "Cumple dentro de lo esperado";
+      } else if (porcentajeRedondeado || clfcJefe || clfcCliente || clfcEquipo >= 80 && porcentajeRedondeado || clfcJefe || clfcCliente || clfcEquipo <= 99.99) {
+        valoracionFinal = "Supera las expectativas";
+        valoracionJefe = "Supera las expectativas";
+        valoracionCliente = "Supera las expectativas";
+        valoracionEquipo = "Supera las expectativas";
+      } else if (porcentajeRedondeado || clfcJefe || clfcCliente || clfcEquipo == 100) {
+        valoracionFinal = "Excepcional";
+        valoracionJefe = "Excepcional";
+        valoracionCliente = "Excepcional";
+        valoracionEquipo = "Excepcional";
+      }
 
 
-    pdf.add([
+      pdf.add([
 
-      new Txt('         ').end,
-      new Txt('         ').end,
+        new Txt('         ').end,
+        new Txt('         ').end,
 
-      new Table([
-        [
-          new Txt('Valoración Final: ').bold().color('black').fontSize(10).end,
-          new Txt(`${porcentajeRedondeado}%`).color('black').fontSize(10).end,
-          new Txt(valoracionFinal).color('black').fontSize(10).end,
-        ]
-      ]).widths([220, 100, '*']).end
-    ]);
+        new Table([
+          [
+            new Txt('Valoración Jefe: ').bold().color('black').fontSize(10).end,
+            new Txt(`${clfcJefe}%`).color('black').fontSize(10).end,
+            new Txt(valoracionJefe).color('black').fontSize(10).end,
+          ]
+        ]).widths([220, 100, '*']).end,
 
+        new Table([
+          [
+            new Txt('Valoración Cliente: ').bold().color('black').fontSize(10).end,
+            new Txt(`${clfcCliente}%`).color('black').fontSize(10).end,
+            new Txt(valoracionCliente).color('black').fontSize(10).end,
+          ]
+        ]).widths([220, 100, '*']).end,
+
+        new Table([
+          [
+            new Txt('Valoración Equipo: ').bold().color('black').fontSize(10).end,
+            new Txt(`${clfcEquipo}%`).color('black').fontSize(10).end,
+            new Txt(valoracionEquipo).color('black').fontSize(10).end,
+          ]
+        ]).widths([220, 100, '*']).end,
+
+        new Table([
+          [
+            new Txt('Valoración Final: ').bold().color('black').fontSize(10).end,
+            new Txt(`${porcentajeRedondeado}%`).color('black').fontSize(10).end,
+            new Txt(valoracionFinal).color('black').fontSize(10).end,
+          ]
+        ]).widths([220, 100, '*']).end
+      ]);
+
+    }else{
+      pdf.add([
+
+        new Txt('         ').end,
+        new Txt('         ').end,
+  
+        new Table([
+          [
+            new Txt('Valoración Final: ').bold().color('black').fontSize(10).end,
+            new Txt(`${porcentajeRedondeado}%`).color('black').fontSize(10).end,
+            new Txt(valoracionFinal).color('black').fontSize(10).end,
+          ]
+        ]).widths([220, 100, '*']).end
+      ]);
+    }
 
     pdf.add([
       new Txt('         ').end,

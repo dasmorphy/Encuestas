@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,6 +23,7 @@ import { EvaluacionComponent } from './components/evaluacion/utils/evaluacion.co
 import { NuevoColaboradorComponent } from './components/colaboradores/nuevo-colaborador/nuevo-colaborador.component';
 import { SearchPipeComponent } from './components/search-pipe-colaborador/search-pipe.component';
 import { ProcesosEvaluacionesComponent } from './components/procesos-evaluaciones/procesos-evaluaciones.component';
+import { EstadisticasComponent } from './components/estadisticas/estadisticas.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,8 @@ import { ProcesosEvaluacionesComponent } from './components/procesos-evaluacione
     NotFoundComponent,
     NuevoColaboradorComponent,
     SearchPipeComponent,
-    ProcesosEvaluacionesComponent
+    ProcesosEvaluacionesComponent,
+    EstadisticasComponent
     //EvaluacionComponent
   ],
   imports: [
@@ -48,7 +51,8 @@ import { ProcesosEvaluacionesComponent } from './components/procesos-evaluacione
     GestionUsuariosModule,
     HttpClientModule,
     ReactiveFormsModule,
-    FormsModule 
+    FormsModule,
+    NgxPaginationModule 
   ],
   providers: [],
   bootstrap: [AppComponent]

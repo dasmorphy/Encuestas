@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, Renderer2 } from '@angular/core';
 import { ApiService } from '../../services/ApiService'
 import { Router } from "@angular/router";
 import { ListaColaboresInterface } from "../../models/colaboradores";
@@ -17,29 +17,34 @@ export class ColaboradoresComponent implements OnInit {
   
   colaboradores: ListaColaboresInterface[];
   estados: string[] = ['Evaluado', 'Borrador', 'No Evaluado'];
+  colaboradoresConCargo: { colaborador: ListaColaboresInterface, nombreCargo: any}[] = [];
 
   estadosSeleccionados: string[] = [];
 
   searchTerm: string = ''; // Término de búsqueda
 
+  page: number = 1;//pagina inicial para paginacion
+
   constructor(private api:ApiService, private router: Router,
-    private http: HttpClient,
-    private sessionService: SessionService, 
+    private http: HttpClient, private renderer: Renderer2
     //private inactivityService: InactivitySessionService  
   ){}
 
-  ngOnInit(): void {
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    this.adjustDirectionLinks();
+  }
 
-    const sessionData = this.sessionService.getSession();
-    //this.inactivityService.initInactivityTimer();
-    // if (sessionData == null){
-    //   this.router.navigate(['login']);
-    // }
+  async ngOnInit() {
+    this.adjustDirectionLinks();
+    
+    let colaboradoresData = await firstValueFrom(this.api.getAllColaboradores())
+    this.colaboradores = colaboradoresData;
 
-    this.api.getAllColaboradores().subscribe(data =>{
-      //console.log(data);
-      this.colaboradores = data;
-    })
+    for (const colaborador of this.colaboradores) {
+      const nombreCargo = await firstValueFrom(this.api.getSingleCargo(colaborador.cargo_Id));
+      this.colaboradoresConCargo.push({ colaborador, nombreCargo });
+    }
   }
 
   async eliminarColaborador(id_Colaborador: number){
@@ -91,9 +96,9 @@ export class ColaboradoresComponent implements OnInit {
     else
     {
       const estadosQuery = this.estadosSeleccionados.join(',');
-      const url = `https://webappevaluaciones.azurewebsites.net/api/colaborador/exportarColaboradores?estadosSeleccionados=${estadosQuery}`;
-  
-      //const url = 'https://localhost:7091/api/colaborador/exportarColaboradores';
+      //const url = `https://webappevaluaciones.azurewebsites.net/api/colaborador/exportarColaboradores?estadosSeleccionados=${estadosQuery}`;
+      
+      const url = `http://localhost:9093/api/colaborador/exportarColaboradores?estadosSeleccionados=${estadosQuery}`;
     
       const params = new HttpParams().set('estadosSeleccionados', this.estadosSeleccionados.join(','));
       // console.log(this.estadosSeleccionados);
@@ -122,4 +127,17 @@ export class ColaboradoresComponent implements OnInit {
     this.router.navigate(['/nuevosColaboradores']);
     
   }
+
+  adjustDirectionLinks() {
+  const isSmallScreen = window.innerWidth <= 500;
+  
+  // Ajusta la propiedad [directionLinks] basada en el ancho de la pantalla.
+  this.renderer.setAttribute(
+    document.querySelector('.paginacion'),
+    'ng-reflect-direction-links',
+    isSmallScreen ? 'true' : 'false'
+  );
+}
+
+
 }

@@ -74,6 +74,7 @@ export class LoginComponent implements OnInit {
   
               Swal.fire({
                 icon: 'error',
+                heightAuto: false,
                 title: 'Ups!',
                 text: 'Verifique los datos ingresados, las credenciales son incorrectas.',
               });
@@ -106,6 +107,7 @@ export class LoginComponent implements OnInit {
   
               Swal.fire({
                 icon: 'error',
+                heightAuto: false,
                 title: 'Ups!',
                 text: 'Verifique los datos ingresados, las credenciales son incorrectas.',
               });
@@ -119,6 +121,7 @@ export class LoginComponent implements OnInit {
   
           Swal.fire({
             icon: 'error',
+            heightAuto: false,
             title: 'Lo sentimos',
             text: 'El período de evaluación ha terminado',
           });
@@ -127,6 +130,7 @@ export class LoginComponent implements OnInit {
     }catch(error){
       Swal.fire({
         icon: 'error',
+        heightAuto: false,
         title: 'Ups!',
         text: 'Verifique los datos ingresados, las credenciales son incorrectas.',
       });

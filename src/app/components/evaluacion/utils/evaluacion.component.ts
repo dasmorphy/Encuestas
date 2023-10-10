@@ -23,6 +23,9 @@ export class EvaluacionComponent implements OnInit {
 
   searchTerm: string = ''; // Término de búsqueda
 
+  page: number = 1;//pagina inicial para paginacion
+
+
   desactivarBoton: boolean = false;
   constructor(private api:ApiService, private router: Router,
     private sessionService: SessionService, 

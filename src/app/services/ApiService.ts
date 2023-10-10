@@ -15,6 +15,7 @@ import { ListaRolesInterface } from '../models/roles';
 import { ListaPreguntaModuloCargo } from '../models/preguntaModuloCargo';
 import { ListaCargosInterface } from '../models/cargos';
 import { ListaProcesosEvalaucion } from '../models/procesosEvaluacion';
+import { ListaPromedios } from '../models/dataPromedios';
 
 
 @Injectable({
@@ -23,7 +24,8 @@ import { ListaProcesosEvalaucion } from '../models/procesosEvaluacion';
 
 export class ApiService {
     //coreRoute: string = environment.API_ROUTE;
-    private baseUrl: string = 'https://webappevaluaciones.azurewebsites.net/api/';
+    //private baseUrl: string = 'https://webappevaluaciones.azurewebsites.net/api/';
+    private baseUrl: string = 'http://localhost:9093/api/';
     constructor(private http:HttpClient){}
 
     getAllColaboradores():Observable<ListaColaboresInterface[]>
@@ -142,6 +144,17 @@ export class ApiService {
         return this.http.get<ListaEvaluacionesInterface[]>(urlSingleEvaluacion);
     }
 
+    getPromediosEvaluaciones(cedulaColaborador?: string):Observable<ListaPromedios>
+    {
+        let urlPromedio: string = `https://localhost:7091/api/evaluacion/promediosCompetencia`;
+
+        if (cedulaColaborador != null){
+            urlPromedio = `https://localhost:7091/api/evaluacion/promediosCompetencia?cedulaColaborador=${cedulaColaborador}`;
+        }
+        //console.warn (urlSingleEvaluacion);
+        return this.http.get<ListaPromedios>(urlPromedio);
+    }
+
     postEvaluacion(form:any):Observable<ResponseInit>
     {
         let urlPostEvaluacion: string = `${this.baseUrl}evaluacion`
@@ -242,6 +255,12 @@ export class ApiService {
     {
         let urlCargo: string = `${this.baseUrl}cargos`;
         return this.http.get<ListaCargosInterface[]>(urlCargo); 
+    }
+
+    getSingleCargo(id_Cargo:number):Observable<ListaCargosInterface>
+    {
+        let urlSingleCargo: string = `${this.baseUrl}cargos/` + id_Cargo;
+        return this.http.get<ListaCargosInterface>(urlSingleCargo); 
     }
 
     getUltmProcesoEvaluacion():Observable<ListaProcesosEvalaucion>

@@ -1,0 +1,20 @@
+h1{
+    padding: 2rem;
+}
+
+.between {
+    margin-top: .5rem;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+}
+
+#colaboradores{
+    height:358px!important;
+    width: 358px!important;
+}
+
+#promedios{
+    height:420px!important;
+    width: 800px!important;
+}
