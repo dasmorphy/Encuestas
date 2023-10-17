@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ListaProcesosEvalaucion } from 'src/app/models/procesosEvaluacion';
-import { ApiService } from 'src/app/services/ApiService';
+import { ApiService } from 'src/app/services/ApiService.service';
 import { SessionService } from 'src/app/services/SessionService';
 import Swal from 'sweetalert2';
 import { firstValueFrom } from 'rxjs';

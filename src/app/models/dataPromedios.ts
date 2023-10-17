@@ -16,4 +16,5 @@ export interface ListaPromedios {
     valueCliente: number;
     valueEquipo: number;
     valueFinal: number;
+    valueCargo: string;
 }

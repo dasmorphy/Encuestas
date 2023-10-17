@@ -83,6 +83,12 @@ export class ApiService {
         // Realizar la solicitud GET con los parámetros
         return this.http.get<any>(urlExportar, { params });
     }
+
+    getColaboradorByNombre(nombreColaborador: string): Observable<ListaColaboresInterface> 
+    {
+        const urlColaboradorNombre = `${this.baseUrl}colaborador/colaboradorByNombre/` + nombreColaborador;
+        return this.http.get<ListaColaboresInterface>(urlColaboradorNombre);
+    }
       
     getAllUsuarios():Observable<ListaUsuariosInterface[]>
     {
@@ -146,13 +152,24 @@ export class ApiService {
 
     getPromediosEvaluaciones(cedulaColaborador?: string):Observable<ListaPromedios>
     {
-        let urlPromedio: string = `https://localhost:7091/api/evaluacion/promediosCompetencia`;
+        let urlPromedio: string = `${this.baseUrl}evaluacion/promediosCompetencia`;
 
         if (cedulaColaborador != null){
-            urlPromedio = `https://localhost:7091/api/evaluacion/promediosCompetencia?cedulaColaborador=${cedulaColaborador}`;
+            urlPromedio = `${this.baseUrl}evaluacion/promediosCompetencia?cedulaColaborador=${cedulaColaborador}`;
         }
         //console.warn (urlSingleEvaluacion);
         return this.http.get<ListaPromedios>(urlPromedio);
+    }
+
+    getPromediosGenerales(cedulaColaborador?: string):Observable<any>
+    {
+        let urlPromedioGeneral: string = `${this.baseUrl}evaluacion/promediosGenerales`;
+        if (cedulaColaborador != null){
+            urlPromedioGeneral = `${this.baseUrl}evaluacion/promediosGenerales?cedulaColaborador=${cedulaColaborador}`;
+        }
+
+        return this.http.get<any>(urlPromedioGeneral);
+
     }
 
     postEvaluacion(form:any):Observable<ResponseInit>

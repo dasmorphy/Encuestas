@@ -5,7 +5,7 @@ import { LoginAuthInterface } from 'src/app/models/loginAuth';
 import { ListaProcesosEvalaucion } from 'src/app/models/procesosEvaluacion';
 import { ListaRolesInterface } from 'src/app/models/roles';
 import { ListaUsuariosInterface } from 'src/app/models/usuarios';
-import { ApiService } from 'src/app/services/ApiService';
+import { ApiService } from 'src/app/services/ApiService.service';
 import { SessionService } from 'src/app/services/SessionService';
 import Swal from 'sweetalert2';
 import { firstValueFrom } from 'rxjs';

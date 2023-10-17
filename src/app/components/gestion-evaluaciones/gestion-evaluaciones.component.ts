@@ -4,7 +4,7 @@ import { NavigationExtras, Router } from '@angular/router';
 import { ListaColaboresInterface } from 'src/app/models/colaboradores';
 import { ListaEvaluacionesInterface } from 'src/app/models/evaluacion';
 import { ListaUsuariosInterface } from 'src/app/models/usuarios';
-import { ApiService } from 'src/app/services/ApiService';
+import { ApiService } from 'src/app/services/ApiService.service';
 //import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
 import { SessionService } from 'src/app/services/SessionService';
 import { Columns, Img, PdfMakeWrapper, Table, Txt } from 'pdfmake-wrapper';
@@ -14,6 +14,11 @@ import Swal from 'sweetalert2';
 import { firstValueFrom } from 'rxjs';
 import { ListaObservacionesInterface } from 'src/app/models/observaciones';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { PromedioService } from 'src/app/services/PromedioService.service';
+import { ListaPromedios } from 'src/app/models/dataPromedios';
+import  ChartDataLabels  from "chartjs-plugin-datalabels";
+import Chart from 'chart.js/auto';
+
 
 
 @Component({
@@ -32,7 +37,7 @@ export class GestionEvaluacionesComponent implements OnInit{
   cargoEvaluador: string;
   cargoBDColaborador: number; //CARGO DEL COLABORADOR A NIVEL DE BASES (JEFATURAS, GESTOR, ETC)
   cedulaColaborador: string;
-  promediosGeneralesColaborador: any;
+  promediosGeneralesColaborador: ListaPromedios;
 
   nombreEvaluado: string;
   cargoEvaluado: string;
@@ -48,20 +53,17 @@ export class GestionEvaluacionesComponent implements OnInit{
 
   promediosGenerales: any = {};
 
+  chartCalificacionesRol: Chart;
+
   constructor(private api:ApiService, private router: Router,
     private http: HttpClient,
     private sessionService: SessionService, 
+    private promedioService: PromedioService
     //private inactivityService: InactivitySessionService
   ){}
 
   async ngOnInit(){
-    const sessionData = this.sessionService.getSession();
-    //this.inactivityService.initInactivityTimer();
-    
-    // if (sessionData == null){
-    //   this.router.navigate(['login']);
-    // }
-
+    Chart.register(ChartDataLabels);
 
     //Se obtiene los nombres del colaborador y del usuario para que se reflejen en la lista de evaluaciones
     let evalua = await firstValueFrom(this.api.getAllEvaluacion())
@@ -149,7 +151,7 @@ export class GestionEvaluacionesComponent implements OnInit{
     else
     {
       const estadosQuery = this.estadosSeleccionados.join(',');
-      const url = `https://localhost:7091/api/evaluacion/exportarEvaluaciones?estadosSeleccionados=${estadosQuery}`;  
+      const url = `http://localhost:9093/api/evaluacion/exportarEvaluaciones?estadosSeleccionados=${estadosQuery}`;  
       const params = new HttpParams().set('estadosSeleccionados', this.estadosSeleccionados.join(','));
       //console.log(this.estadosSeleccionados);
       //console.log(params)  
@@ -185,8 +187,7 @@ export class GestionEvaluacionesComponent implements OnInit{
       const estadosQuery = this.estadosRoles.join(',');
       const url = `http://localhost:9093/api/evaluacion/detalladoAcumulado?estadosSeleccionados=${estadosQuery}`;  
       const params = new HttpParams().set('estadosSeleccionados', this.estadosRoles.join(','));
-      //console.log(this.estadosRoles);
-      //console.log(params)  
+
       this.http.get(url, {
         responseType: 'blob',
         headers: new HttpHeaders().append('Accept', 'application/octet-stream'),
@@ -299,10 +300,140 @@ export class GestionEvaluacionesComponent implements OnInit{
   }
 
   async getPromediosGenerales(cedulaColaborador:string) {
-    this.api.getPromediosEvaluaciones(cedulaColaborador).subscribe((data: any) => {  
+    this.api.getPromediosEvaluaciones(cedulaColaborador).subscribe((data: ListaPromedios) => {  
       this.promediosGeneralesColaborador = data;
     });
   }
+
+  async createChart(cedulaColaborador: string, cargoId: number) {
+    //let canvar_bar = document.createElement("canvas");
+    let dataURL3: any;
+    let calificacionPorRol = await firstValueFrom(this.api.getPromediosGenerales(cedulaColaborador));
+    let labelsCalificacion: any[] = Object.keys(calificacionPorRol);
+    let dataCalificacion: any[] = Object.values(calificacionPorRol);
+
+    let rolColaborador = await firstValueFrom(this.api.getSingleCargo(cargoId));
+
+    let calificacionJefe = 0;
+    let calificacionCliente = 0;
+    let calificacionEquipo = 0;
+
+    let mensajeJefe: string = '';
+    let mensajeCliente: string = '';
+    let mensajeEquipo: string = '';
+
+
+    
+    if (rolColaborador.nombre_Cargo === "Jefaturas"){
+      calificacionJefe = 40;
+      calificacionCliente = 40;
+      calificacionEquipo = 20;
+    }
+    else if (rolColaborador.nombre_Cargo === "Supervisores"){
+      calificacionJefe = 50;
+      calificacionCliente = 25;
+      calificacionEquipo = 25;
+    }
+    else if (rolColaborador.nombre_Cargo === "Coordinador"){
+      calificacionJefe = 60;
+      calificacionCliente = 40;
+    }
+    else if (rolColaborador.nombre_Cargo === "Gestor"){
+      calificacionJefe = 60;
+      calificacionCliente = 40;
+    }
+    else if (rolColaborador.nombre_Cargo === "Analista" || rolColaborador.nombre_Cargo === "Vendedor" ||
+    rolColaborador.nombre_Cargo === "Auxiliar")
+    {
+      calificacionJefe = 100;
+    }
+    else if (rolColaborador.nombre_Cargo === "Administrador"){
+      calificacionJefe = 50;
+      calificacionEquipo = 50;
+    }
+    
+
+    if (calificacionJefe != 0){
+      mensajeJefe = `Jefe = ${calificacionJefe} `
+    }
+    if (calificacionCliente != 0){
+      mensajeCliente = `Cliente = ${calificacionCliente} `
+    }
+    if (calificacionEquipo != 0){
+      mensajeEquipo = `Equipo = ${calificacionEquipo} `
+    }
+
+    let mensaje: string = 'Calificación esperada: ' + mensajeJefe + mensajeCliente + mensajeEquipo
+  
+    if (labelsCalificacion != null && dataCalificacion != null) {
+      if (this.chartCalificacionesRol) {
+        this.chartCalificacionesRol.destroy();
+      }
+  
+      let data = {
+        labels: labelsCalificacion,
+        datasets: [{
+          label: 'Calificaciones por Rol',
+          data: dataCalificacion,
+          backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)'
+          ],
+          hoverOffset: 4
+        }]
+      };
+  
+      // Espera a que el gráfico se haya renderizado
+      await new Promise<void>((resolve) => {
+        this.chartCalificacionesRol = new Chart("canvar_bar", {
+          type: 'bar',
+          data,
+          options: {
+            scales: {
+              y: {
+                type: 'linear',
+                max: 110,
+              }
+            },
+            plugins: {
+              legend: {
+                display: false
+              },
+              datalabels: {
+                anchor: 'end',
+                align: 'top',
+                font: {
+                    weight: 'bold',
+                    size: 16
+                },
+                formatter: (value, context) => {
+                  return (value).toFixed(2);
+                }, 
+              },
+              title: {
+                display: true,
+                text: mensaje,
+                font: {weight: 'bold', size: 24},
+                position: "top",
+              },
+              
+            },
+            animation: {
+                onComplete: () => {
+                    // El gráfico se ha renderizado completamente
+                    resolve();
+                }
+            }
+          }
+        });
+      });
+
+      dataURL3 = this.chartCalificacionesRol.toBase64Image();
+    }
+    return dataURL3;
+  }
+  
   
   /*
     autor: Daniel Males
@@ -313,7 +444,7 @@ export class GestionEvaluacionesComponent implements OnInit{
     autor: Daniel Males
     since: 09-10-2023
     version: 1.1 
-    -Se agrega parametros para la funcionalidad de imprimir evaluacion general
+    -Se agrega logica para la funcionalidad de imprimir evaluacion acumulada
     params: cedulaColaborador
 
   */
@@ -324,27 +455,65 @@ export class GestionEvaluacionesComponent implements OnInit{
     // Leer la imagen como dataURL
     let imagenLogo = '../../../assets/img/logo.png';
     let lineaFirma =  '../../../assets/img/Linea_Firma.png';
+    let valoracionPromedio: any;
+    let clfcJefe: number = 0;
+    let clfcCliente: number = 0;
+    let clfcEquipo: number = 0;
 
-    this.api.getSingleColaborador(id_Colaborador).subscribe(data => { 
-      this.nombreEvaluado = data.nombres;
-      this.cargoEvaluado = data.cargo_Colaborador;
-      this.nombreEvaluador = data.nombres_Evaluador;
-      this.cargoEvaluador = data.cargo_Evaluador;
-      this.cargoBDColaborador = data.cargo_Id;
-      
-      if (accion){
-        this.cedulaColaborador = data.cedula;
+    let dataColaborador = await firstValueFrom (this.api.getSingleColaborador(id_Colaborador));
+    
+    this.nombreEvaluado = dataColaborador.nombres;
+    this.cargoEvaluado = dataColaborador.cargo_Colaborador;
+    this.nombreEvaluador = dataColaborador.nombres_Evaluador;
+    this.cargoEvaluador = dataColaborador.cargo_Evaluador;
+    this.cargoBDColaborador = dataColaborador.cargo_Id;
+    
+    if (accion){
+      this.cedulaColaborador = dataColaborador.cedula;
+      if (this.cedulaColaborador){
+        await this.getPromediosGenerales(this.cedulaColaborador);
+        valoracionPromedio = this.promedioService.getValoracionPromedio(this.promediosGeneralesColaborador);
+
+        clfcJefe = this.promediosGeneralesColaborador.valueJefe;
+        clfcCliente = this.promediosGeneralesColaborador.valueCliente;
+        clfcEquipo = this.promediosGeneralesColaborador.valueEquipo;
+
+        console.log('clfcJefe',clfcJefe);
+        console.log('clfcCliente',clfcCliente);
+        console.log('clfcEquipo',clfcEquipo);
+
+        if (clfcJefe != 0){
+          this.nombreEvaluador = "Jefe";
+        }
+        if (clfcCliente != 0){
+          if(clfcJefe == 0){
+          this.nombreEvaluador = "Cliente";
+          }else{
+            this.nombreEvaluador += ", Cliente";
+          }
+
+        }
+        if (clfcEquipo != 0){
+          if(clfcJefe == 0){
+            this.nombreEvaluador = "Equipo";
+          }else{
+            this.nombreEvaluador += ", Equipo";
+          }
+
+        }
+
       }
 
-    });
-    console.log("COLABORADOOOOOOR",this.cedulaColaborador);
+    }
+
     await this.getEvaluacion(id_Colaborador, usuarioId);
     await this.obtenerDatosUsuario(usuarioId);
     await this.getModulosPreguntasByCargo(this.cargoBDColaborador);
     await this.getObservacion(this.evaluaciones[0].id_Evaluacion);
-    await this.getPromediosGenerales(this.cedulaColaborador);
 
     if (accion){
+      this.cedulaColaborador = dataColaborador.cedula;
+
       this.promediosGenerales = {
         valueCompetencia1: 'Orientación al Servicio',
         valueCompetencia2: 'Trabajo en Equipo',
@@ -381,12 +550,24 @@ export class GestionEvaluacionesComponent implements OnInit{
         [
           new Txt('Evaluador: ').bold().color('black').fontSize(10).end,
           new Txt(this.nombreEvaluador).color('black').fontSize(10).end,
-        ],
-        [
-          new Txt('Cargo: ').bold().fontSize(10).end,
-          new Txt(this.cargoEvaluador).color('black').fontSize(10).end,
-        ],
+        ]
       ]).widths(['*', '*']).end,
+
+      
+    ]);
+
+    if (!accion){
+      pdf.add([
+        new Table([
+          [
+            new Txt('Cargo: ').bold().fontSize(10).end,
+            new Txt(this.cargoEvaluador).color('black').fontSize(10).end,
+          ],
+        ]).widths(['*', '*']).end,
+      ]);  
+    }
+    
+    pdf.add([
 
       new Txt('         ').end,
       new Txt('         ').end,
@@ -454,7 +635,6 @@ export class GestionEvaluacionesComponent implements OnInit{
         fillColor: (rowIndex) => (rowIndex === 0 ? '#3f60a8' : '#ffffff'), // Color de fondo de la tabla
         paddingBottom: () => 0,
       }).end,
-
     ]);
     
     pdf.add(new Txt('         ').end);
@@ -485,11 +665,10 @@ export class GestionEvaluacionesComponent implements OnInit{
         
         let key: any;
         let calificacion: any;
-        console.log(this.promediosGeneralesColaborador);
+
         //Se agrega logica para calificaciones individuales y generales
         if (modulosPreguntas.nombre_Modulo === this.promediosGenerales.valueCompetencia1){
           calificacion = this.promediosGeneralesColaborador.valueCompetencia1;
-          console.log("ENTRO CONDICIONAL");
         }
         else if(modulosPreguntas.nombre_Modulo === this.promediosGenerales.valueCompetencia2){
           calificacion = this.promediosGeneralesColaborador.valueCompetencia2;
@@ -544,9 +723,6 @@ export class GestionEvaluacionesComponent implements OnInit{
           calificacion = this.evaluaciones[0][key as keyof ListaEvaluacionesInterface];
 
         }
-        console.log("KEY",key);
-        console.log("calificacion",calificacion);
-
 
         //Se muestran la clasificacion de la calificacion en base a la escala del 1 al 5
         if (calificacion == 0){
@@ -601,10 +777,6 @@ export class GestionEvaluacionesComponent implements OnInit{
     let calificacionMax = 5; //calificacion maxima en base a la suma de las tres competencias
 
     let valoracionFinal: string = "";
-    let valoracionJefe: string = "";
-    let valoracionCliente: string = "";
-    let valoracionEquipo: string = "";
-
     
     if (calificacionFinal === undefined) {
       calificacionFinal = 0; // Asigna un valor predeterminado si es undefined
@@ -625,45 +797,16 @@ export class GestionEvaluacionesComponent implements OnInit{
 
     //Asignacion de valoraciones para evaluaciones acumuladas y/o generales
     if (accion){
+      //let valoracionPromedio: any = this.promedioService.getValoracionPromedio(this.promediosGeneralesColaborador);
       porcentajeRedondeado = this.promediosGeneralesColaborador.valueFinal;
-      let clfcJefe = this.promediosGeneralesColaborador.valueJefe
-      let clfcCliente = this.promediosGeneralesColaborador.valueCliente
-      let clfcEquipo =this.promediosGeneralesColaborador.valueEquipo
-
-      if (porcentajeRedondeado || clfcJefe || clfcCliente || clfcEquipo === undefined) { // Asigna un valor predeterminado si es undefined
-        porcentajeRedondeado = 0;
-        clfcJefe = 0;
-        clfcCliente = 0; 
-        clfcEquipo = 0; 
-      } else if (porcentajeRedondeado || clfcJefe || clfcCliente || clfcEquipo >= 20 && porcentajeRedondeado || clfcJefe || clfcCliente || clfcEquipo <= 39.99) {
-        valoracionFinal = "Por debajo de lo esperado";
-        valoracionJefe = "Por debajo de lo esperado";
-        valoracionCliente = "Por debajo de lo esperado";
-        valoracionEquipo = "Por debajo de lo esperado";
-
-      } else if (porcentajeRedondeado || clfcJefe || clfcCliente || clfcEquipo >= 40 && porcentajeRedondeado || clfcJefe || clfcCliente || clfcEquipo <= 59.99) {
-        valoracionFinal = "Apenas cumple con lo esperado";
-        valoracionJefe = "Apenas cumple con lo esperado";
-        valoracionCliente = "Apenas cumple con lo esperado";
-        valoracionEquipo = "Apenas cumple con lo esperado";
-      } else if (porcentajeRedondeado || clfcJefe || clfcCliente || clfcEquipo >= 60 && porcentajeRedondeado || clfcJefe || clfcCliente || clfcEquipo <= 79.99) {
-        valoracionFinal = "Cumple dentro de lo esperado";
-        valoracionJefe = "Cumple dentro de lo esperado";
-        valoracionCliente = "Cumple dentro de lo esperado";
-        valoracionEquipo = "Cumple dentro de lo esperado";
-      } else if (porcentajeRedondeado || clfcJefe || clfcCliente || clfcEquipo >= 80 && porcentajeRedondeado || clfcJefe || clfcCliente || clfcEquipo <= 99.99) {
-        valoracionFinal = "Supera las expectativas";
-        valoracionJefe = "Supera las expectativas";
-        valoracionCliente = "Supera las expectativas";
-        valoracionEquipo = "Supera las expectativas";
-      } else if (porcentajeRedondeado || clfcJefe || clfcCliente || clfcEquipo == 100) {
-        valoracionFinal = "Excepcional";
-        valoracionJefe = "Excepcional";
-        valoracionCliente = "Excepcional";
-        valoracionEquipo = "Excepcional";
-      }
-
-
+      //clfcJefe = this.promediosGeneralesColaborador.valueJefe;
+      //clfcCliente = this.promediosGeneralesColaborador.valueCliente;
+      //clfcEquipo = this.promediosGeneralesColaborador.valueEquipo;
+      let imagenChart = await this.createChart(dataColaborador.cedula, dataColaborador.cargo_Id);
+      
+      //Imagen del grafico de evaluaciones acumuladas      
+      pdf.add([await new Img(imagenChart).width(500).height(300).build()]);
+      
       pdf.add([
 
         new Txt('         ').end,
@@ -673,7 +816,7 @@ export class GestionEvaluacionesComponent implements OnInit{
           [
             new Txt('Valoración Jefe: ').bold().color('black').fontSize(10).end,
             new Txt(`${clfcJefe}%`).color('black').fontSize(10).end,
-            new Txt(valoracionJefe).color('black').fontSize(10).end,
+            new Txt(valoracionPromedio.valoracionJefe).color('black').fontSize(10).end,
           ]
         ]).widths([220, 100, '*']).end,
 
@@ -681,7 +824,7 @@ export class GestionEvaluacionesComponent implements OnInit{
           [
             new Txt('Valoración Cliente: ').bold().color('black').fontSize(10).end,
             new Txt(`${clfcCliente}%`).color('black').fontSize(10).end,
-            new Txt(valoracionCliente).color('black').fontSize(10).end,
+            new Txt(valoracionPromedio.valoracionCliente).color('black').fontSize(10).end,
           ]
         ]).widths([220, 100, '*']).end,
 
@@ -689,7 +832,7 @@ export class GestionEvaluacionesComponent implements OnInit{
           [
             new Txt('Valoración Equipo: ').bold().color('black').fontSize(10).end,
             new Txt(`${clfcEquipo}%`).color('black').fontSize(10).end,
-            new Txt(valoracionEquipo).color('black').fontSize(10).end,
+            new Txt(valoracionPromedio.valoracionEquipo).color('black').fontSize(10).end,
           ]
         ]).widths([220, 100, '*']).end,
 
@@ -697,11 +840,11 @@ export class GestionEvaluacionesComponent implements OnInit{
           [
             new Txt('Valoración Final: ').bold().color('black').fontSize(10).end,
             new Txt(`${porcentajeRedondeado}%`).color('black').fontSize(10).end,
-            new Txt(valoracionFinal).color('black').fontSize(10).end,
+            new Txt(valoracionPromedio.valoracionFinal).color('black').fontSize(10).end,
           ]
         ]).widths([220, 100, '*']).end
       ]);
-
+    
     }else{
       pdf.add([
 
@@ -718,22 +861,24 @@ export class GestionEvaluacionesComponent implements OnInit{
       ]);
     }
 
-    pdf.add([
-      new Txt('         ').end,
-      new Txt('         ').end,
-      new Txt('         ').end,
-      await new Img(lineaFirma).width(170).height(40).build(),
-      new Txt(this.nombreEvaluado).color('black').fontSize(10).end,
-      new Txt("Evaluado").bold().color('black').fontSize(10).end,
-
-      new Txt('         ').end,
-      new Txt('         ').end,
-
-      await new Img(lineaFirma).width(170).height(40).build(),
-      new Txt(this.nombreEvaluador).color('black').fontSize(10).end,
-      new Txt("Evaluador").bold().color('black').fontSize(10).end
-      
-    ]);
+    if (!accion){
+      pdf.add([
+        new Txt('         ').end,
+        new Txt('         ').end,
+        new Txt('         ').end,
+        await new Img(lineaFirma).width(170).height(40).build(),
+        new Txt(this.nombreEvaluado).color('black').fontSize(10).end,
+        new Txt("Evaluado").bold().color('black').fontSize(10).end,
+  
+        new Txt('         ').end,
+        new Txt('         ').end,
+  
+        await new Img(lineaFirma).width(170).height(40).build(),
+        new Txt(this.nombreEvaluador).color('black').fontSize(10).end,
+        new Txt("Evaluador").bold().color('black').fontSize(10).end
+        
+      ]);
+    }
 
     pdf.create().download(`Evaluacion ${this.nombreEvaluado}`);
   }

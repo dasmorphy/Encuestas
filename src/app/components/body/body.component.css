@@ -20,3 +20,9 @@
     width: calc(100% - 5rem);
     margin-right: 16rem;
 } 
+
+.body-sin-height {
+    height: auto!important;
+
+}
+

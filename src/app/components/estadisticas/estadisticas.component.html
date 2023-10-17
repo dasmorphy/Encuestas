@@ -1,10 +1,57 @@
 <body>
     <h1>Estadísticas</h1>
 
-    <div class="between container">
-        <canvas  id="colaboradores"></canvas>
-        <canvas  id="promedios"></canvas>
-    
+
+    <div data-aos="fade-up" data-aos-duration="700" class="modal-container" 
+    [ngStyle]="{'opacity': showModal ? '1' : '0', 'visibility': showModal ? 'visible' : 'hidden'}"
+    >
+        <div class="ventana" >
+          <!-- Contenido de tu ventana modal -->
+          <button  class="close" (click)="closeModal()">X</button>
+
+          <canvas id="calificacionesColaborador"></canvas>
+
+          <p *ngIf="showLabel" class="labels"></p>
+          <p *ngIf="!showLabel" class="labels">Calificación esperada: 
+            <span *ngIf="calificacionJefe != 0">Jefe = {{calificacionJefe}} </span> 
+            <span *ngIf="calificacionCliente != 0">Cliente = {{calificacionCliente}} </span> 
+            <span *ngIf="calificacionEquipo != 0">Equipo = {{calificacionEquipo}}</span></p>
+
+        </div>
     </div>
         
+    <div class="between container">
+        <div class="card">
+            <div class="card-body">
+                <canvas  id="colaboradores"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <canvas  id="promedios"></canvas>
+            </div>
+        </div>
+    
+    </div>
+
+    <div class="container dataGeneral">
+        <canvas (click)="chartGeneral($event)" id="calificacionesGenerales"></canvas>
+
+    </div>
+
+    <div class="paginador">
+        
+        <button (click)="goToPreviousPage()" class="btn btn-light">
+        Anterior
+        </button>
+        <button style="margin-left: 5px;" class="botonPag btn btn-outline-primary" *ngFor="let pagina of paginas" (click)="onPageChange(pagina)">
+        {{pagina}}
+        </button>
+        <button class="btn btn-light" style="margin-left: 5px;" (click)="goToNextPage()">
+        Siguiente
+        </button>
+    </div>      
+      
+
 </body>

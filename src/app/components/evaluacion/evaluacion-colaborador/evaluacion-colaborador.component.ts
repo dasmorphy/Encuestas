@@ -6,7 +6,7 @@ import { ListaModuloEvaluacionInterface } from 'src/app/models/moduloEvaluacion'
 import { ListaModuloPreguntasInterface } from 'src/app/models/moduloPreguntas';
 import { ListaPreguntasByEvaluacionInterface } from 'src/app/models/preguntasByEvaluacion';
 import { ListaUsuariosInterface } from 'src/app/models/usuarios';
-import { ApiService } from 'src/app/services/ApiService';
+import { ApiService } from 'src/app/services/ApiService.service';
 // import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
 import { SessionService } from 'src/app/services/SessionService';
 import Swal from 'sweetalert2';

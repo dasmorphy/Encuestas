@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener, Renderer2 } from '@angular/core';
-import { ApiService } from '../../services/ApiService'
+import { ApiService } from '../../services/ApiService.service'
 import { Router } from "@angular/router";
 import { ListaColaboresInterface } from "../../models/colaboradores";
 // import { InactivitySessionService } from 'src/app/services/InactivitySessionService';

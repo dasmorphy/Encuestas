@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ListaUsuariosInterface } from 'src/app/models/usuarios';
-import { ApiService } from 'src/app/services/ApiService';
+import { ApiService } from 'src/app/services/ApiService.service';
 import Swal from 'sweetalert2';
 import { firstValueFrom } from 'rxjs';
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ListaUsuariosInterface } from '../../../models/usuarios';
-import { ApiService } from '../../../services/ApiService';
+import { ApiService } from '../../../services/ApiService.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ListaCargosInterface } from 'src/app/models/cargos';
 import { ListaRolesInterface } from 'src/app/models/roles';
