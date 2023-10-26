@@ -117,6 +117,13 @@ export class ApiService {
         return this.http.post<ResponseInit>(urlPostUsuario, form);
     }
 
+    postUserCsv(formData: any):Observable<ResponseInit>
+    {
+        let urlPostUsuario: string = `${this.baseUrl}usuarios/csv`
+        //console.warn (urlPostUsuario);
+        return this.http.post<ResponseInit>(urlPostUsuario, formData);
+    }
+
     updateUser(form:ListaUsuariosInterface):Observable<ResponseInit>
     {
         let urlUpdateUsuario: string = `${this.baseUrl}usuarios/` + form.id_Usuario;

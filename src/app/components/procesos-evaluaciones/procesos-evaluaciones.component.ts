@@ -15,6 +15,7 @@ import { firstValueFrom } from 'rxjs';
 export class ProcesosEvaluacionesComponent implements OnInit {
 
   ultmProceso: ListaProcesosEvalaucion;
+  estadoProceso: string = '';
   procesoActivo: boolean = true;
   fechaActual = new Date();
   formProceso = new FormGroup({
@@ -23,19 +24,17 @@ export class ProcesosEvaluacionesComponent implements OnInit {
     estado: new FormControl('')
   })
 
-  constructor (private router: Router, private api:ApiService, private sessionService: SessionService){}
+  constructor (private router: Router, private api:ApiService){}
   
   ngOnInit(): void {
     
     this.api.getUltmProcesoEvaluacion().subscribe(data =>{
       //console.log(data);
       this.ultmProceso = data;
-
+      this.estadoProceso = data.estado;
       if(this.ultmProceso.estado === "Activo"){
         this.procesoActivo = false;
-        //console.log("ddddddd", this.procesoActivo)
       }
-      //console.log("sss", this.procesoActivo)
     })
     
   }
@@ -75,12 +74,6 @@ export class ProcesosEvaluacionesComponent implements OnInit {
       fecha_Fin: fecha_Fin,
       estado: estadoProceso,
     };
-
-
-    // this.api.postProcesoEvaluacion(newProceso).subscribe(data => {
-    //   console.log ("Proceso correcto", data);
-    // })
-
 
     try
     {

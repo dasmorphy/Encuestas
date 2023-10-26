@@ -2,11 +2,11 @@
 
 <div>
     <br>
-    <div *ngIf="ultmProceso.estado === 'Inactivo' ">
+    <div *ngIf="estadoProceso === 'Inactivo' ">
         <label for="">Último período aperturado: {{ ultmProceso.fecha_Inicio | date:'mediumDate' }} - {{ ultmProceso.fecha_Fin | date:'mediumDate' }} </label>
     </div>
 
-    <div *ngIf="ultmProceso.estado === 'Activo' ">
+    <div *ngIf="estadoProceso === 'Activo' ">
         <label for="">Periodo Actual: {{ ultmProceso.fecha_Inicio | date:'mediumDate' }} - {{ ultmProceso.fecha_Fin | date:'mediumDate' }} </label>
     </div>
 
@@ -25,7 +25,7 @@
         <button type="submit" class="btn btn-success mt-3" [disabled] = "!procesoActivo">Abrir Proceso</button>
     </form>
 
-    <button class="btn btn-danger mt-3" (click)="cerrarPeriodo(ultmProceso.id_Proceso_Evaluacion)">Cerrar Proceso</button>
+    <button class="btn btn-danger mt-3" (click)="cerrarPeriodo(ultmProceso.id_Proceso_Evaluacion)" [disabled] = "procesoActivo">Cerrar Proceso</button>
 </div>
 
       

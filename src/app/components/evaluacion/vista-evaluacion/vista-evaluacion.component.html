@@ -1,99 +1,100 @@
-
 <h1>Proceso de Evaluación</h1>
 
-<form >
+<form>
 
   <div [formGroup]="usuarioForm" class="col-12">
     <div class="card" style="border-radius: 21px;">
-        <div class="card-header" style="border-radius: 21px;">
-            <h4 class="card-title">Datos del Usuario</h4>
-        </div>
-        <div class="card-body">
-          <div class="form-group col-md-11" >
-            <div style="display: none;">
-              <label>Id Usuario:</label>
-              <input class="form-control" type="text" formControlName="id_Usuario">
-            </div>
-            <div>
-              <label>Usuario:</label>
-              <input class="form-control" type="text" formControlName="usuario">
-            </div>
+      <div class="card-header" style="border-radius: 21px;">
+        <h4 class="card-title">Datos del Usuario</h4>
+      </div>
+      <div class="card-body">
+        <div class="form-group col-md-11">
+          <div style="display: none;">
+            <label>Id Usuario:</label>
+            <input class="form-control" type="text" formControlName="id_Usuario">
+          </div>
+          <div>
+            <label>Usuario:</label>
+            <input class="form-control" type="text" formControlName="usuario">
           </div>
         </div>
+      </div>
     </div>
   </div>
 
   <div [formGroup]="evaluacionForm" class="col-12">
     <div class="card" style="border-radius: 21px;">
-        <div class="card-header" style="border-radius: 21px;">
-            <h4 class="card-title">Datos del evaluado</h4>
-        </div>
-        <div class="card-body">
-          <div class="form-group col-md-11" >
-            <div style="display: none;">
-              <label>Id Colaborador:</label>
-              <input class="form-control" type="text" formControlName="id_Colaborador">
-            </div>
-            <div>
-              <label>Nombres:</label>
-              <input class="form-control" type="text" formControlName="nombres">
-            </div>
+      <div class="card-header" style="border-radius: 21px;">
+        <h4 class="card-title">Datos del evaluado</h4>
+      </div>
+      <div class="card-body">
+        <div class="form-group col-md-11">
+          <div style="display: none;">
+            <label>Id Colaborador:</label>
+            <input class="form-control" type="text" formControlName="id_Colaborador">
+          </div>
+          <div>
+            <label>Nombres:</label>
+            <input class="form-control" type="text" formControlName="nombres">
           </div>
         </div>
+      </div>
     </div>
   </div>
 
   <div class="col-12">
     <div class="card" style="border-radius: 21px;">
-        <div class="card-header" style="border-radius: 21px;">
-            <h4 class="card-title">Preguntas</h4>
-        </div>
-        <div class="card-body">
-          <div *ngFor="let modulo of modulosPreguntas">
-            <h3>{{ modulo.nombre_Modulo }}</h3>
-            <p>{{modulo.definicion}}</p>
-            
-            <form [formGroup]="evaluacionSingle">                
-                <div class="form-group col-md-11" *ngFor="let preguntas of modulo.preguntasByEvaluacionModel">
-                  <b><label id="{{preguntas.id_Preguntas_Tipo}}">{{preguntas.pregunta}}</label></b>
-                  <!-- <input class="form-control" type="text" formControlName="clfc_Pregunta{{preguntas.numero_Pregunta}}"> -->
+      <div class="card-header" style="border-radius: 21px;">
+        <h4 class="card-title">Preguntas</h4>
+      </div>
+      <div class="card-body">
+        <div *ngFor="let modulo of modulosPreguntas">
+          <h3>{{ modulo.nombre_Modulo }}</h3>
+          <p>{{modulo.definicion}}</p>
 
-                  <select class="form-control" formControlName="clfc_Pregunta{{preguntas.numero_Pregunta}}">
-                    <option value="5">Excepcional</option>
-                    <option value="4">Supera las expectativas</option>
-                    <option value="3">Cumple dentro de lo esperado</option>
-                    <option value="2">Apenas cumple con lo esperado</option>
-                    <option value="1">Por debajo de lo esperado</option>
-                  </select>
+          <form [formGroup]="evaluacionSingle">
+            <div class="form-group col-md-11" *ngFor="let preguntas of modulo.preguntasByEvaluacionModel">
+              <b><label id="{{preguntas.id_Preguntas_Tipo}}">{{preguntas.pregunta}}</label></b>
+              <!-- <input class="form-control" type="text" formControlName="clfc_Pregunta{{preguntas.numero_Pregunta}}"> -->
+
+              <select class="form-control" formControlName="clfc_Pregunta{{preguntas.numero_Pregunta}}">
+                <option value="5">Excepcional</option>
+                <option value="4">Supera las expectativas</option>
+                <option value="3">Cumple dentro de lo esperado</option>
+                <option value="2">Apenas cumple con lo esperado</option>
+                <option value="1">Por debajo de lo esperado</option>
+              </select>
 
 
-                  <form [formGroup]="observacionSingle">
-                    
-                      <label for="">Observaciones:</label>
-                      <textarea class="form-control" cols="28" rows="2"
-                                formControlName="observacion{{preguntas.numero_Pregunta}}">
-                      </textarea>
-                              
-                  </form>
-                </div>              
-            </form>
-            <!-- <form [formGroup]="observacionSingle">
+              <form [formGroup]="observacionSingle">
+
+                <label for="">Observaciones:</label>
+                <textarea class="form-control" cols="28" rows="2"
+                  formControlName="observacion{{preguntas.numero_Pregunta}}">
+                </textarea>
+
+              </form>
+            </div>
+          </form>
+          <!-- <form [formGroup]="observacionSingle">
               <div class="form-group col-md-11" *ngFor="let preguntas of modulo.preguntasByEvaluacionModel">
                 <textarea class="form-control" cols="28" rows="2"
                           formControlName="observacion{{preguntas.numero_Pregunta}}">
                 </textarea>
               </div>              
             </form> -->
-            
 
-          </div>
+
         </div>
+      </div>
     </div>
   </div>
-  
 
-  <button (click)="actualizarEvaluacion('Realizada')" type="submit" *ngIf="!rutaListaEvaluacion" class="btn btn-primary button">Finalizar evaluación</button>
-  <button (click)="actualizarEvaluacion('Borrador')" type="submit" *ngIf="!rutaListaEvaluacion" class="btn btn-success button">Guardar evaluación en borrador</button>
+
+  <button (click)="actualizarEvaluacion('Realizada')" type="submit" *ngIf="!rutaListaEvaluacion"
+    class="btn btn-primary button">Finalizar evaluación</button>
+  <button (click)="actualizarEvaluacion('Borrador')" type="submit" *ngIf="!rutaListaEvaluacion"
+    class="btn btn-success button">Guardar evaluación en borrador</button>
   <button *ngIf="!rutaListaEvaluacion" (click)="regresar(false)" class="btn btn-danger button">Cancelar</button>
   <button *ngIf="rutaListaEvaluacion" (click)="regresar(true)" class="btn btn-primary button">Regresar</button>
 

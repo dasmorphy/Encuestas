@@ -11,6 +11,11 @@ import { Router, NavigationEnd } from '@angular/router';
   since: 11-10-2023
   version: 1.1
   -Se agrega contructor para el cambio del height al body cuando la ruta se encuentra en estadisticas
+
+  autor: Daniel Males
+  since: 17-10-2023
+  version: 1.2
+  -Se agrega la ruta de nuevo usuario para establecer la clase body-sin-height
 */
 export class BodyComponent {
 
@@ -22,7 +27,7 @@ export class BodyComponent {
       if (event instanceof NavigationEnd) {
         const bodyElement = document.querySelector('.body');
         if (bodyElement) {
-          if (event.url === "/estadisticas") {
+          if (event.url === "/estadisticas" || event.url === "/gestion-usuarios/nuevo-usuario") {
             bodyElement.classList.add("body-sin-height");
           } else {
             // Remueve el estilo si no esta en la ruta '/estadisticas'
