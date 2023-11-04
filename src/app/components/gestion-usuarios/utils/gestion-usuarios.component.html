@@ -12,24 +12,26 @@
                         <!-- <th scope="col">ID</th> -->
                         <th scope="col">Usuario</th>
                         <th scope="col">Identificacion</th>
+                        <th scope="col">Tipo de Usuario</th>
                         <th scope="col">Acciones</th>
 
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let usuario of usuarios | filtroUsuarios: searchTerm">
-                        <input type="hidden" value="{{usuario.id_Usuario}}">
-                        <td hidden>{{usuario.id_Usuario}}</td>
-                        <td data-titulo="Usuario:">{{usuario.usuario}}</td>
-                        <td data-titulo="Identificacion:">{{usuario.identificacion}}</td>
+                    <tr *ngFor="let item of usuariosConRol | filtroUsuarios: searchTerm | paginate: { itemsPerPage: 5, currentPage: page }">
+                        <input type="hidden" value="{{item.usuario.id_Usuario}}">
+                        <td hidden>{{item.usuario.id_Usuario}}</td>
+                        <td data-titulo="Usuario:">{{item.usuario.usuario}}</td>
+                        <td data-titulo="Identificacion:">{{item.usuario.identificacion}}</td>
+                        <td data-titulo="Tipo:">{{item.rolUsuario.nombre_Rol}}</td>
                         <td>
-                            <button class="btn btn-warning" (click) = "editarUsuario(usuario.id_Usuario)">Editar</button>
+                            <button class="btn btn-warning" (click) = "editarUsuario(item.usuario.id_Usuario)">Editar</button>
                         </td>
                         <td>
-                            <button class="btn btn-success" (click)="cambioPass(usuario.id_Usuario)">Cambiar Contraseña</button>                        
+                            <button class="btn btn-success" (click)="cambioPass(item.usuario.id_Usuario)">Cambiar Contraseña</button>                        
                         </td>
                         <td>
-                            <button class="btn btn-danger" (click)="eliminarUsuario(usuario.id_Usuario)">Eliminar Usuario</button>                        
+                            <button class="btn btn-danger" (click)="eliminarUsuario(item.usuario.id_Usuario)">Eliminar Usuario</button>                        
                         </td>
 
 
@@ -41,3 +43,5 @@
         </div>
     </div>
 </div>
+
+<pagination-controls class="paginacion" (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Siguiente"></pagination-controls>

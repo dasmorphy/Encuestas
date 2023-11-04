@@ -6,7 +6,7 @@ import { ListaModuloEvaluacionInterface } from 'src/app/models/moduloEvaluacion'
 import { ListaModuloPreguntasInterface } from 'src/app/models/moduloPreguntas';
 import { ListaPreguntasByEvaluacionInterface } from 'src/app/models/preguntasByEvaluacion';
 import { ListaUsuariosInterface } from 'src/app/models/usuarios';
-import { ApiService } from 'src/app/services/ApiService';
+import { ApiService } from 'src/app/services/ApiService.service';
 // import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
 import { SessionService } from 'src/app/services/SessionService';
 import Swal from 'sweetalert2';
@@ -49,13 +49,6 @@ export class EvaluacionColaboradorComponent implements OnInit {
   });
 
   async ngOnInit() {
-    const sessionData = this.sessionService.getSession();
-    // console.log(sessionData);
-    //this.inactivityService.initInactivityTimer();
-    // if (sessionData == null){
-    //   this.router.navigate(['login']);
-    // }
-
     const loginAuthString = localStorage.getItem('loginAuth');
     if (loginAuthString) {
       this.loginAuth = JSON.parse(loginAuthString);
@@ -74,6 +67,8 @@ export class EvaluacionColaboradorComponent implements OnInit {
       'nombres': this.colaboradores.nombres
     })
 
+    this.evaluacionForm.get('nombres')?.disable();
+
     this.api.getAllPreguntaByEvaluacion().subscribe(data =>{
       // console.log(data);
       this.preguntasByEvaluacion = data;
@@ -86,56 +81,19 @@ export class EvaluacionColaboradorComponent implements OnInit {
         'usuario': this.usuario.usuario
 
       })
-      //console.warn(data);
     });
 
-    //Obtiene todas las preguntas a mostrar en la evaluacion
-    // this.api.getPreguntaModuloCargo(this.colaboradores.cargo_Id).subscribe(data => {
-    //   this.modulosPreguntas = data;
-    //   console.log(this.modulosPreguntas);
-    // });
+    this.usuarioForm.get('usuario')?.disable();
 
     //Obtiene todas las preguntas a mostrar en la evaluacion
     const nextModuloCargo = await firstValueFrom(this.api.getPreguntaModuloCargo(this.colaboradores.cargo_Id));
     this.modulosPreguntas = nextModuloCargo;
-
-
-    // this.api.getAllModulosPreguntas(sessionData.tipo_Evaluacion_Id).subscribe(data =>{
-    //   console.log(data);
-    //   //this.modulosPreguntas = data;
-    //   //Se filtra los modulos segun el tipo de evaluacion del login
-    //   this.modulosPreguntas = data
-    //   // this.modulosPreguntas = data.filter
-    //   // (
-    //   //   modulo => modulo.tipo_Evaluacion_Id === sessionData.tipo_Evaluacion_Id
-    //   // );
-    //   console.log(this.modulosPreguntas);
-      
-    // });
-
   }
 
-  
-  // validarCalificacion(event: any, preguntaNumero: number) {
-  //   const inputValue = event.target.value;
-  //   const validValue = parseFloat(inputValue);
-    
-  //   if (isNaN(validValue) || validValue < 0 || validValue > 5) {
-  //     this.calificacionInvalida[preguntaNumero] = true;
-  //   } else {
-  //     this.calificacionInvalida[preguntaNumero] = false;
-  //     const key = `clfc_Pregunta${preguntaNumero}`;
-  //     this.calificacionPregunta[key] = validValue.toString();
-  //   }
-  // }
   generarCalificacionesPreguntas() {
     for (let i = 1; i <= this.preguntaCount; i++) {
       const key = `clfc_Pregunta${i}`;
       this.calificacionPregunta[key] = 0;
-
-
-       
-      
     }
   }
 
@@ -221,7 +179,6 @@ export class EvaluacionColaboradorComponent implements OnInit {
           // Llamada al servicio y registro de datos solo si el usuario confirma
           const next = await firstValueFrom(this.api.postEvaluacion(formData));
           await Swal.fire('Ok', 'Evaluación guardada como borrador', 'success');
-          // console.log('Evaluacion registrada exitosamente', next);
           this.router.navigate(['evaluacion']);
         } else if (result.isDenied) {
           Swal.fire('Cancelado', '', 'info');
@@ -274,8 +231,4 @@ export class EvaluacionColaboradorComponent implements OnInit {
   cancelar(){
     this.router.navigate(['evaluacion']);
   }
-
-  // onUserActivity(): void {
-  //   this.inactivityService.resetInactivityTimer();
-  // }
 }

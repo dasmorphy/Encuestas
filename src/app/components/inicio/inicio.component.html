@@ -10,7 +10,7 @@
         </div>
         
       </div>
-      <h4 style="padding: 2%; height: 10px; position: relative;">¡Bienvenido {{ nombreUsuario.nombres }}!</h4>
+      <h4 *ngIf="nombreUsuario && nombreUsuario.nombres" style="padding: 2%; height: 10px; position: relative;">¡Bienvenido {{ nombreUsuario.nombres }}!</h4>
 
       <div class="contenido">
           <div class="paragraphs">

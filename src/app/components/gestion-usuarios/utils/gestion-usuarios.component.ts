@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ListaUsuariosInterface } from 'src/app/models/usuarios';
-import { ApiService } from 'src/app/services/ApiService';
+import { ApiService } from 'src/app/services/ApiService.service';
 //import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
 import { SessionService } from 'src/app/services/SessionService';
 import Swal from 'sweetalert2';
@@ -17,23 +17,25 @@ export class GestionUsuariosComponent implements OnInit{
   usuarios: ListaUsuariosInterface[];
 
   searchTerm: string = ''; // Término de búsqueda
+  page: number = 1;//pagina inicial para paginacion
+ 
+  usuariosConRol: { usuario: ListaUsuariosInterface, rolUsuario: any}[] = [];
 
   constructor(private api:ApiService, private router: Router,
     private sessionService: SessionService, 
     //private inactivityService: InactivitySessionService  
   ){}
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.router.navigate(['gestion-usuarios/lista-usuarios']);
-    this.api.getAllUsuarios().subscribe(data =>{
-      this.usuarios = data; 
-    })
 
-    const sessionData = this.sessionService.getSession();
-    //this.inactivityService.initInactivityTimer();
-    // if (sessionData == null){
-    //   this.router.navigate(['login']);
-    // }
+    let usuariosData = await firstValueFrom(this.api.getAllUsuarios())
+    this.usuarios = usuariosData; 
+
+    for (const usuario of this.usuarios) {
+      const rolUsuario = await firstValueFrom(this.api.getSingleRol(usuario.rol_Id));
+      this.usuariosConRol.push({ usuario, rolUsuario });
+    }
   }
 
   editarUsuario(id_usuario: number){

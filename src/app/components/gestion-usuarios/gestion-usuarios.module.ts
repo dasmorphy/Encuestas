@@ -7,6 +7,7 @@ import { GestionUsuariosComponent } from './utils/gestion-usuarios.component';
 import { EditarUsuarioComponent } from './editar-usuario/editar-usuario.component';
 import { CambiarContrasenaComponent } from './cambiar-contrasena/cambiar-contrasena.component';
 import { SearchPipeUsuariosComponent } from '../search-pipe-usuarios/search-pipe-usuarios.component';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { SearchPipeUsuariosComponent } from '../search-pipe-usuarios/search-pipe
     ReactiveFormsModule,
     CommonModule,
     GestionUsuariosRoutingModule,
-    FormsModule
+    FormsModule,
+    NgxPaginationModule
   ]
 })
 export class GestionUsuariosModule { }

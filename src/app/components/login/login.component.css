@@ -1,11 +1,5 @@
 body {
-    /*webgradients/*/
-    /* background: #8b9bbe; */
     background: linear-gradient(109.6deg, rgb(157, 75, 199) 11.2%, rgb(119, 81, 204) 83.1%);
-}
-
-.login-component app-sidenav {
-    display: none;
 }
 
 button {

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 import { GestionEvaluacionesRoutingModule } from './gestion-evaluaciones-routing.module';
 import { GestionEvaluacionesComponent } from './gestion-evaluaciones.component';
@@ -22,7 +23,8 @@ import { SearchPipeListaEvaluacionesComponent } from '../search-pipe-lista-evalu
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
-    GestionEvaluacionesRoutingModule
+    GestionEvaluacionesRoutingModule,
+    NgxPaginationModule
   ]
 })
 export class GestionEvaluacionesModule { }

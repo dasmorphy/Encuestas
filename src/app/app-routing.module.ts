@@ -9,6 +9,7 @@ import { EvaluacionColaboradorComponent } from './components/evaluacion/evaluaci
 import { NuevoColaboradorComponent } from './components/colaboradores/nuevo-colaborador/nuevo-colaborador.component';
 import { VistaEvaluacionComponent } from './components/evaluacion/vista-evaluacion/vista-evaluacion.component';
 import { ProcesosEvaluacionesComponent } from './components/procesos-evaluaciones/procesos-evaluaciones.component';
+import { EstadisticasComponent } from './components/estadisticas/estadisticas.component';
 
 
 
@@ -35,6 +36,10 @@ const routes: Routes = [
 
   {
     path: 'procesosEvaluacion', component: ProcesosEvaluacionesComponent
+  },
+
+  {
+    path: 'estadisticas', component: EstadisticasComponent
   },
 
   {path: '**', component: NotFoundComponent},

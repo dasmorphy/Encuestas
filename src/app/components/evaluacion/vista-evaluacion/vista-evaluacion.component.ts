@@ -6,7 +6,7 @@ import { ListaEvaluacionesInterface } from 'src/app/models/evaluacion';
 import { ListaModuloPreguntasInterface } from 'src/app/models/moduloPreguntas';
 import { ListaPreguntasByEvaluacionInterface } from 'src/app/models/preguntasByEvaluacion';
 import { ListaUsuariosInterface } from 'src/app/models/usuarios';
-import { ApiService } from 'src/app/services/ApiService';
+import { ApiService } from 'src/app/services/ApiService.service';
 // import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
 import { SessionService } from 'src/app/services/SessionService';
 import Swal from 'sweetalert2';
@@ -202,6 +202,8 @@ export class VistaEvaluacionComponent implements OnInit{
       'nombres': this.colaboradores.nombres
     })
 
+    this.evaluacionForm.get('nombres')?.disable();
+
     //console.log("Datos de la Evaluacion",this.datosEvaluacion);
     this.evaluacionSingle.setValue(this.datosEvaluacion.state.evaluaciones[0]);
     this.observacionSingle.setValue(this.datosEvaluacion.state.observaciones);
@@ -220,20 +222,15 @@ export class VistaEvaluacionComponent implements OnInit{
         'usuario': this.usuario.usuario
 
       })
-      //console.warn(data);
-      //console.warn(this.usuario);
-      //CAMBIO SOLICITADO
+
       this.api.getPreguntaModuloCargo(this.colaboradores.cargo_Id).subscribe(data => {
         this.modulosPreguntas = data
-        //console.log("AAAA",this.modulosPreguntas)
-        //console.log("ssss",sessionData.cargo_Id)
       });
 
 
     });
     
-    
-
+    this.usuarioForm.get('usuario')?.disable();    
   }
   
   

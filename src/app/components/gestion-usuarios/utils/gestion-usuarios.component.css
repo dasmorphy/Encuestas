@@ -1,0 +1,15 @@
+.paginacion ::ng-deep{
+    .ngx-pagination{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center; 
+    }
+
+    .ngx-pagination a{
+        display: flex;
+        text-decoration: none;
+
+    }
+
+}

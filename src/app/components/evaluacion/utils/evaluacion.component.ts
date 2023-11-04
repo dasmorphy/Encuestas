@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../../../services/ApiService'
+import { ApiService } from '../../../services/ApiService.service'
 import { NavigationExtras, Router } from "@angular/router";
 import { ListaColaboresInterface } from "../../../models/colaboradores";
 // import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
@@ -22,6 +22,9 @@ export class EvaluacionComponent implements OnInit {
   loginAuth: any;
 
   searchTerm: string = ''; // Término de búsqueda
+
+  page: number = 1;//pagina inicial para paginacion
+
 
   desactivarBoton: boolean = false;
   constructor(private api:ApiService, private router: Router,

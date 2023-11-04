@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApiService } from 'src/app/services/ApiService';
+import { ApiService } from 'src/app/services/ApiService.service';
 // import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
 import { SessionService } from 'src/app/services/SessionService';
 import Swal from 'sweetalert2';
@@ -49,27 +49,39 @@ export class NuevoColaboradorComponent implements OnInit{
   }
 
   uploadCsv(): void {
-    if (!this.selectedFile) {
-      console.error('No se ha seleccionado ningún archivo.');
-      return;
-    }
+    
+    try{
 
-    const formData = new FormData();
-    formData.append('file', this.selectedFile, this.selectedFile.name);
-
-    this.api.postColaborador(formData).subscribe(
-      () => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Ok',
-          text: 'Archivo CSV cargado correctamente.',
-        });
-        // console.log('Archivo CSV enviado correctamente.', formData);
-      },
-      error => {
-        console.error('Error al enviar el archivo CSV:', error);
+      if (!this.selectedFile) {
+        console.error('No se ha seleccionado ningún archivo.');
+        return;
       }
-    );
+  
+      const formData = new FormData();
+      formData.append('file', this.selectedFile, this.selectedFile.name);
+  
+      this.api.postColaborador(formData).subscribe(
+        () => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Ok',
+            text: 'Archivo CSV cargado correctamente.',
+          });
+          // console.log('Archivo CSV enviado correctamente.', formData);
+        },
+        error => {
+          console.error('Error al enviar el archivo CSV:', error);
+        }
+      );
+    }
+    catch{
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ha ocurrido un error inesperado, por favor comuníquese con el adminitrador o sistemas',
+      });
+    }
+    
   }
   
   ngOnInit(): void {}

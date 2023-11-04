@@ -5,7 +5,7 @@ import { LoginAuthInterface } from 'src/app/models/loginAuth';
 import { ListaProcesosEvalaucion } from 'src/app/models/procesosEvaluacion';
 import { ListaRolesInterface } from 'src/app/models/roles';
 import { ListaUsuariosInterface } from 'src/app/models/usuarios';
-import { ApiService } from 'src/app/services/ApiService';
+import { ApiService } from 'src/app/services/ApiService.service';
 import { SessionService } from 'src/app/services/SessionService';
 import Swal from 'sweetalert2';
 import { firstValueFrom } from 'rxjs';
@@ -74,6 +74,7 @@ export class LoginComponent implements OnInit {
   
               Swal.fire({
                 icon: 'error',
+                heightAuto: false,
                 title: 'Ups!',
                 text: 'Verifique los datos ingresados, las credenciales son incorrectas.',
               });
@@ -106,6 +107,7 @@ export class LoginComponent implements OnInit {
   
               Swal.fire({
                 icon: 'error',
+                heightAuto: false,
                 title: 'Ups!',
                 text: 'Verifique los datos ingresados, las credenciales son incorrectas.',
               });
@@ -119,6 +121,7 @@ export class LoginComponent implements OnInit {
   
           Swal.fire({
             icon: 'error',
+            heightAuto: false,
             title: 'Lo sentimos',
             text: 'El período de evaluación ha terminado',
           });
@@ -127,6 +130,7 @@ export class LoginComponent implements OnInit {
     }catch(error){
       Swal.fire({
         icon: 'error',
+        heightAuto: false,
         title: 'Ups!',
         text: 'Verifique los datos ingresados, las credenciales son incorrectas.',
       });

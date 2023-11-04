@@ -1,7 +1,7 @@
 <div class="container" >
     <h1>Lista de Evaluaciones</h1>
     <p>Se presentan todas las evaluaciones calificadas</p>
-
+    <canvas style="display: none;" id="canvar_bar"></canvas>
     <div class="reportes">
         <div>
             <div *ngFor="let estado of estados; let i = index">
@@ -11,6 +11,8 @@
             </div>
             <button class="btn btn-primary" (click)="exportarCalificaciones()">Calificaciones Individual</button>
         </div>
+        
+        <div class="espaciador"></div> <!-- Espacio separador -->
 
         <div class="roles">
             <div *ngFor="let estado of rolesEstados; let i = index">
@@ -41,7 +43,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let item of evaluacionesConNombres | filtroEvaluaciones: searchTerm">
+                        <tr *ngFor="let item of evaluacionesConNombres | filtroEvaluaciones: searchTerm | paginate: { itemsPerPage: 5   , currentPage: page }">
                             <input type="hidden" value="{{ item.evaluacion.id_Evaluacion }}">
                             <td hidden>{{ item.evaluacion.id_Evaluacion }}</td>
                             <td data-titulo="Usuario:">{{ item.nombreUsuario.usuario }}</td>
@@ -62,7 +64,9 @@
                                 class="btn btn-success">Reversar</button>
                             </td>
 
-                            <td><button (click)="imprimirPdf(item.evaluacion.colaborador_id, item.evaluacion.usuario_id)" class="btn btn-dark">Imprimir</button></td>
+                            <td><button (click)="imprimirPdf(item.evaluacion.colaborador_id, item.evaluacion.usuario_id)" class="btn btn-dark">Prueba Individual</button></td>
+                            <td><button (click)="imprimirPdf(item.evaluacion.colaborador_id, item.evaluacion.usuario_id, 'promedios')" class="btn btn-warning">Prueba Acumulada</button></td>
+
                             <td><button (click)="eliminarEvaluacion(item.evaluacion.id_Evaluacion)" class="btn btn-danger">Eliminar</button></td>    
                         </tr>
                     
@@ -71,6 +75,8 @@
             </div>
         </div>
     </div>
+
+    <pagination-controls class="paginacion" (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Siguiente"></pagination-controls>
 
 
 </div>

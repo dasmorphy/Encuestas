@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ListaModuloEvaluacionInterface } from 'src/app/models/moduloEvaluacion';
 import { ListaPreguntasByEvaluacionInterface } from 'src/app/models/preguntasByEvaluacion';
 import { ListaTipoEvaluacionInterface } from 'src/app/models/tipoEvaluacion';
-import { ApiService } from 'src/app/services/ApiService';
+import { ApiService } from 'src/app/services/ApiService.service';
 //import { InactivitySessionService } from 'src/app/services/InactivitySessionService';
 import { SessionService } from 'src/app/services/SessionService';
 

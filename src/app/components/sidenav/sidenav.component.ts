@@ -116,7 +116,11 @@ export class SidenavComponent implements OnInit {
       return this.navData;
     } else {
       //console.log("data3",this.navData);
-      return this.navData.filter(option => option.label === 'Inicio' || option.label === 'Evaluar' || option.label === 'Cambiar contraseña');
+      return this.navData.filter(
+        option => 
+          option.label === 'Inicio' || option.label === 'Evaluar' || 
+          option.label === 'Cambiar contraseña'
+      );
     }
   }
   

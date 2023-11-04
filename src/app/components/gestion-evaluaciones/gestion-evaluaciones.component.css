@@ -2,6 +2,9 @@
     display: flex;
     /* margin-right: 5rem; */
 }
+.espaciador{
+    width: 8px;
+}
 .roles{
     justify-content: space-between;
     margin-right: 8rem;
@@ -9,5 +12,21 @@
 
 td, th{
     text-align: center;
+}
+
+.paginacion ::ng-deep{
+    .ngx-pagination{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center; 
+        margin-top: 1.5rem;
+    }
+
+    .ngx-pagination a{
+        text-decoration: none;
+
+    }
+
 }
   

@@ -5,9 +5,32 @@ th, td{
 button{
     display: flex;
     text-align: center;
-    align-items: center;
-    width: 8rem;
+    width: 12rem;
     font-size: 15px;
-    /* margin-left: 1rem; */
-    margin-top: 1rem;
+}
+.between {
+    margin-top: .5rem;
+    display: flex;
+    justify-content: flex-end;
+    height: 50px;
+    margin-bottom: 1rem;
+}
+.salto{
+    margin-bottom: 10rem;
+}
+
+.paginacion ::ng-deep{
+    .ngx-pagination{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center; 
+    }
+
+    .ngx-pagination a{
+        display: flex;
+        text-decoration: none;
+
+    }
+
 }

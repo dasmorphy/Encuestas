@@ -6,17 +6,21 @@ import { ListaUsuariosInterface } from 'src/app/models/usuarios';
   name: 'filtroUsuarios'
 })
 export class SearchPipeUsuariosComponent implements PipeTransform {
-  transform(usuarios: ListaUsuariosInterface[], searchTerm: string): ListaUsuariosInterface[] {
-    if (!usuarios || !searchTerm) {
-      return usuarios;
+  transform(usuariosConRol: any[], searchTerm: string): any[] {
+    if (!usuariosConRol || !searchTerm) {
+      return usuariosConRol;
     }
     
     searchTerm = searchTerm.toLowerCase();
 
-    return usuarios.filter(usuarios => {
+    return usuariosConRol.filter(item => {
+
+      const tipoUsuario = item.rolUsuario.nombre_Rol;
+
       return (
-        usuarios.usuario.toLowerCase().includes(searchTerm) ||
-        usuarios.identificacion.toLowerCase().includes(searchTerm)
+        item.usuario.usuario.toLowerCase().includes(searchTerm) ||
+        item.usuario.identificacion.toLowerCase().includes(searchTerm) ||
+        tipoUsuario.toLowerCase().includes(searchTerm)
       );
     });
   }

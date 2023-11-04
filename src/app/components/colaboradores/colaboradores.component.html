@@ -1,8 +1,11 @@
 <h1>Mis Colaboradores</h1>
-<input class="form-control" [(ngModel)]="searchTerm" type="text" placeholder="Buscar">
+    <div class="between">
+        <input class="form-control" [(ngModel)]="searchTerm" type="text" placeholder="Buscar">
+        <button style="margin-left: 10px;" (click)="agregarColaboradores()" class="btn btn-primary">Agregar Colaboradores</button>
+
+    </div>
 
 <!-- <div (mousemove)="onUserActivity()" (click)="onUserActivity()"> -->
-    <button (click)="agregarColaboradores()" class="btn btn-primary">Agregar Colaboradores</button>
 
 
     <label for="">Estados:</label>
@@ -11,7 +14,7 @@
             <input type="checkbox" [checked]="estadosSeleccionados.includes(estado)" (change)="toggleEstado(i)">
             {{ estado }}
         </div>
-        <button class="btn btn-primary" (click)="descargarArchivo()">Exportar Colaboradores</button>
+        <button class="btn btn-primary" style="margin-top: .5rem" (click)="descargarArchivo()">Exportar Colaboradores</button>
       
 
     <div class="card">
@@ -34,38 +37,47 @@
                             <th scope="col">Evaluador</th>
                             <th scope="col">I. Evaluador</th>
                             <th scope="col">Cargo Evaluador</th>
+                            <th scope="col">Rol</th>
+                            <th scope="col">Cargo Evaluacion</th>
                             <th scope="col">Estado</th>
                             <th scope="col">Acciones</th>
 
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let colaborador of colaboradores | searchFilter: searchTerm">
-                            <th hidden>{{colaborador.id_Colaborador}}</th>
-                            <td data-titulo="Nombres:">{{colaborador.nombres}}</td>
-                            <td data-titulo="Cedula:">{{colaborador.cedula}}</td>
-                            <td data-titulo="I. Colaborador:">{{colaborador.fe_Ingreso_Colaborador | date:'dd-MM-yyyy'}}</td>
-                            <td data-titulo="Cargo Colaborador:">{{colaborador.cargo_Colaborador}}</td>
-                            <td data-titulo="CC:">{{colaborador.cc}}</td>
-                            <td data-titulo="Localidad:">{{colaborador.localidad}}</td>
-                            <td data-titulo="Zona:">{{colaborador.zona}}</td>
-                            <td data-titulo="Area:">{{colaborador.area}}</td>
-                            <td data-titulo="Departamento:">{{colaborador.departamento}}</td>
-                            <td data-titulo="Cedula Evaluador:">{{colaborador.cedula_Evaluador}}</td>
-                            <td data-titulo="Nombres Evaluador:">{{colaborador.nombres_Evaluador}}</td>
-                            <td data-titulo="Ingreso Evaluador:">{{colaborador.fe_Ingreso_Evaluador | date:'dd-MM-yyyy'}}</td>
-                            <td data-titulo="Cargo Evaluador:">{{colaborador.cargo_Evaluador}}</td>
-                            <td data-titulo="Estado:">{{colaborador.estado}}</td> 
+                        <tr *ngFor="let item of colaboradoresConCargo | searchFilter: searchTerm | paginate: { itemsPerPage: 3, currentPage: page }">
+                            <th hidden>{{item.colaborador.id_Colaborador}}</th>
+                            <td data-titulo="Nombres:">{{item.colaborador.nombres}}</td>
+                            <td data-titulo="Cedula:">{{item.colaborador.cedula}}</td>
+                            <td data-titulo="I. Colaborador:">{{item.colaborador.fe_Ingreso_Colaborador | date:'dd-MM-yyyy'}}</td>
+                            <td data-titulo="Cargo Colaborador:">{{item.colaborador.cargo_Colaborador}}</td>
+                            <td data-titulo="CC:">{{item.colaborador.cc}}</td>
+                            <td data-titulo="Localidad:">{{item.colaborador.localidad}}</td>
+                            <td data-titulo="Zona:">{{item.colaborador.zona}}</td>
+                            <td data-titulo="Area:">{{item.colaborador.area}}</td>
+                            <td data-titulo="Departamento:">{{item.colaborador.departamento}}</td>
+                            <td data-titulo="Cedula Evaluador:">{{item.colaborador.cedula_Evaluador}}</td>
+                            <td data-titulo="Nombres Evaluador:">{{item.colaborador.nombres_Evaluador}}</td>
+                            <td data-titulo="Ingreso Evaluador:">{{item.colaborador.fe_Ingreso_Evaluador | date:'dd-MM-yyyy'}}</td>
+                            <td data-titulo="Cargo Evaluador:">{{item.colaborador.cargo_Evaluador}}</td>
+                            <td data-titulo="Rol:">{{item.colaborador.grupo}}</td>
+                            <td data-titulo="Cargo Evaluacion:">{{item.nombreCargo.nombre_Cargo}}</td>
+                            <td data-titulo="Estado:">{{item.colaborador.estado}}</td> 
                             <td>
                                 <button 
                                 style="width: 5rem;"
-                                class="btn btn-danger" (click)="eliminarColaborador(colaborador.id_Colaborador)">Eliminar</button>
+                                class="btn btn-danger" (click)="eliminarColaborador(item.colaborador.id_Colaborador)">Eliminar</button>
                             </td> 
 
 
                         </tr>
                     </tbody>
                 </table>
+
             </div>
+
         </div>
+
     </div>
+    <pagination-controls class="paginacion" (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Siguiente"></pagination-controls>
+

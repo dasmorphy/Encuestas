@@ -15,6 +15,7 @@ import { ListaRolesInterface } from '../models/roles';
 import { ListaPreguntaModuloCargo } from '../models/preguntaModuloCargo';
 import { ListaCargosInterface } from '../models/cargos';
 import { ListaProcesosEvalaucion } from '../models/procesosEvaluacion';
+import { ListaPromedios } from '../models/dataPromedios';
 
 
 @Injectable({
@@ -23,7 +24,8 @@ import { ListaProcesosEvalaucion } from '../models/procesosEvaluacion';
 
 export class ApiService {
     //coreRoute: string = environment.API_ROUTE;
-    private baseUrl: string = 'https://webappevaluaciones.azurewebsites.net/api/';
+    //private baseUrl: string = 'https://webappevaluaciones.azurewebsites.net/api/';
+    private baseUrl: string = 'http://localhost:9093/api/';
     constructor(private http:HttpClient){}
 
     getAllColaboradores():Observable<ListaColaboresInterface[]>
@@ -81,6 +83,12 @@ export class ApiService {
         // Realizar la solicitud GET con los parámetros
         return this.http.get<any>(urlExportar, { params });
     }
+
+    getColaboradorByNombre(nombreColaborador: string): Observable<ListaColaboresInterface> 
+    {
+        const urlColaboradorNombre = `${this.baseUrl}colaborador/colaboradorByNombre/` + nombreColaborador;
+        return this.http.get<ListaColaboresInterface>(urlColaboradorNombre);
+    }
       
     getAllUsuarios():Observable<ListaUsuariosInterface[]>
     {
@@ -107,6 +115,13 @@ export class ApiService {
         let urlPostUsuario: string = `${this.baseUrl}usuarios/`
         //console.warn (urlPostUsuario);
         return this.http.post<ResponseInit>(urlPostUsuario, form);
+    }
+
+    postUserCsv(formData: any):Observable<ResponseInit>
+    {
+        let urlPostUsuario: string = `${this.baseUrl}usuarios/csv`
+        //console.warn (urlPostUsuario);
+        return this.http.post<ResponseInit>(urlPostUsuario, formData);
     }
 
     updateUser(form:ListaUsuariosInterface):Observable<ResponseInit>
@@ -140,6 +155,28 @@ export class ApiService {
         let urlSingleEvaluacion: string = `${this.baseUrl}evaluacion/search/` + id_Colaborador + '/' + id_Usuario;
         //console.warn (urlSingleEvaluacion);
         return this.http.get<ListaEvaluacionesInterface[]>(urlSingleEvaluacion);
+    }
+
+    getPromediosEvaluaciones(cedulaColaborador?: string):Observable<ListaPromedios>
+    {
+        let urlPromedio: string = `${this.baseUrl}evaluacion/promediosCompetencia`;
+
+        if (cedulaColaborador != null){
+            urlPromedio = `${this.baseUrl}evaluacion/promediosCompetencia?cedulaColaborador=${cedulaColaborador}`;
+        }
+        //console.warn (urlSingleEvaluacion);
+        return this.http.get<ListaPromedios>(urlPromedio);
+    }
+
+    getPromediosGenerales(cedulaColaborador?: string):Observable<any>
+    {
+        let urlPromedioGeneral: string = `${this.baseUrl}evaluacion/promediosGenerales`;
+        if (cedulaColaborador != null){
+            urlPromedioGeneral = `${this.baseUrl}evaluacion/promediosGenerales?cedulaColaborador=${cedulaColaborador}`;
+        }
+
+        return this.http.get<any>(urlPromedioGeneral);
+
     }
 
     postEvaluacion(form:any):Observable<ResponseInit>
@@ -242,6 +279,12 @@ export class ApiService {
     {
         let urlCargo: string = `${this.baseUrl}cargos`;
         return this.http.get<ListaCargosInterface[]>(urlCargo); 
+    }
+
+    getSingleCargo(id_Cargo:number):Observable<ListaCargosInterface>
+    {
+        let urlSingleCargo: string = `${this.baseUrl}cargos/` + id_Cargo;
+        return this.http.get<ListaCargosInterface>(urlSingleCargo); 
     }
 
     getUltmProcesoEvaluacion():Observable<ListaProcesosEvalaucion>
